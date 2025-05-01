@@ -25,5 +25,15 @@ fun SetupNavGraph(
         ){
             InfoScreen(navController)
         }
+        composable(
+            route = Screen.Inst.route
+        ){
+            ManualScreen(navController)
+        }
+        composable(
+            route = Screen.Stat.route
+        ){
+            StatisticsScreen(navController)
+        }
     }
 }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">testowy testownik</string>
     <string name="main_menu">Lepszy Testownik</string>
+    <string name="manual">Instrukcja</string>
     <string name="settings">Ustawienia</string>
     <string name="stats">Statystyki</string>
     <string name="open_last">Otwórz ostatni</string>

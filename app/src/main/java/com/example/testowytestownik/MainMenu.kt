@@ -42,14 +42,13 @@ fun MainMenu(
         verticalArrangement = Arrangement.Top,
     )
     {
-        val samplestring:String = stringResource(R.string.main_menu)
-        Text(text = samplestring, fontSize = 30.sp, fontWeight = FontWeight.Bold)
-        MenuButton("Ustawienia", Icons.Default.Settings){navController.navigate(route = Screen.Sett.route)}
-        MenuButton("Statystyki", Icons.AutoMirrored.Filled.List){navController.navigate(route = Screen.Stat.route)}
-        MenuButton("Otwórz Ostatni", Icons.Default.PlayArrow){}
-        MenuButton("Nowy Testownik", Icons.Filled.Add){}
-        MenuButton("Instrukcja Obsługi", Icons.Default.MoreVert){navController.navigate(route = Screen.Inst.route)}
-        MenuButton("Informacje", Icons.Default.Info, ){navController.navigate(route = Screen.Info.route)}
+        Text(text = stringResource(R.string.main_menu), fontSize = 30.sp, fontWeight = FontWeight.Bold)
+        MenuButton(stringResource(R.string.settings), Icons.Default.Settings){navController.navigate(route = Screen.Sett.route)}
+        MenuButton(stringResource(R.string.stats), Icons.AutoMirrored.Filled.List){navController.navigate(route = Screen.Stat.route)}
+        MenuButton(stringResource(R.string.open_last), Icons.Default.PlayArrow){}
+        MenuButton(stringResource(R.string.open_new), Icons.Filled.Add){}
+        MenuButton(stringResource(R.string.intruct), Icons.Default.MoreVert){navController.navigate(route = Screen.Inst.route)}
+        MenuButton(stringResource(R.string.info), Icons.Default.Info, ){navController.navigate(route = Screen.Info.route)}
     }
 }
 
