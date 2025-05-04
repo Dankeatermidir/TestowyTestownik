@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
@@ -35,61 +36,63 @@ import androidx.navigation.NavController
 fun InfoScreen(
     navController: NavController
 ) {
-  Box(
-      modifier = Modifier.fillMaxSize()
-  ) {
-      Column (
-          modifier = Modifier
-              .fillMaxSize(),
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Top,
+  Surface {
+      Box(
+          modifier = Modifier.fillMaxSize()
       ) {
-          Row(
+          Column(
               modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(16.dp),
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.SpaceBetween
+                  .fillMaxSize(),
+              horizontalAlignment = Alignment.CenterHorizontally,
+              verticalArrangement = Arrangement.Top,
           ) {
-              Icon(
-                  Icons.Default.KeyboardArrowLeft,
-                  "back button",
+              Row(
                   modifier = Modifier
-                      .clickable {
-                          navController.navigate(route = Screen.Menu.route) {
-                              popUpTo(Screen.Menu.route)
+                      .fillMaxWidth()
+                      .padding(16.dp),
+                  verticalAlignment = Alignment.CenterVertically,
+                  horizontalArrangement = Arrangement.SpaceBetween
+              ) {
+                  Icon(
+                      Icons.Default.KeyboardArrowLeft,
+                      "back button",
+                      modifier = Modifier
+                          .clickable {
+                              navController.navigate(route = Screen.Menu.route) {
+                                  popUpTo(Screen.Menu.route)
+                              }
                           }
-                      }
-                      .size(38.dp)
-              )
-              Text(
-                  text = stringResource(R.string.info),
-                  fontSize = 30.sp,
-                  fontWeight = FontWeight.Bold,
-                  modifier = Modifier.weight(1f),
-                  textAlign = TextAlign.Center
-              )
-              Spacer(modifier = Modifier.size(38.dp))
-          }
-          Text(
-              text = "KYS!",
-              color = Color.Red,
-              fontSize = 50.sp,
-              fontWeight = FontWeight.Bold
-          )
-          ElevatedButton(
-              modifier = Modifier
-                  .padding(vertical = 15.dp)
-                  .fillMaxWidth(1f)
-                  .height(75.dp),
-              onClick = {
-                  navController.navigate(route = Screen.Menu.route) {
-                      popUpTo(Screen.Menu.route)
-                  }
+                          .size(38.dp)
+                  )
+                  Text(
+                      text = stringResource(R.string.info),
+                      fontSize = 30.sp,
+                      fontWeight = FontWeight.Bold,
+                      modifier = Modifier.weight(1f),
+                      textAlign = TextAlign.Center
+                  )
+                  Spacer(modifier = Modifier.size(38.dp))
               }
-          ) {
-              Icon(Icons.Default.CheckCircle, "time to kys", tint = Color.Black)
-              Text(text = "GOT IT!", color = Color.Black)
+              Text(
+                  text = "KYS!",
+                  color = Color.Red,
+                  fontSize = 50.sp,
+                  fontWeight = FontWeight.Bold
+              )
+              ElevatedButton(
+                  modifier = Modifier
+                      .padding(vertical = 15.dp)
+                      .fillMaxWidth(1f)
+                      .height(75.dp),
+                  onClick = {
+                      navController.navigate(route = Screen.Menu.route) {
+                          popUpTo(Screen.Menu.route)
+                      }
+                  }
+              ) {
+                  Icon(Icons.Default.CheckCircle, "time to kys")
+                  Text(text = "GOT IT!")
+              }
           }
       }
   }

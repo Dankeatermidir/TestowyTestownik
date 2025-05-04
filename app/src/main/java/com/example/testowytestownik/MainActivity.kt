@@ -54,8 +54,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            navController = rememberNavController()
-            SetupNavGraph(navController = navController)
+            TestowyTestownikTheme {
+                navController = rememberNavController()
+                SetupNavGraph(navController = navController, permissionManager = PermissionManager())
+            }
         }
     }
 }

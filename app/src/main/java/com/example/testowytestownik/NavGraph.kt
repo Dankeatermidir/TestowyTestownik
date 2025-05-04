@@ -9,7 +9,8 @@ import androidx.navigation.compose.composable
 
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    permissionManager: PermissionManager
 ) {
     NavHost (
         navController = navController,
@@ -18,7 +19,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Menu.route
         ){
-            MainMenu(navController)
+            MainMenu(navController, permissionManager)
         }
         composable(
             route = Screen.Info.route

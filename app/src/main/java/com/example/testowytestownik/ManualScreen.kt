@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,38 +28,40 @@ import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun ManualScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top,
-    ) {
-        Row(
+    Surface {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top,
         ) {
-            Icon(
-                Icons.Default.KeyboardArrowLeft,
-                "back button",
+            Row(
                 modifier = Modifier
-                    .clickable {
-                        navController.navigate(route = Screen.Menu.route) {
-                            popUpTo(Screen.Menu.route)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Icon(
+                    Icons.Default.KeyboardArrowLeft,
+                    "back button",
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(route = Screen.Menu.route) {
+                                popUpTo(Screen.Menu.route)
+                            }
                         }
-                    }
-                    .size(38.dp)
-            )
-            Text(
-                text = stringResource(R.string.manual),
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.size(38.dp))
+                        .size(38.dp)
+                )
+                Text(
+                    text = stringResource(R.string.manual),
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(38.dp))
+            }
         }
     }
 }
