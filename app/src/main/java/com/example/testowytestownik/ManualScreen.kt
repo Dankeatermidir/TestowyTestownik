@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -43,8 +44,8 @@ fun ManualScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Icon(
-                    Icons.Default.KeyboardArrowLeft,
-                    "back button",
+                    Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    stringResource(R.string.back_button_desc),
                     modifier = Modifier
                         .clickable {
                             navController.navigate(route = Screen.Menu.route) {

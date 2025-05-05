@@ -36,5 +36,10 @@ fun SetupNavGraph(
         ){
             StatisticsScreen(navController)
         }
+        composable(
+            route = Screen.Sett.route
+        ){
+            SettingsScreen(navController)
+        }
     }
 }

@@ -93,11 +93,11 @@ fun MainMenu(
                 stringResource(R.string.intruct),
                 Icons.Default.MoreVert
             ) { navController.navigate(route = Screen.Inst.route) }
-            MenuButton(stringResource(R.string.info), Icons.Default.Info,) {
-                navController.navigate(
-                    route = Screen.Info.route
-                )
-            }
+            MenuButton(
+                stringResource(R.string.info),
+                Icons.Default.Info,
+            ) {
+                navController.navigate(route = Screen.Info.route) }
         }
     }
 }

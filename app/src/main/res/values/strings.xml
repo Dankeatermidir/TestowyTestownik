@@ -1,11 +1,12 @@
 <resources>
-    <string name="app_name">testowy testownik</string>
-    <string name="main_menu">Lepszy Testownik</string>
-    <string name="manual">Instrukcja</string>
-    <string name="settings">Ustawienia</string>
-    <string name="stats">Statystyki</string>
-    <string name="open_last">Otwórz ostatni</string>
-    <string name="open_new">Nowy Testownik</string>
-    <string name="intruct">Instrukcja obsługi</string>
-    <string name="info">Informacje</string>
+    <string name="app_name">ein besserer testownik</string>
+    <string name="main_menu">Ein besserer Testownik</string>
+    <string name="manual">Betriebsanleitung</string>
+    <string name="settings">Anwendungseinstellungen</string>
+    <string name="stats">Antwortstatistiken</string>
+    <string name="open_last">Öffne die letzte</string>
+    <string name="open_new">Neuer Testownik</string>
+    <string name="intruct">Betriebsanleitung</string>
+    <string name="info">Anwendunginformationen</string>
+    <string name="back_button_desc">zurück</string>
 </resources>

@@ -1,3 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">testowy testownik</string>
+    <string name="main_menu">Lepszy Testownik</string>
+    <string name="manual">Instrukcja</string>
+    <string name="settings">Ustawienia</string>
+    <string name="stats">Statystyki</string>
+    <string name="open_last">Otwórz ostatni</string>
+    <string name="open_new">Nowy Testownik</string>
+    <string name="intruct">Instrukcja obsługi</string>
+    <string name="info">Informacje</string>
+    <string name="back_button_desc">powrót</string>
 </resources>

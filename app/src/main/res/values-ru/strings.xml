@@ -1,3 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">лучшый тестовник</string>
+    <string name="main_menu">Лучшый Тестовник</string>
+    <string name="manual">Инструкции</string>
+    <string name="open_new">Новый Тестовник</string>
+    <string name="intruct">Инструкция обсуживания</string>
+    <string name="info">Информации</string>
+    <string name="settings">Настройки</string>
+    <string name="stats">Статистика игр</string>
+    <string name="open_last">Последния игра</string>
+    <string name="back_button_desc">назад</string>
 </resources>
