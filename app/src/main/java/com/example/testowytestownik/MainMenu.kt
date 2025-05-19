@@ -27,6 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.platform.LocalContext
@@ -37,6 +40,9 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
+import java.io.File
+import java.io.FileOutputStream
+import kotlin.random.Random
 
 @Composable
 fun MainMenu(
@@ -44,26 +50,22 @@ fun MainMenu(
     fileManager: FileManager,
 ) {
     val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-        uri?.let {
-            val documentFile = DocumentFile.fromTreeUri(context, uri)
-            documentFile?.listFiles()?.forEach { file ->
-                val name = file.name
-                val inputStream = context.contentResolver.openInputStream(file.uri)
-                // Read the file contents and insert into DB
 
-                if (inputStream != null) {
-                    inputStream.close()
-                }
-            }
-        }
-    }
     val permissionsToRequest = arrayOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        uri?.let {
+            context.contentResolver.takePersistableUriPermission(
+                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            copyFilesToInternalStorage(context, it)
+        }
+    }
     val PermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { perms ->
@@ -102,7 +104,7 @@ fun MainMenu(
                 stringResource(R.string.open_last),
                 Icons.Default.PlayArrow
             ) {
-
+                navController.navigate(route = Screen.Quiz.route)
             }
             MenuButton(
                 stringResource(R.string.open_new),
@@ -142,6 +144,26 @@ fun MenuButton(name:String, icon: ImageVector, onclick: () -> Unit) {
 }
 
 
+fun copyFilesToInternalStorage(context: Context, uri: Uri) {
+    val contentResolver = context.contentResolver
+    val pickedFolder = DocumentFile.fromTreeUri(context, uri)
+    val folderName = Random.nextInt(0,999999999).toString()
+    val targetDir = File(context.filesDir, folderName).apply { mkdirs() }
+
+    pickedFolder?.listFiles()?.forEach { file ->
+        if (file.isFile) {
+            val inputStream = contentResolver.openInputStream(file.uri)
+            val outFile = File(targetDir, file.name ?: "unknown_file")
+            val outputStream = FileOutputStream(outFile)
+
+            inputStream?.use { input ->
+                outputStream.use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+    }
+}
 
 /*
 @Preview

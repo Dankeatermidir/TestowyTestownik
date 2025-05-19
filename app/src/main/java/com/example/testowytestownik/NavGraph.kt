@@ -39,5 +39,10 @@ fun SetupNavGraph(
         ){
             SettingsScreen(navController)
         }
+        composable(
+            route = Screen.Quiz.route
+        ){
+            FilesScreen("./")
+        }
     }
 }
