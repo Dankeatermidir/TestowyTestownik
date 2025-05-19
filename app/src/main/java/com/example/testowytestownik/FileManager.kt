@@ -1,10 +1,10 @@
 package com.example.testowytestownik
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import android.Manifest
 
-class PermissionManager {
+class FileManager: ViewModel() {
 
     val PermissionDialogQueue = mutableStateListOf<String>()
 
@@ -20,4 +20,6 @@ class PermissionManager {
             PermissionDialogQueue.add(permission)
         }
     }
+
+
 }

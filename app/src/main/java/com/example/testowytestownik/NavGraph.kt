@@ -1,8 +1,6 @@
 package com.example.testowytestownik
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.internal.composableLambda
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -10,7 +8,7 @@ import androidx.navigation.compose.composable
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
-    permissionManager: PermissionManager
+    fileManager: FileManager,
 ) {
     NavHost (
         navController = navController,
@@ -19,7 +17,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Menu.route
         ){
-            MainMenu(navController, permissionManager)
+            MainMenu(navController, fileManager)
         }
         composable(
             route = Screen.Info.route

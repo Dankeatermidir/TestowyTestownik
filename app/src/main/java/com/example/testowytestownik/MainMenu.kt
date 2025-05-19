@@ -20,27 +20,44 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.platform.LocalContext
+import androidx.documentfile.provider.DocumentFile
 
-import androidx.navigation.compose.rememberNavController
+import androidx.room.Dao
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
 
 @Composable
 fun MainMenu(
     navController: NavController,
-    permissionManager: PermissionManager
+    fileManager: FileManager,
 ) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        uri?.let {
+            val documentFile = DocumentFile.fromTreeUri(context, uri)
+            documentFile?.listFiles()?.forEach { file ->
+                val name = file.name
+                val inputStream = context.contentResolver.openInputStream(file.uri)
+                // Read the file contents and insert into DB
 
+                if (inputStream != null) {
+                    inputStream.close()
+                }
+            }
+        }
+    }
     val permissionsToRequest = arrayOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.READ_EXTERNAL_STORAGE
@@ -51,7 +68,7 @@ fun MainMenu(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { perms ->
             permissionsToRequest.forEach { permission ->
-                permissionManager.onPermissionResult(
+                fileManager.onPermissionResult(
                     permission = permission,
                     isGranted = perms[permission] == true
                 )
@@ -84,11 +101,16 @@ fun MainMenu(
             MenuButton(
                 stringResource(R.string.open_last),
                 Icons.Default.PlayArrow
-            ) {PermissionResultLauncher.launch(permissionsToRequest)}
+            ) {
+
+            }
             MenuButton(
                 stringResource(R.string.open_new),
                 Icons.Filled.Add
-            ) {PermissionResultLauncher.launch(permissionsToRequest)}
+            ) {
+                PermissionResultLauncher.launch(permissionsToRequest)
+                launcher.launch(null)
+            }
             MenuButton(
                 stringResource(R.string.intruct),
                 Icons.Default.MoreVert
@@ -101,6 +123,8 @@ fun MainMenu(
         }
     }
 }
+
+
 
 @Composable
 fun MenuButton(name:String, icon: ImageVector, onclick: () -> Unit) {
@@ -116,6 +140,8 @@ fun MenuButton(name:String, icon: ImageVector, onclick: () -> Unit) {
         Text(text = name)
     }
 }
+
+
 
 /*
 @Preview
