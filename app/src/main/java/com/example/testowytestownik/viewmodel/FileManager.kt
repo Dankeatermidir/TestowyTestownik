@@ -1,6 +1,5 @@
-package com.example.testowytestownik
+package com.example.testowytestownik.viewmodel
 
-import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 

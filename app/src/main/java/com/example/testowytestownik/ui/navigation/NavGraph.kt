@@ -1,9 +1,16 @@
-package com.example.testowytestownik
+package com.example.testowytestownik.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.example.testowytestownik.viewmodel.FileManager
+import com.example.testowytestownik.ui.screen.FilesScreen
+import com.example.testowytestownik.ui.screen.InfoScreen
+import com.example.testowytestownik.ui.screen.MainMenu
+import com.example.testowytestownik.ui.screen.ManualScreen
+import com.example.testowytestownik.ui.screen.SettingsScreen
+import com.example.testowytestownik.ui.screen.StatisticsScreen
 
 @Composable
 fun SetupNavGraph(
@@ -40,9 +47,9 @@ fun SetupNavGraph(
             SettingsScreen(navController)
         }
         composable(
-            route = Screen.Quiz.route
+            route = Screen.Mgmt.route
         ){
-            FilesScreen("./")
+            ManagementScreen(navController, fileManager,"./")
         }
     }
 }
