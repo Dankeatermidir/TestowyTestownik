@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.testowytestownik.viewmodel.FileManager
-import com.example.testowytestownik.ui.screen.FilesScreen
+import com.example.testowytestownik.ui.screen.ManagementScreen
 import com.example.testowytestownik.ui.screen.InfoScreen
 import com.example.testowytestownik.ui.screen.MainMenu
 import com.example.testowytestownik.ui.screen.ManualScreen
