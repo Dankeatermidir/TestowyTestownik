@@ -10,4 +10,7 @@
     <string name="stats">Статистика игр</string>
     <string name="open_last">Последния игра</string>
     <string name="back_button_desc">назад</string>
+    <string name="testo_missing">TODO</string>
+    <string name="add">TODO</string>
+    <string name="rename">TODO</string>
 </resources>

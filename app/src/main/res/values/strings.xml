@@ -9,4 +9,7 @@
     <string name="intruct">Betriebsanleitung</string>
     <string name="info">Anwendunginformationen</string>
     <string name="back_button_desc">zurück</string>
+    <string name="testo_missing">keine testoniken</string>
+    <string name="add">gib testownik</string>
+    <string name="rename">TODO</string>
 </resources>

@@ -37,7 +37,6 @@ import com.example.testowytestownik.ui.navigation.Screen
 @Composable
 fun MainMenu(
     navController: NavController,
-    fileManager: FileManager,
 ) {
     val context = LocalContext.current
 

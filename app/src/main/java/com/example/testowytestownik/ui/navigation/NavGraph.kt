@@ -24,7 +24,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Menu.route
         ){
-            MainMenu(navController, fileManager)
+            MainMenu(navController)
         }
         composable(
             route = Screen.Info.route

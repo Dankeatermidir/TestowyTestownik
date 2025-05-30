@@ -10,4 +10,7 @@
     <string name="intruct">Manual</string>
     <string name="info">Info</string>
     <string name="back_button_desc">back</string>
+    <string name="testo_missing">No testowniks found</string>
+    <string name="add">Add new Testownik</string>
+    <string name="rename">Rename Testownik</string>
 </resources>

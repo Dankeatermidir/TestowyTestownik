@@ -10,4 +10,7 @@
     <string name="intruct">Instrukcja obsługi</string>
     <string name="info">Informacje</string>
     <string name="back_button_desc">powrót</string>
+    <string name="testo_missing">Nie znaleziono testowników</string>
+    <string name="add">Dodaj nowy testownik</string>
+    <string name="rename">Zmień nazwę</string>
 </resources>
