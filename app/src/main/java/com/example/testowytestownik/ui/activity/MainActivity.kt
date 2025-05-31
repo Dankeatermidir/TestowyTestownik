@@ -15,7 +15,12 @@ import com.example.testowytestownik.ui.navigation.SetupNavGraph
 import com.example.testowytestownik.viewmodel.FileManager
 import com.example.testowytestownik.viewmodel.SettingsManager
 import androidx.compose.runtime.collectAsState
-
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.room.Room
+import com.example.testowytestownik.data.storage.QuizDao
+import com.example.testowytestownik.data.storage.QuizDatabase
+import com.example.testowytestownik.viewmodel.DatabaseManager
 
 
 class MainActivity : ComponentActivity() {
@@ -27,6 +32,17 @@ class MainActivity : ComponentActivity() {
         val fileManager = FileManager()
         val store = SettingsStore(applicationContext)
         val settingsManager = SettingsManager(store)
+        /*
+        val db = Room.databaseBuilder(
+            applicationContext,
+            QuizDatabase::class.java, "quiz-db"
+        ).build()
+
+        val quizDao = db.quizDao()
+        val databaseManager = ViewModelProvider(this, viewModelFactory { DatabaseManager::class.java })
+
+
+         */
         setContent {
             TestowyTestownikTheme(
                 settingsManager
