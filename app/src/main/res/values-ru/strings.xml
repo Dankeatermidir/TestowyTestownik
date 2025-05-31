@@ -13,4 +13,11 @@
     <string name="testo_missing">TODO</string>
     <string name="add">TODO</string>
     <string name="rename">TODO</string>
+    <string name="darkmode">TODO</string>
+    <string name="fontsize">TODO</string>
+    <string name="autosave">TODO</string>
+    <string name="init_repeats">TODO</string>
+    <string name="extra_repeats">TODO</string>
+    <string name="hardcoremode">TODO</string>
+    <string name="max_repeats">TODO</string>
 </resources>

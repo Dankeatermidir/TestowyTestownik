@@ -2,15 +2,20 @@ package com.example.testowytestownik.ui.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -29,11 +34,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testowytestownik.R
+import com.example.testowytestownik.data.model.FontSize
 import com.example.testowytestownik.ui.navigation.Screen
+import com.example.testowytestownik.viewmodel.SettingsManager
 
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    settingsManager: SettingsManager
+) {
+    val state = settingsManager.uiState
     var darkTheme by remember { mutableStateOf(false) }
     var autosave by remember { mutableStateOf(true) }
     var statistics by remember { mutableStateOf(true) }
@@ -74,6 +86,71 @@ fun SettingsScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.size(38.dp))
             }
+
+            Text("Font Size")
+            DropdownMenuFontSize(
+                selected = state.fontSize,
+                onSelect = { settingsManager.updateFontSize(it) }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.darkmode))
+                Spacer(modifier = Modifier.weight(1f))
+                Switch(
+                    checked = state.darkMode,
+                    onCheckedChange = {settingsManager.toogleDarkMode(it)}
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+
+
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.autosave))
+                Spacer(modifier = Modifier.weight(1f))
+                Switch(
+                    checked = state.autoSave,
+                    onCheckedChange = { settingsManager.toogleAutoSave(it) }
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text("${stringResource(R.string.init_repeats)} ${state.initRepeats}")
+            Slider(
+                value = state.initRepeats.toFloat(),
+                onValueChange = { settingsManager.updateInitRepeats(it.toInt()) },
+                valueRange = 0f..10f
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text("${stringResource(R.string.extra_repeats)} ${state.extraRepeats}")
+            Slider(
+                value = state.extraRepeats.toFloat(),
+                onValueChange = { settingsManager.updateExtraRepeats(it.toInt()) },
+                valueRange = 0f..10f
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text("${stringResource(R.string.max_repeats)} ${state.maxRepeats}")
+            Slider(
+                value = state.maxRepeats.toFloat(),
+                onValueChange = { settingsManager.updateMaxRepeats(it.toInt()) },
+                valueRange = 0f..10f
+            )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.hardcoremode))
+                Spacer(modifier = Modifier.weight(1f))
+                Switch(
+                    checked = state.hardcoreMode,
+                    onCheckedChange = { settingsManager.toogleHardcoreMode(it) }
+                )
+            }
+
+
+            /*
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,6 +185,33 @@ fun SettingsScreen(navController: NavController) {
                     onValueChange = { fontSize = it }
                 )
                 Text(text = kotlin.math.floor((fontSize*24+5)).toString())
+            }
+
+             */
+        }
+    }
+}
+
+@Composable
+fun DropdownMenuFontSize(
+    selected: FontSize,
+    onSelect: (FontSize) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        Button(onClick = { expanded = true }) {
+            Text("Font Size: ${selected.name}")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            FontSize.values().forEach { size ->
+                DropdownMenuItem(
+                    text = { Text(size.name) },
+                    onClick = {
+                        onSelect(size)
+                        expanded = false
+                    }
+                )
             }
         }
     }

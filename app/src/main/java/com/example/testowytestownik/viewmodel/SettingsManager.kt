@@ -63,7 +63,7 @@ class SettingsManager(private val store: SettingsStore) : ViewModel() {
     }
 
     fun updateMaxRepeats(repeats: Int) {
-        uiState = uiState.copy(initRepeats = repeats)
+        uiState = uiState.copy(maxRepeats = repeats)
         viewModelScope.launch {
             store.saveMaxRepeats(repeats)
         }

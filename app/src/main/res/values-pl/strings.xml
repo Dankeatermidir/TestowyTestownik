@@ -13,4 +13,11 @@
     <string name="testo_missing">Nie znaleziono testowników</string>
     <string name="add">Dodaj nowy testownik</string>
     <string name="rename">Zmień nazwę</string>
+    <string name="darkmode">Tryb Ciemny</string>
+    <string name="fontsize">Rozmiar Czcionki</string>
+    <string name="autosave">Autozapis</string>
+    <string name="init_repeats">Wstępna liczba powtórzeń</string>
+    <string name="extra_repeats">Powtórzenia przy błędnej odpowiedzi</string>
+    <string name="hardcoremode">Tryb Hardcore</string>
+    <string name="max_repeats">Maksymalna liczba powtórzeń</string>
 </resources>

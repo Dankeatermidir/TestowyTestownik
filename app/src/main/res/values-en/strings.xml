@@ -13,4 +13,11 @@
     <string name="testo_missing">No testowniks found</string>
     <string name="add">Add new Testownik</string>
     <string name="rename">Rename Testownik</string>
+    <string name="darkmode">Dark Mode</string>
+    <string name="fontsize">Font Size</string>
+    <string name="autosave">AutoSave</string>
+    <string name="init_repeats">Initial number of repeats</string>
+    <string name="extra_repeats">Repeats on wrong answer</string>
+    <string name="hardcoremode">Hardcore Mode</string>
+    <string name="max_repeats">Maximum repeats number</string>
 </resources>
