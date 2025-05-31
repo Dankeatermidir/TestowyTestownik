@@ -59,7 +59,14 @@ fun StatisticsScreen(
                             }
                             .size(38.dp)
                     )
-
+                    Text(
+                        text = stringResource(R.string.stats),
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.size(38.dp))
                 }
             }
         }

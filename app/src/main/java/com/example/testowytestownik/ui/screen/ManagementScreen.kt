@@ -14,13 +14,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -43,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,7 +48,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.testowytestownik.R
 import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
@@ -74,7 +70,7 @@ fun ManagementScreen(
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-    val GetUserFolder = rememberLauncherForActivityResult(
+    val getUserFolder = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree()
     ) { uri ->
         uri?.let {
@@ -185,7 +181,7 @@ fun ManagementScreen(
                     Icons.Default.AddCircle
                 ) {
                     PermissionResultLauncher.launch(permissionsToRequest)
-                    GetUserFolder.launch(null)
+                    getUserFolder.launch(null)
                     updateFiles()
                 }
             }
@@ -242,41 +238,6 @@ fun ManagementScreen(
         }
     }
 }
-/*
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Contents of: /data/data/${context.packageName}/files/$folderName",
-            style = MaterialTheme.typography.titleMedium
-        )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (files.isEmpty()) {
-            Text("No files found in $folderName.")
-        } else {
-            LazyColumn {
-                items(
-                    count = files.size,
-                    key = { index -> files[index] }, // optional
-                    itemContent = { index ->
-                        Text(text = files[index].name)
-                    }
-                )
-            }
-        }
-        MenuButton(
-            "DODAJ",
-            Icons.Default.Add
-        ) {
-            PermissionResultLauncher.launch(permissionsToRequest)
-            GetUserFolder.launch(null)
-        }
-    }
-
- */
 
 
