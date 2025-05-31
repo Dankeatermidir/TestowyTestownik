@@ -12,6 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.example.testowytestownik.viewmodel.SettingsManager
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 
 private val DarkColorScheme = darkColorScheme(
@@ -48,7 +52,7 @@ fun TestowyTestownikTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var darkTheme = settingsManager.uiState.darkMode
+    val darkTheme = settingsManager.uiState.darkMode
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -59,7 +63,26 @@ fun TestowyTestownikTheme(
         else -> LightColorScheme
     }
 
-    MaterialTheme(
+    val Typography = androidx.compose.material3.Typography(
+        bodyLarge = TextStyle(
+            fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.Normal,
+            fontSize = (16 * settingsManager.uiState.fontSize.scale).sp ,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
+        ),
+        labelLarge = MaterialTheme.typography.bodyLarge.copy(
+            fontSize = (MaterialTheme.typography.bodyLarge.fontSize.value * settingsManager.uiState.fontSize.scale).sp
+        ),
+        headlineSmall = MaterialTheme.typography.headlineSmall.copy(
+            fontSize = (MaterialTheme.typography.headlineSmall.fontSize.value * settingsManager.uiState.fontSize.scale).sp
+        ),
+        bodyMedium = MaterialTheme.typography.bodyMedium.copy(
+            fontSize = (MaterialTheme.typography.bodyMedium.fontSize.value * settingsManager.uiState.fontSize.scale).sp
+        )
+    )
+
+    MaterialTheme (
         colorScheme = colorScheme,
         typography = Typography,
         content = content
