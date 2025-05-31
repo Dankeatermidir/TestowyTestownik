@@ -14,6 +14,8 @@ import com.example.testowytestownik.data.model.dataStore
 import com.example.testowytestownik.ui.navigation.SetupNavGraph
 import com.example.testowytestownik.viewmodel.FileManager
 import com.example.testowytestownik.viewmodel.SettingsManager
+import androidx.compose.runtime.collectAsState
+
 
 
 class MainActivity : ComponentActivity() {
@@ -26,7 +28,9 @@ class MainActivity : ComponentActivity() {
         val store = SettingsStore(applicationContext)
         val settingsManager = SettingsManager(store)
         setContent {
-            TestowyTestownikTheme {
+            TestowyTestownikTheme(
+                settingsManager
+            ) {
                 navController = rememberNavController()
                 SetupNavGraph(navController = navController, fileManager, settingsManager)
             }

@@ -12,5 +12,9 @@ data class SettingsState(
     val hardcoreMode: Boolean = false
 )
 
-enum class FontSize { Small, Medium, Large }
+enum class FontSize(val scale: Float){
+    Small(1.0f),
+    Medium(1.2f),
+    Large(1.5f)
+}
 

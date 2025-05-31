@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class SettingsManager(private val store: SettingsStore) : ViewModel() {
     var uiState by mutableStateOf(SettingsState())
-        private set
+
     init {
         viewModelScope.launch {
             store.loadSettings().collect { loadedSettings ->
