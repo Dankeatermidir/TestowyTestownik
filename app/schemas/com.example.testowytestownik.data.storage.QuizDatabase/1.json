@@ -1,0 +1,104 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "f1f54b374ee5efbec0026464889d5668",
+    "entities": [
+      {
+        "tableName": "Quiz",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`quizName` TEXT NOT NULL, `questionNum` INTEGER NOT NULL, `questionLeft` INTEGER NOT NULL, `wrongAnswers` INTEGER NOT NULL, `correctAnswers` INTEGER NOT NULL, `quizUri` TEXT NOT NULL, PRIMARY KEY(`quizName`))",
+        "fields": [
+          {
+            "fieldPath": "quizName",
+            "columnName": "quizName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "questionNum",
+            "columnName": "questionNum",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "questionLeft",
+            "columnName": "questionLeft",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wrongAnswers",
+            "columnName": "wrongAnswers",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "correctAnswers",
+            "columnName": "correctAnswers",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quizUri",
+            "columnName": "quizUri",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "quizName"
+          ]
+        }
+      },
+      {
+        "tableName": "Question",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`questionName` TEXT NOT NULL, `parentQuiz` TEXT NOT NULL, `repeatsLeft` INTEGER NOT NULL, PRIMARY KEY(`questionName`), FOREIGN KEY(`parentQuiz`) REFERENCES `Quiz`(`quizName`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "questionName",
+            "columnName": "questionName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentQuiz",
+            "columnName": "parentQuiz",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repeatsLeft",
+            "columnName": "repeatsLeft",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "questionName"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "Quiz",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "parentQuiz"
+            ],
+            "referencedColumns": [
+              "quizName"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f1f54b374ee5efbec0026464889d5668')"
+    ]
+  }
+}

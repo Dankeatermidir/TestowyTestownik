@@ -20,7 +20,7 @@ data class Quiz(
     val questionLeft: Int,
     val wrongAnswers: Int,
     val correctAnswers: Int,
-    val quizUri: Uri
+    val quizUri: String
 )
 
 @Entity(
@@ -65,7 +65,7 @@ interface QuizDao {
     suspend fun deleteQuiz(quiz: Quiz)
 
     @Query("UPDATE Quiz SET quizUri = :newUri WHERE quizName = :quizName")
-    suspend fun updateUri(quizName: String, newUri: Uri)
+    suspend fun updateUri(quizName: String, newUri: String)
 
     @Query("UPDATE Quiz SET questionLeft = :newCount WHERE quizName = :quizName")
     suspend fun updateQuestionLeft(quizName: String, newCount: Int)

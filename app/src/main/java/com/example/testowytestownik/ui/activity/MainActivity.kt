@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
         val fileManager = FileManager()
         val store = SettingsStore(applicationContext)
         val settingsManager = SettingsManager(store)
-        /*
+
         val db = Room.databaseBuilder(
             applicationContext,
             QuizDatabase::class.java, "quiz-db"
@@ -41,8 +41,6 @@ class MainActivity : ComponentActivity() {
         val quizDao = db.quizDao()
         val databaseManager = ViewModelProvider(this, viewModelFactory { DatabaseManager::class.java })
 
-
-         */
         setContent {
             TestowyTestownikTheme(
                 settingsManager
