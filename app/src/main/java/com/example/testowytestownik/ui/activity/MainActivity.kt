@@ -21,6 +21,7 @@ import androidx.room.Room
 import com.example.testowytestownik.data.storage.QuizDao
 import com.example.testowytestownik.data.storage.QuizDatabase
 import com.example.testowytestownik.viewmodel.DatabaseManager
+import com.example.testowytestownik.viewmodel.QuizViewModelFactory
 
 
 class MainActivity : ComponentActivity() {
@@ -39,14 +40,15 @@ class MainActivity : ComponentActivity() {
         ).build()
 
         val quizDao = db.quizDao()
-        val databaseManager = ViewModelProvider(this, viewModelFactory { DatabaseManager::class.java })
+        val quizViewModelFactory = QuizViewModelFactory(quizDao)
+        val databaseManager = ViewModelProvider(this, quizViewModelFactory)[DatabaseManager::class.java]
 
         setContent {
             TestowyTestownikTheme(
                 settingsManager
             ) {
                 navController = rememberNavController()
-                SetupNavGraph(navController = navController, fileManager, settingsManager)
+                SetupNavGraph(navController = navController, fileManager = fileManager, databaseManager = databaseManager, settingsManager = settingsManager)
             }
         }
     }

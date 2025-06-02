@@ -15,6 +15,22 @@ import java.io.File
 
 class DatabaseManager(private val quizDao: QuizDao) : ViewModel() {
 
+    private var wasUpdated = false
+    fun controlledUpdate(files: List<File>, defaultRepeats: Int) {
+        viewModelScope.launch {
+            if (!wasUpdated) {
+                updateDataBases(files, defaultRepeats)
+                wasUpdated = true
+            }
+        }
+    }
+
+    fun renameQuiz(oldName: String, newName: String){
+        viewModelScope.launch {
+            quizDao.renameQuizAndQuestions(oldName,newName)
+        }
+    }
+
     fun insertQuizWithQuestions(quiz: Quiz, questions: List<Question>) {
         viewModelScope.launch {
             quizDao.insertQuizWithQuestions(quiz, questions)

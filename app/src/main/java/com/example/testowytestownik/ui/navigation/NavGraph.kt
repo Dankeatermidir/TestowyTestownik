@@ -11,13 +11,15 @@ import com.example.testowytestownik.ui.screen.MainMenu
 import com.example.testowytestownik.ui.screen.ManualScreen
 import com.example.testowytestownik.ui.screen.SettingsScreen
 import com.example.testowytestownik.ui.screen.StatisticsScreen
+import com.example.testowytestownik.viewmodel.DatabaseManager
 import com.example.testowytestownik.viewmodel.SettingsManager
 
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
     fileManager: FileManager,
-    settingsManager: SettingsManager
+    settingsManager: SettingsManager,
+    databaseManager: DatabaseManager
 ) {
     NavHost (
         navController = navController,
@@ -51,7 +53,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Mgmt.route
         ){
-            ManagementScreen(navController, fileManager,"./")
+            ManagementScreen(navController, fileManager, databaseManager, settingsManager,"./")
         }
     }
 }

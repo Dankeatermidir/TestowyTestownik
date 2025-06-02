@@ -116,4 +116,16 @@ interface QuizDao {
 
     @Query("SELECT quizName FROM Quiz")
     suspend fun getAllQuizNames(): List<String>
+
+    @Query("UPDATE Quiz SET quizName = :newName WHERE quizName = :oldName")
+    suspend fun renameQuiz(oldName: String, newName: String)
+
+    @Query("UPDATE Question SET parentQuiz = :newName WHERE parentQuiz = :oldName")
+    suspend fun updateQuestionParentQuiz(oldName: String, newName: String)
+
+    @Transaction
+    suspend fun renameQuizAndQuestions(oldName: String, newName: String) {
+        renameQuiz(oldName, newName)
+        updateQuestionParentQuiz(oldName, newName)
+    }
 }

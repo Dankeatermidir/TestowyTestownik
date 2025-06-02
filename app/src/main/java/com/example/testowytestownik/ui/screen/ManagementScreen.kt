@@ -48,12 +48,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.testowytestownik.R
 import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
 import com.example.testowytestownik.ui.components.MenuButton
 import com.example.testowytestownik.ui.navigation.Screen
+import com.example.testowytestownik.viewmodel.DatabaseManager
 import com.example.testowytestownik.viewmodel.FileManager
+import com.example.testowytestownik.viewmodel.SettingsManager
+import kotlinx.coroutines.launch
 import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -61,6 +65,8 @@ import java.io.File
 fun ManagementScreen(
     navController : NavController,
     fileManager: FileManager,
+    databaseManager: DatabaseManager,
+    settingsManager: SettingsManager,
     folderName: String = "./" // optional: browse a subfolder
 ) {
     val context = LocalContext.current
@@ -103,8 +109,11 @@ fun ManagementScreen(
         if (!dir.exists()) dir.mkdirs()
         files = dir.listFiles()?.filter { it.isDirectory }?.toList() ?: emptyList()
     }
-
     updateFiles()
+
+    databaseManager.controlledUpdate(files, settingsManager.uiState.initRepeats)
+
+
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
@@ -183,6 +192,8 @@ fun ManagementScreen(
                     PermissionResultLauncher.launch(permissionsToRequest)
                     getUserFolder.launch(null)
                     updateFiles()
+                    databaseManager.viewModelScope.launch { databaseManager.updateDataBases(files,settingsManager.uiState.initRepeats) }
+
                 }
             }
             selectedFolder?.let { folder ->
@@ -196,6 +207,7 @@ fun ManagementScreen(
                         onClick = {
                             showMenu = false
                             fileManager.deleteFolder(folder)
+                            databaseManager.deleteQuizByName(folder.name)
                             updateFiles()
                         }
                     )
@@ -222,6 +234,7 @@ fun ManagementScreen(
                     confirmButton = {
                         TextButton(onClick = {
                             fileManager.renameFolder(selectedFolder!!, renameText)
+                            databaseManager.renameQuiz(selectedFolder!!.name, renameText)
                             showRenameDialog = false
                             updateFiles()
                         }) {
