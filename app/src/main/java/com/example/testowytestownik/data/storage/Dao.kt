@@ -64,6 +64,9 @@ interface QuizDao {
     @Delete
     suspend fun deleteQuiz(quiz: Quiz)
 
+    @Query("DELETE FROM Quiz WHERE quizName = :quizName")
+    suspend fun deleteQuizByName(quizName: String)
+
     @Query("UPDATE Quiz SET quizUri = :newUri WHERE quizName = :quizName")
     suspend fun updateUri(quizName: String, newUri: String)
 
@@ -110,4 +113,7 @@ interface QuizDao {
         resetQuestionRepeats(quizName, defaultRepeats)
         resetQuizStats(quizName)
     }
+
+    @Query("SELECT quizName FROM Quiz")
+    suspend fun getAllQuizNames(): List<String>
 }
