@@ -123,5 +123,6 @@ class DatabaseManager(private val quizDao: QuizDao) : ViewModel() {
             }
         }
     }
-    //val allQuizzes: LiveData<List<Quiz>> = quizDao.getAllQuizzes().asLiveData()
+    val allQuizNames: LiveData<List<String>> = quizDao.observeAllQuizNames()
+
 }

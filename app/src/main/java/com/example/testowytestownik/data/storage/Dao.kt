@@ -1,6 +1,7 @@
 package com.example.testowytestownik.data.storage
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Embedded
@@ -128,4 +129,8 @@ interface QuizDao {
         renameQuiz(oldName, newName)
         updateQuestionParentQuiz(oldName, newName)
     }
+
+    @Query("SELECT quizName FROM Quiz")
+    fun observeAllQuizNames(): LiveData<List<String>>
+
 }
