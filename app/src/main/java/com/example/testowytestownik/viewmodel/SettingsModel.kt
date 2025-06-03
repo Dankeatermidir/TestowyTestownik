@@ -5,12 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testowytestownik.data.model.FontSize
-import com.example.testowytestownik.data.model.SettingsState
-import com.example.testowytestownik.data.model.SettingsStore
+import com.example.testowytestownik.data.storage.FontSize
+import com.example.testowytestownik.data.storage.SettingsState
+import com.example.testowytestownik.data.storage.SettingsStore
 import kotlinx.coroutines.launch
 
-class SettingsManager(private val store: SettingsStore) : ViewModel() {
+class SettingsModel(private val store: SettingsStore) : ViewModel() {
     var uiState by mutableStateOf(SettingsState())
 
     init {

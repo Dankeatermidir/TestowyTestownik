@@ -1,4 +1,4 @@
-package com.example.testowytestownik.data.model
+package com.example.testowytestownik.data.storage
 
 
 data class SettingsState(
@@ -12,9 +12,14 @@ data class SettingsState(
     val hardcoreMode: Boolean = false
 )
 
-enum class FontSize(val scale: Float){
+enum class FontSize(val scale: Float) {
     Small(1.0f),
     Medium(1.2f),
-    Large(1.5f)
-}
+    Large(1.5f);
 
+    companion object {
+        fun fromName(name: String?): FontSize {
+            return values().firstOrNull { it.name == name } ?: Medium
+        }
+    }
+}

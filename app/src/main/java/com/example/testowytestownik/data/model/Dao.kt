@@ -1,52 +1,13 @@
-package com.example.testowytestownik.data.storage
+package com.example.testowytestownik.data.model
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Relation
 import androidx.room.Transaction
 
-@Entity
-data class Quiz(
-    @PrimaryKey val quizName: String,
-    val questionNum: Int,
-    val questionLeft: Int,
-    val wrongAnswers: Int,
-    val correctAnswers: Int,
-    val quizUri: String
-)
-
-@Entity(
-    foreignKeys = [ForeignKey(
-        entity = Quiz::class,
-        parentColumns = ["quizName"],
-        childColumns = ["parentQuiz"],
-        onDelete = ForeignKey.CASCADE
-    )]
-)
-data class Question(
-    @PrimaryKey val questionName: String,
-    val parentQuiz: String,
-    val repeatsLeft: Int
-)
-
-data class Quizzes(
-    @Embedded val quiz: Quiz,
-
-    @Relation(
-        parentColumn = "quizName",
-        entityColumn = "parentQuiz"
-    )
-    val questions: List<Question>
-)
 
 @Dao
 interface QuizDao {
@@ -70,6 +31,9 @@ interface QuizDao {
 
     @Query("UPDATE Quiz SET quizUri = :newUri WHERE quizName = :quizName")
     suspend fun updateUri(quizName: String, newUri: String)
+
+    @Query("SELECT questionLeft FROM Quiz WHERE quizName = :quizName")
+    suspend fun getQuestionLeft(quizName: String) : Int?
 
     @Query("UPDATE Quiz SET questionLeft = :newCount WHERE quizName = :quizName")
     suspend fun updateQuestionLeft(quizName: String, newCount: Int)
@@ -132,5 +96,19 @@ interface QuizDao {
 
     @Query("SELECT quizName FROM Quiz")
     fun observeAllQuizNames(): LiveData<List<String>>
+
+    @Query("""
+    UPDATE Question 
+    SET repeatsLeft = :newRepeats 
+    WHERE questionName = :questionName AND parentQuiz = :quizName
+    """)
+    suspend fun changeRepeatsLeft(quizName: String, questionName: String, newRepeats: Int)
+
+    @Query("""
+    SELECT repeatsLeft 
+    FROM Question 
+    WHERE questionName = :questionName AND parentQuiz = :quizName
+    """)
+    suspend fun getRepeatsLeft(quizName: String, questionName: String): Int?
 
 }

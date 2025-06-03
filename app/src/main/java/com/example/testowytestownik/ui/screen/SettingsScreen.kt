@@ -34,24 +34,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testowytestownik.R
-import com.example.testowytestownik.data.model.FontSize
+import com.example.testowytestownik.data.storage.FontSize
 import com.example.testowytestownik.ui.navigation.Screen
-import com.example.testowytestownik.viewmodel.SettingsManager
+import com.example.testowytestownik.viewmodel.SettingsModel
 
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    settingsManager: SettingsManager
+    settingsModel: SettingsModel
 ) {
-    val state = settingsManager.uiState
-    var darkTheme by remember { mutableStateOf(false) }
-    var autosave by remember { mutableStateOf(true) }
-    var statistics by remember { mutableStateOf(true) }
-    var hardcore by remember { mutableStateOf(false) }
-
-    var fontSize by remember { mutableStateOf(0.5f) }
+    val state = settingsModel.uiState
     Surface {
         Column(
             modifier = Modifier
@@ -90,7 +83,7 @@ fun SettingsScreen(
             Text("Font Size")
             DropdownMenuFontSize(
                 selected = state.fontSize,
-                onSelect = { settingsManager.updateFontSize(it) }
+                onSelect = { settingsModel.updateFontSize(it) }
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -99,7 +92,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = state.darkMode,
-                    onCheckedChange = {settingsManager.toogleDarkMode(it)}
+                    onCheckedChange = {settingsModel.toogleDarkMode(it)}
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -112,7 +105,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = state.autoSave,
-                    onCheckedChange = { settingsManager.toogleAutoSave(it) }
+                    onCheckedChange = { settingsModel.toogleAutoSave(it) }
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -120,7 +113,7 @@ fun SettingsScreen(
             Text("${stringResource(R.string.init_repeats)} ${state.initRepeats}")
             Slider(
                 value = state.initRepeats.toFloat(),
-                onValueChange = { settingsManager.updateInitRepeats(it.toInt()) },
+                onValueChange = { settingsModel.updateInitRepeats(it.toInt()) },
                 valueRange = 0f..10f
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -128,7 +121,7 @@ fun SettingsScreen(
             Text("${stringResource(R.string.extra_repeats)} ${state.extraRepeats}")
             Slider(
                 value = state.extraRepeats.toFloat(),
-                onValueChange = { settingsManager.updateExtraRepeats(it.toInt()) },
+                onValueChange = { settingsModel.updateExtraRepeats(it.toInt()) },
                 valueRange = 0f..10f
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -136,7 +129,7 @@ fun SettingsScreen(
             Text("${stringResource(R.string.max_repeats)} ${state.maxRepeats}")
             Slider(
                 value = state.maxRepeats.toFloat(),
-                onValueChange = { settingsManager.updateMaxRepeats(it.toInt()) },
+                onValueChange = { settingsModel.updateMaxRepeats(it.toInt()) },
                 valueRange = 0f..10f
             )
 
@@ -145,49 +138,9 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = state.hardcoreMode,
-                    onCheckedChange = { settingsManager.toogleHardcoreMode(it) }
+                    onCheckedChange = { settingsModel.toogleHardcoreMode(it) }
                 )
             }
-
-
-            /*
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("Tryb ciemny")
-                Switch(
-                    checked = darkTheme,
-                    onCheckedChange = { darkTheme = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("Autozapis")
-                Switch(
-                    checked = autosave,
-                    onCheckedChange = { autosave = it }
-                )
-            }
-            Column {
-                Text("Rozmiar czcionki")
-                Slider(
-                    value = fontSize,
-                    onValueChange = { fontSize = it }
-                )
-                Text(text = kotlin.math.floor((fontSize*24+5)).toString())
-            }
-
-             */
         }
     }
 }

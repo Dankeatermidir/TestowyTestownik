@@ -4,22 +4,28 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.testowytestownik.viewmodel.FileManager
 import com.example.testowytestownik.ui.screen.ManagementScreen
 import com.example.testowytestownik.ui.screen.InfoScreen
 import com.example.testowytestownik.ui.screen.MainMenu
 import com.example.testowytestownik.ui.screen.ManualScreen
 import com.example.testowytestownik.ui.screen.SettingsScreen
 import com.example.testowytestownik.ui.screen.StatisticsScreen
-import com.example.testowytestownik.viewmodel.DatabaseManager
-import com.example.testowytestownik.viewmodel.SettingsManager
+import com.example.testowytestownik.viewmodel.InfoModel
+import com.example.testowytestownik.viewmodel.ManagementModel
+import com.example.testowytestownik.viewmodel.ManualModel
+import com.example.testowytestownik.viewmodel.QuizModel
+import com.example.testowytestownik.viewmodel.SettingsModel
+import com.example.testowytestownik.viewmodel.StatisticsModel
 
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
-    fileManager: FileManager,
-    settingsManager: SettingsManager,
-    databaseManager: DatabaseManager
+    managementModel: ManagementModel,
+    settingsModel: SettingsModel,
+    quizModel: QuizModel,
+    infoModel: InfoModel,
+    statisticsModel: StatisticsModel,
+    manualModel: ManualModel
 ) {
     NavHost (
         navController = navController,
@@ -48,12 +54,12 @@ fun SetupNavGraph(
         composable(
             route = Screen.Sett.route
         ){
-            SettingsScreen(navController, settingsManager)
+            SettingsScreen(navController, settingsModel)
         }
         composable(
             route = Screen.Mgmt.route
         ){
-            ManagementScreen(navController, fileManager, databaseManager, settingsManager,"./")
+            ManagementScreen(navController, managementModel,"./")
         }
     }
 }

@@ -35,6 +35,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,28 +51,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.navigation.NavController
 import com.example.testowytestownik.R
+import com.example.testowytestownik.data.storage.dataStore
 import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
-import com.example.testowytestownik.ui.components.MenuButton
 import com.example.testowytestownik.ui.navigation.Screen
-import com.example.testowytestownik.viewmodel.DatabaseManager
-import com.example.testowytestownik.viewmodel.FileManager
-import com.example.testowytestownik.viewmodel.SettingsManager
-import kotlinx.coroutines.launch
+import com.example.testowytestownik.viewmodel.ManagementModel
+import kotlinx.coroutines.flow.map
 import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ManagementScreen(
     navController : NavController,
-    fileManager: FileManager,
-    databaseManager: DatabaseManager,
-    settingsManager: SettingsManager,
+    managementModel: ManagementModel,
     folderName: String = "./" // optional: browse a subfolder
 ) {
     val context = LocalContext.current
+
+    val initRepeatsFlow = context.dataStore.data
+        .map { it[intPreferencesKey("initial_repeats")] ?: 2 }
+    val initRepeats by initRepeatsFlow.collectAsState(initial = 2)
 
     val permissionsToRequest = arrayOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -92,7 +93,7 @@ fun ManagementScreen(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { perms ->
             permissionsToRequest.forEach { permission ->
-                fileManager.onPermissionResult(
+                managementModel.onPermissionResult(
                     permission = permission,
                     isGranted = perms[permission] == true
                 )
@@ -113,7 +114,7 @@ fun ManagementScreen(
     }
     updateFiles()
 
-    databaseManager.controlledUpdate(files, settingsManager.uiState.initRepeats)
+    managementModel.controlledUpdate(files,initRepeats)
 
 
 
@@ -197,7 +198,7 @@ fun ManagementScreen(
                         PermissionResultLauncher.launch(permissionsToRequest)
                         getUserFolder.launch(null)
                         updateFiles()
-                        databaseManager.viewModelScope.launch { databaseManager.updateDataBases(files,settingsManager.uiState.initRepeats) }
+                        managementModel.updateDataBases(files,initRepeats)
                     }
 
                 ) {
@@ -215,8 +216,8 @@ fun ManagementScreen(
                         text = { Text("Delete") },
                         onClick = {
                             showMenu = false
-                            fileManager.deleteFolder(folder)
-                            databaseManager.deleteQuizByName(folder.name)
+                            managementModel.deleteFolder(folder)
+                            managementModel.deleteQuizByName(folder.name)
                             updateFiles()
                         }
                     )
@@ -242,8 +243,8 @@ fun ManagementScreen(
                     },
                     confirmButton = {
                         TextButton(onClick = {
-                            fileManager.renameFolder(selectedFolder!!, renameText)
-                            databaseManager.renameQuiz(selectedFolder!!.name, renameText)
+                            managementModel.renameFolder(selectedFolder!!, renameText)
+                            managementModel.renameQuiz(selectedFolder!!.name, renameText)
                             showRenameDialog = false
                             updateFiles()
                         }) {

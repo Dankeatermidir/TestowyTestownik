@@ -1,27 +1,25 @@
 package com.example.testowytestownik.ui.activity
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import com.example.testowytestownik.ui.theme.TestowyTestownikTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.testowytestownik.data.model.SettingsStore
-import com.example.testowytestownik.data.model.dataStore
+import com.example.testowytestownik.data.storage.SettingsStore
 import com.example.testowytestownik.ui.navigation.SetupNavGraph
-import com.example.testowytestownik.viewmodel.FileManager
-import com.example.testowytestownik.viewmodel.SettingsManager
-import androidx.compose.runtime.collectAsState
+import com.example.testowytestownik.viewmodel.SettingsModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.room.Room
-import com.example.testowytestownik.data.storage.QuizDao
-import com.example.testowytestownik.data.storage.QuizDatabase
-import com.example.testowytestownik.viewmodel.DatabaseManager
-import com.example.testowytestownik.viewmodel.QuizViewModelFactory
+import com.example.testowytestownik.data.model.QuizDatabase
+import com.example.testowytestownik.viewmodel.InfoModel
+import com.example.testowytestownik.viewmodel.ManagementModel
+import com.example.testowytestownik.viewmodel.ManagementModelFactory
+import com.example.testowytestownik.viewmodel.ManualModel
+import com.example.testowytestownik.viewmodel.QuizModel
+import com.example.testowytestownik.viewmodel.QuizModelFactory
+import com.example.testowytestownik.viewmodel.StatisticsModel
+import com.example.testowytestownik.viewmodel.StatisticsModelFactory
 
 
 class MainActivity : ComponentActivity() {
@@ -30,25 +28,26 @@ class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val fileManager = FileManager()
         val store = SettingsStore(applicationContext)
-        val settingsManager = SettingsManager(store)
-
+        val settingsModel = SettingsModel(store)
+        val infoModel = InfoModel()
+        val manualModel = ManualModel()
         val db = Room.databaseBuilder(
             applicationContext,
             QuizDatabase::class.java, "quiz-db"
         ).build()
 
         val quizDao = db.quizDao()
-        val quizViewModelFactory = QuizViewModelFactory(quizDao)
-        val databaseManager = ViewModelProvider(this, quizViewModelFactory)[DatabaseManager::class.java]
-
+        val managementModelFactory = ManagementModelFactory(quizDao)
+        val managementModel = ViewModelProvider(this, managementModelFactory)[ManagementModel::class.java]
+        val quizModelFactory = QuizModelFactory(quizDao)
+        val quizModel = ViewModelProvider(this, quizModelFactory)[QuizModel::class.java]
+        val statisticsModelFactory = StatisticsModelFactory(quizDao)
+        val statisticsModel = ViewModelProvider(this, statisticsModelFactory)[StatisticsModel::class.java]
         setContent {
-            TestowyTestownikTheme(
-                settingsManager
-            ) {
+            TestowyTestownikTheme {
                 navController = rememberNavController()
-                SetupNavGraph(navController = navController, fileManager = fileManager, databaseManager = databaseManager, settingsManager = settingsManager)
+                SetupNavGraph(navController = navController, managementModel = managementModel, settingsModel = settingsModel, quizModel = quizModel, infoModel = infoModel, manualModel = manualModel, statisticsModel = statisticsModel)
             }
         }
     }
