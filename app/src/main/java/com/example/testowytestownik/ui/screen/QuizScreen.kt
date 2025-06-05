@@ -100,7 +100,6 @@ fun QuizScreen(
                             .fillMaxWidth() )
                     Text(
                         text="Nie otwierałeś wcześniej żadnego testownika.",
-                        modifier = Modifier.scale(1.25f),
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center )
                     Spacer(modifier = Modifier.size(10.dp))
