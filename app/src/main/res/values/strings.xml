@@ -5,12 +5,12 @@
     <string name="settings">Anwendungseinstellungen</string>
     <string name="stats">Antwortstatistiken</string>
     <string name="open_last">Öffne die letzte</string>
-    <string name="open_new">Testowniken</string>
+    <string name="open_new">Deine Testowniken</string>
     <string name="intruct">Betriebsanleitung</string>
     <string name="info">Anwendunginformationen</string>
     <string name="back_button_desc">zurück</string>
-    <string name="testo_missing">keine testoniken</string>
-    <string name="add">gib testownik</string>
+    <string name="testo_missing">keine Testowniken</string>
+    <string name="add">gib Testownik</string>
     <string name="rename">TODO</string>
     <string name="darkmode">TODO</string>
     <string name="fontsize">TODO</string>
@@ -19,4 +19,9 @@
     <string name="extra_repeats">TODO</string>
     <string name="hardcoremode">jebenmachen</string>
     <string name="max_repeats">TODO</string>
+    <string name="delete">Testownik streichen</string>
+    <string name="new_name">TODO</string>
+    <string name="accept">OK</string>
+    <string name="cancel">zuruck</string>
+    <string name="next">TODO</string>
 </resources>

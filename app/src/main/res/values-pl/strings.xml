@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">testowy testownik</string>
-    <string name="main_menu">Lepszy Testownik</string>
+    <string name="main_menu">Testowy Testownik</string>
     <string name="manual">Instrukcja</string>
     <string name="settings">Ustawienia</string>
     <string name="stats">Statystyki</string>
@@ -20,4 +20,9 @@
     <string name="extra_repeats">Powtórzenia przy błędnej odpowiedzi</string>
     <string name="hardcoremode">Tryb Hardcore</string>
     <string name="max_repeats">Maksymalna liczba powtórzeń</string>
+    <string name="delete">Usuń testownik</string>
+    <string name="new_name">Nowa nazwa</string>
+    <string name="accept">Zaakceptuj</string>
+    <string name="cancel">Anuluj</string>
+    <string name="next">Dalej</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">testownik: test</string>
-    <string name="main_menu">Better Testownik</string>
+    <string name="main_menu">Test Testownik</string>
     <string name="manual">Manual</string>
     <string name="settings">Settings</string>
     <string name="stats">Statistics</string>
@@ -10,7 +10,7 @@
     <string name="intruct">Manual</string>
     <string name="info">Info</string>
     <string name="back_button_desc">back</string>
-    <string name="testo_missing">No testowniks found</string>
+    <string name="testo_missing">No Testowniks found</string>
     <string name="add">Add new Testownik</string>
     <string name="rename">Rename Testownik</string>
     <string name="darkmode">Dark Mode</string>
@@ -20,4 +20,9 @@
     <string name="extra_repeats">Repeats on wrong answer</string>
     <string name="hardcoremode">Hardcore Mode</string>
     <string name="max_repeats">Maximum repeats number</string>
+    <string name="delete">Delete Testownik</string>
+    <string name="new_name">New name</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
+    <string name="next">Next</string>
 </resources>
