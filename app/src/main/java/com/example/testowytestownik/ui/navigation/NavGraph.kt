@@ -10,6 +10,7 @@ import com.example.testowytestownik.ui.screen.MainMenu
 import com.example.testowytestownik.ui.screen.ManualScreen
 import com.example.testowytestownik.ui.screen.SettingsScreen
 import com.example.testowytestownik.ui.screen.StatisticsScreen
+import com.example.testowytestownik.ui.screen.QuizScreen
 import com.example.testowytestownik.viewmodel.InfoModel
 import com.example.testowytestownik.viewmodel.ManagementModel
 import com.example.testowytestownik.viewmodel.ManualModel
@@ -31,35 +32,40 @@ fun SetupNavGraph(
         navController = navController,
         startDestination = Screen.Menu.route
     ){
-        composable( //navigate to Main Menu
+        composable(
             route = Screen.Menu.route
         ){
             MainMenu(navController)
         }
-        composable( //navigate to Information Screen
+        composable(
             route = Screen.Info.route
         ){
             InfoScreen(navController)
         }
-        composable( //navigate to Manual Screen
+        composable(
             route = Screen.Inst.route
         ){
             ManualScreen(navController)
         }
-        composable( //navigate to Statistics Screen
+        composable(
             route = Screen.Stat.route
         ){
             StatisticsScreen(navController)
         }
-        composable( //navigate to Settings Screen
+        composable(
             route = Screen.Sett.route
         ){
             SettingsScreen(navController, settingsModel)
         }
-        composable( //navigate to Quiz Management Screen
+        composable(
             route = Screen.Mgmt.route
         ){
             ManagementScreen(navController, managementModel,"./")
+        }
+        composable(
+            route = Screen.Quiz.route
+        ){
+            QuizScreen(navController)
         }
     }
 }
