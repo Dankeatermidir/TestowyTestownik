@@ -10,6 +10,13 @@ import com.example.testowytestownik.data.storage.QuizState
 import com.example.testowytestownik.data.storage.SettingsState
 import kotlinx.coroutines.launch
 
+
+data class QueFile(
+    val question: String,
+    val typeCorrect: String,
+    val answers: List<String>
+)
+
 class QuizModel(private val quizDao: QuizDao) : ViewModel(){
 
     var quizState by mutableStateOf(QuizState())
@@ -54,6 +61,55 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
+    fun getQuestion(quizName: String, questionName: String): QueFile
+    {
+        return QueFile("Rozważmy układ równań różniczkowych du/dt. = Au. Ile wynoszą wartości własne macierzy A, gdy A= [1 2 ; 1 2]","X1010",listOf("a. 0 oraz (-3)", "b. 1 oraz 2", "c. 0 oraz (3)", "d. 2 oraz 2"))
+    }
+
+    fun drawQuestion(quizName: String): String
+    {
+        var que=""
+        viewModelScope.launch {
+            val answers=quizDao.getQuestionsForQuiz(quizName)
+            var ansRepeats:Int?=0
+            while(ansRepeats==0)
+            {
+                que=answers.random().questionName
+                ansRepeats=quizDao.getRepeatsLeft(quizName,que)
+            }
+        }
+        return que
+    }
+
+
+    fun correctAnswersList(que:QueFile): List<Int>
+    {
+        val correct = mutableListOf<Int>()
+        val correctStr = que.typeCorrect.substring(1)
+        for(i in 0..correctStr.length)
+        {
+            if(correctStr[i]=='1')
+            {
+                correct.add(i)
+            }
+        }
+        return correct
+    }
+
+    fun isPicInQue(quizName: String, questionName: String): Boolean
+    {
+        return false
+    }
+
+    fun isPicInAns(quizName: String, questionName: String): Boolean
+    {
+        return false
+    }
+
+    fun isY(quizName: String, questionName: String): Boolean
+    {
+        return false
+    }
 
 
 }

@@ -126,12 +126,11 @@ fun QuizScreen(
                             .fillMaxWidth() )
                     return@Box
                 }
-                val test = listOf("Rozważmy układ równań różniczkowych du/dt. = Au. Ile wynoszą wartości własne macierzy A, gdy A= [1 2 ; 1 2]","X1010","a. 0 oraz (-3)", "b. 1 oraz 2", "c. 0 oraz (3)", "d. 2 oraz 2")
-                val onlyAnswers = test.subList(2, test.size)
-                if("[img]" !in test[0])
+                val test = quizModel.getQuestion(state.lastQuiz,"")
+                if("[img]" !in test.question)
                 {
                     Text(
-                        text = test[0],
+                        text = test.question,
                         fontWeight = FontWeight.Bold )
                 }
                 LazyColumn(
@@ -140,9 +139,9 @@ fun QuizScreen(
                         .padding(horizontal = 10.dp) )
                 {
 
-                    if("[img]" !in onlyAnswers)
+                    if("[img]" !in test.answers)
                     {
-                        items(onlyAnswers.size)
+                        items(test.answers.size)
                         { i ->
                             //var itemOffset by remember { mutableStateOf(Offset.Zero) }
                             ElevatedButton(
@@ -158,8 +157,8 @@ fun QuizScreen(
                                     }
                                 } )
                             {
-                                Icon(Icons.Rounded.Check, onlyAnswers[i])
-                                Text(text = onlyAnswers[i])
+                                Icon(Icons.Rounded.Check, test.answers[i])
+                                Text(text = test.answers[i])
                             }
                         }
                     }
