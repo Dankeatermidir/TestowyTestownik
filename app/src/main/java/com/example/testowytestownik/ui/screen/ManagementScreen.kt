@@ -1,6 +1,5 @@
 package com.example.testowytestownik.ui.screen
 
-import android.Manifest
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -61,6 +60,12 @@ import com.example.testowytestownik.viewmodel.ManagementModel
 import kotlinx.coroutines.flow.map
 import java.io.File
 
+/*
+Management screen is used to manage Quizzes.
+Load them into internal storage and insert save info into database,
+Rename and Delete Quizzes.
+ */
+
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ManagementScreen(
@@ -69,16 +74,32 @@ fun ManagementScreen(
     folderName: String = "./" // optional: browse a subfolder
 ) {
     val context = LocalContext.current
+    var selectedFolder by remember { mutableStateOf<File?>(null) }
+    var showMenu by remember { mutableStateOf(false) }
+    var menuOffset by remember { mutableStateOf(Offset.Zero) }
+    var showRenameDialog by remember { mutableStateOf(false) }
+    var renameText by remember { mutableStateOf("") }
+    var files by remember { mutableStateOf<List<File>>(emptyList()) }
 
+    //Load Initial number of repeats from user preferences
     val initRepeatsFlow = context.dataStore.data
         .map { it[intPreferencesKey("initial_repeats")] ?: 2 }
     val initRepeats by initRepeatsFlow.collectAsState(initial = 2)
 
-    val permissionsToRequest = arrayOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.READ_EXTERNAL_STORAGE
+    //Ask for permissions
+    val permissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { perms ->
+            managementModel.permissionsToRequest.forEach { permission ->
+                managementModel.onPermissionResult(
+                    permission = permission,
+                    isGranted = perms[permission] == true
+                )
+            }
+        }
     )
 
+    // Pick folder with file manager and copy it to app private files
     val getUserFolder = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree()
     ) { uri ->
@@ -89,24 +110,9 @@ fun ManagementScreen(
             copyFilesToInternalStorage(context, it)
         }
     }
-    val PermissionResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = { perms ->
-            permissionsToRequest.forEach { permission ->
-                managementModel.onPermissionResult(
-                    permission = permission,
-                    isGranted = perms[permission] == true
-                )
-            }
-        }
-    )
-    var selectedFolder by remember { mutableStateOf<File?>(null) }
-    var showMenu by remember { mutableStateOf(false) }
-    var menuOffset by remember { mutableStateOf(Offset.Zero) }
-    var showRenameDialog by remember { mutableStateOf(false) }
-    var renameText by remember { mutableStateOf("") }
-    var files by remember { mutableStateOf<List<File>>(emptyList()) }
 
+
+    // Scan files in internal storage
     fun updateFiles() {
         val dir = File(context.filesDir, folderName)
         if (!dir.exists()) dir.mkdirs()
@@ -114,6 +120,7 @@ fun ManagementScreen(
     }
     updateFiles()
 
+    // Synchronize DB with files
     managementModel.controlledUpdate(files,initRepeats)
 
 
@@ -121,7 +128,7 @@ fun ManagementScreen(
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Row(
+                Row( // Title
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
@@ -148,10 +155,11 @@ fun ManagementScreen(
                     )
                     Spacer(modifier = Modifier.size(38.dp))
                 }
-                if (files.isEmpty()) {
+                if (files.isEmpty()) { //if no files in internal storage - display info
                     Text(stringResource(R.string.testo_missing))
-                } else {
-                    LazyColumn(
+                }
+                else {
+                    LazyColumn( //Display Scrollable list of Quiz folders
                         modifier = Modifier
                             .weight(1f)
                             .padding(horizontal = 10.dp)
@@ -164,11 +172,11 @@ fun ManagementScreen(
                                     .padding(vertical = 4.dp)
                                     .onGloballyPositioned { layoutCoordinates ->
                                         val pos = layoutCoordinates.localToWindow(Offset.Zero)
-                                        itemOffset = pos / 3f
+                                        itemOffset = pos / 3f //check card position to display popupMenu on right height
                                     }
                                     .combinedClickable(
-                                        onClick = {},//navController.navigate(route = Screen.Quiz.route)
-                                        onLongClick = {
+                                        onClick = {},//navController.navigate(route = Screen.Quiz.route) //navigate to quiz
+                                        onLongClick = { // display popupMenu on long press
                                             selectedFolder = files[file]
                                             menuOffset = itemOffset
                                             showMenu = true
@@ -189,15 +197,15 @@ fun ManagementScreen(
                         }
                     }
                 }
-                ElevatedButton(
+                ElevatedButton( // Add new folder on click
                     modifier = Modifier
                         .padding(horizontal= 10.dp, vertical = 5.dp)
                         .fillMaxWidth(1f)
                         .height(75.dp),
                     onClick = {
-                        PermissionResultLauncher.launch(permissionsToRequest)
+                        permissionResultLauncher.launch(managementModel.permissionsToRequest)
                         getUserFolder.launch(null)
-                        updateFiles()
+                        updateFiles() //update files list and synchronize DB after adding folder.
                         managementModel.updateDataBases(files,initRepeats)
                     }
 
@@ -207,12 +215,12 @@ fun ManagementScreen(
                 }
             }
             selectedFolder?.let { folder ->
-                DropdownMenu(
+                DropdownMenu( //popupMenu
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
                     offset = DpOffset(menuOffset.x.dp, menuOffset.y.dp)
                 ) {
-                    DropdownMenuItem(
+                    DropdownMenuItem(// Delete quiz from storage and DB
                         text = { Text("Delete") },
                         onClick = {
                             showMenu = false
@@ -221,7 +229,7 @@ fun ManagementScreen(
                             updateFiles()
                         }
                     )
-                    DropdownMenuItem(
+                    DropdownMenuItem(// Start rename dialog popup
                         text = { Text("Rename") },
                         onClick = {
                             showMenu = false
@@ -232,7 +240,7 @@ fun ManagementScreen(
                 }
             }
             if (showRenameDialog && selectedFolder != null) {
-                AlertDialog(
+                AlertDialog( // rename dialog popup
                     onDismissRequest = { showRenameDialog = false },
                     text = {
                         OutlinedTextField(
@@ -242,7 +250,7 @@ fun ManagementScreen(
                         )
                     },
                     confirmButton = {
-                        TextButton(onClick = {
+                        TextButton(onClick = { //rename folder and entry in DB
                             managementModel.renameFolder(selectedFolder!!, renameText)
                             managementModel.renameQuiz(selectedFolder!!.name, renameText)
                             showRenameDialog = false
@@ -261,6 +269,3 @@ fun ManagementScreen(
         }
     }
 }
-
-
-

@@ -23,31 +23,37 @@ import com.example.testowytestownik.viewmodel.StatisticsModelFactory
 
 
 class MainActivity : ComponentActivity() {
-
-
     lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val store = SettingsStore(applicationContext)
-        val settingsModel = SettingsModel(store)
-        val infoModel = InfoModel()
-        val manualModel = ManualModel()
+        //init DB
         val db = Room.databaseBuilder(
             applicationContext,
             QuizDatabase::class.java, "quiz-db"
         ).build()
-
         val quizDao = db.quizDao()
+        //init viewModels
         val managementModelFactory = ManagementModelFactory(quizDao)
         val managementModel = ViewModelProvider(this, managementModelFactory)[ManagementModel::class.java]
         val quizModelFactory = QuizModelFactory(quizDao)
         val quizModel = ViewModelProvider(this, quizModelFactory)[QuizModel::class.java]
         val statisticsModelFactory = StatisticsModelFactory(quizDao)
         val statisticsModel = ViewModelProvider(this, statisticsModelFactory)[StatisticsModel::class.java]
+        val settingsModel = SettingsModel(store)
+        val infoModel = InfoModel()
+        val manualModel = ManualModel()
         setContent {
             TestowyTestownikTheme {
                 navController = rememberNavController()
-                SetupNavGraph(navController = navController, managementModel = managementModel, settingsModel = settingsModel, quizModel = quizModel, infoModel = infoModel, manualModel = manualModel, statisticsModel = statisticsModel)
+                SetupNavGraph(navController = navController,
+                    managementModel = managementModel,
+                    settingsModel = settingsModel,
+                    quizModel = quizModel,
+                    infoModel = infoModel,
+                    manualModel = manualModel,
+                    statisticsModel = statisticsModel
+                )
             }
         }
     }

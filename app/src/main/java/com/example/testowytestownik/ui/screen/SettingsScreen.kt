@@ -39,6 +39,9 @@ import com.example.testowytestownik.data.storage.FontSize
 import com.example.testowytestownik.ui.navigation.Screen
 import com.example.testowytestownik.viewmodel.SettingsModel
 
+/*
+Settings screen is used to modify app settings, and save them as preferences
+ */
 @Composable
 fun SettingsScreen(
     navController: NavController,
@@ -145,6 +148,7 @@ fun SettingsScreen(
     }
 }
 
+//Menu for choosing font size preset
 @Composable
 fun DropdownMenuFontSize(
     selected: FontSize,

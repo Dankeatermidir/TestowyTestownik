@@ -1,5 +1,6 @@
 package com.example.testowytestownik.viewmodel
 
+import android.Manifest
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,17 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
+
+    /*
+    Managing permissions, request storage permissions and store result.
+    Request only older API permissions, because newer API doesn't need them for picker event.
+     */
     val PermissionDialogQueue = mutableStateListOf<String>()
+
+    val permissionsToRequest = arrayOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    )
 
     fun onPermissionResult(
         permission: String,
@@ -20,6 +31,7 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
             PermissionDialogQueue.add(permission)
         }
     }
+
 
     fun deleteFolder(folder: File) {
         viewModelScope.launch {
@@ -36,6 +48,7 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
+    // make sure DB is synced only once one start, unless called directly
     private var wasUpdated = false
     fun controlledUpdate(files: List<File>, defaultRepeats: Int) {
         viewModelScope.launch {
@@ -64,17 +77,19 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
+    // Synchronize DB with files in internal storage
     fun updateDataBases(files: List<File>, defaultRepeats: Int){
         viewModelScope.launch {
             val names = quizDao.getAllQuizNames().toMutableList()
             for (dir in files) {
                 if (!dir.isDirectory) continue
-                if (dir.name in names){
+                if (dir.name in names){ //skip if Quiz is already in DB
                     names.remove(dir.name)
                     continue
                 }
 
                 val quizName = dir.name
+                //get name of each file and ensure it's in right extension
                 val txtFiles = dir.listFiles() {file -> file.extension.lowercase() == "txt"} ?: continue
 
                 val questions = txtFiles.map{file ->
@@ -97,7 +112,7 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
                 insertQuizWithQuestions(quiz, questions)
             }
             if (names.size != 0) {
-                for (name in names){
+                for (name in names){ //if folder is no longer in internal storage - delete entry
                     quizDao.deleteQuizByName(name)
                 }
             }

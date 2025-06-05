@@ -31,32 +31,32 @@ fun SetupNavGraph(
         navController = navController,
         startDestination = Screen.Menu.route
     ){
-        composable(
+        composable( //navigate to Main Menu
             route = Screen.Menu.route
         ){
             MainMenu(navController)
         }
-        composable(
+        composable( //navigate to Information Screen
             route = Screen.Info.route
         ){
             InfoScreen(navController)
         }
-        composable(
+        composable( //navigate to Manual Screen
             route = Screen.Inst.route
         ){
             ManualScreen(navController)
         }
-        composable(
+        composable( //navigate to Statistics Screen
             route = Screen.Stat.route
         ){
             StatisticsScreen(navController)
         }
-        composable(
+        composable( //navigate to Settings Screen
             route = Screen.Sett.route
         ){
             SettingsScreen(navController, settingsModel)
         }
-        composable(
+        composable( //navigate to Quiz Management Screen
             route = Screen.Mgmt.route
         ){
             ManagementScreen(navController, managementModel,"./")

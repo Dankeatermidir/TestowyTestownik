@@ -7,11 +7,12 @@ import java.io.File
 import java.io.FileOutputStream
 import kotlin.random.Random
 
+//Recursively copy folder with all it's contents to internal storage
 fun copyFilesToInternalStorage(context: Context, uri: Uri) {
     val contentResolver = context.contentResolver
     val pickedFolder = DocumentFile.fromTreeUri(context, uri)
     var folderName = Random.nextInt(0,999999999).toString()
-    if (pickedFolder != null) {
+    if (pickedFolder.name != null) { //if folder name is null, name is random numbers
         folderName = pickedFolder.name
     }
     val targetDir = File(context.filesDir, folderName).apply { mkdirs() }

@@ -11,15 +11,19 @@ import com.example.testowytestownik.data.storage.SettingsStore
 import kotlinx.coroutines.launch
 
 class SettingsModel(private val store: SettingsStore) : ViewModel() {
+
+    // settings state to be operated on
     var uiState by mutableStateOf(SettingsState())
 
-    init {
+    init { // load Preferences on init
         viewModelScope.launch {
             store.loadSettings().collect { loadedSettings ->
                 uiState = loadedSettings
             }
         }
     }
+
+    //Just edit Preference functions
     fun toogleDarkMode(enabled: Boolean) {
         uiState = uiState.copy(darkMode = enabled)
         viewModelScope.launch {

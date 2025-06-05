@@ -33,14 +33,14 @@ import com.example.testowytestownik.R
 import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
 import com.example.testowytestownik.ui.navigation.Screen
 
+/*
+Just a screen for main menu, only thing it does is navigate through other screens.
+ */
+
 @Composable
 fun MainMenu(
     navController: NavController,
 ) {
-    val context = LocalContext.current
-
-
-
     Surface{
         Column (
             modifier = Modifier
@@ -86,17 +86,3 @@ fun MainMenu(
         }
     }
 }
-
-
-
-
-
-
-
-/*
-@Preview
-@Composable
-fun PreviewMenu() {
-    MainMenu()
-}
-*/
