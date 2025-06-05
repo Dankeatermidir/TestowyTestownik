@@ -57,6 +57,7 @@ import com.example.testowytestownik.data.storage.dataStore
 import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
 import com.example.testowytestownik.ui.navigation.Screen
 import com.example.testowytestownik.viewmodel.ManagementModel
+import com.example.testowytestownik.viewmodel.QuizModel
 import kotlinx.coroutines.flow.map
 import java.io.File
 
@@ -71,6 +72,7 @@ Rename and Delete Quizzes.
 fun ManagementScreen(
     navController : NavController,
     managementModel: ManagementModel,
+    quizModel: QuizModel,
     folderName: String = "./" // optional: browse a subfolder
 ) {
     val context = LocalContext.current
@@ -80,6 +82,7 @@ fun ManagementScreen(
     var showRenameDialog by remember { mutableStateOf(false) }
     var renameText by remember { mutableStateOf("") }
     var files by remember { mutableStateOf<List<File>>(emptyList()) }
+    var quizState = quizModel.quizState
 
     //Load Initial number of repeats from user preferences
     val initRepeatsFlow = context.dataStore.data
@@ -175,7 +178,14 @@ fun ManagementScreen(
                                         itemOffset = pos / 3f //check card position to display popupMenu on right height
                                     }
                                     .combinedClickable(
-                                        onClick = {},//navController.navigate(route = Screen.Quiz.route) //navigate to quiz
+                                        onClick = {
+                                            quizState.lastQuiz=files[file].name
+                                            navController.navigate(route = Screen.Quiz.route){
+                                                popUpTo(Screen.Menu.route) {
+                                                    inclusive = false
+                                                }
+                                            }
+                                        },//navController.navigate(route = Screen.Quiz.route) //navigate to quiz
                                         onLongClick = { // display popupMenu on long press
                                             selectedFolder = files[file]
                                             menuOffset = itemOffset

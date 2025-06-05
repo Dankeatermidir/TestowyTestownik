@@ -1,12 +1,16 @@
 package com.example.testowytestownik.viewmodel
 
 import android.Manifest
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testowytestownik.data.model.Question
 import com.example.testowytestownik.data.model.Quiz
 import com.example.testowytestownik.data.model.QuizDao
+import com.example.testowytestownik.data.storage.QuizState
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -16,7 +20,9 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
     Managing permissions, request storage permissions and store result.
     Request only older API permissions, because newer API doesn't need them for picker event.
      */
+    var quizState by mutableStateOf(QuizState())
     val PermissionDialogQueue = mutableStateListOf<String>()
+
 
     val permissionsToRequest = arrayOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
