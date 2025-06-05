@@ -1,11 +1,18 @@
 package com.example.testowytestownik.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testowytestownik.data.model.QuizDao
+import com.example.testowytestownik.data.storage.QuizState
+import com.example.testowytestownik.data.storage.SettingsState
 import kotlinx.coroutines.launch
 
 class QuizModel(private val quizDao: QuizDao) : ViewModel(){
+
+    var quizState by mutableStateOf(QuizState())
 
     fun resetQuiz(name: String, initRepeats: Int){
         viewModelScope.launch {
