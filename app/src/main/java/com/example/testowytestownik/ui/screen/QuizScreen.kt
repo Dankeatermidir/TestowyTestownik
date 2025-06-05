@@ -110,9 +110,11 @@ fun QuizScreen(
                             .height(75.dp),
                         onClick =
                         {
-                            navController.navigate(route = Screen.Mgmt.route)
-                            {
-                                popUpTo(Screen.Mgmt.route)
+                            navController.navigate(Screen.Mgmt.route) {
+                                popUpTo(Screen.Menu.route) {
+                                    inclusive = false // saves Menu
+                                }
+                                launchSingleTop = true // in advance
                             }
                         } )
                     {
