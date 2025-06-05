@@ -26,6 +26,7 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 
 import com.example.testowytestownik.ui.components.MenuButton
@@ -33,14 +34,14 @@ import com.example.testowytestownik.R
 import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
 import com.example.testowytestownik.ui.navigation.Screen
 
-/*
-Just a screen for main menu, only thing it does is navigate through other screens.
- */
-
 @Composable
 fun MainMenu(
     navController: NavController,
 ) {
+    val context = LocalContext.current
+
+
+
     Surface{
         Column (
             modifier = Modifier
@@ -52,7 +53,8 @@ fun MainMenu(
             Text(
                 text = stringResource(R.string.main_menu),
                 fontSize = 30.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 30.dp)
             )
             MenuButton(
                 stringResource(R.string.settings),
@@ -65,15 +67,11 @@ fun MainMenu(
             MenuButton(
                 stringResource(R.string.open_last),
                 Icons.Default.PlayArrow
-            ) {
-                //navController.navigate(route = Screen.Quiz.route)
-            }
+            ) { navController.navigate(route = Screen.Quiz.route) }
             MenuButton(
                 stringResource(R.string.open_new),
                 Icons.Filled.Create
-            ) {
-                navController.navigate(route = Screen.Mgmt.route)
-            }
+            ) { navController.navigate(route = Screen.Mgmt.route) }
             MenuButton(
                 stringResource(R.string.intruct),
                 Icons.Default.MoreVert
@@ -81,8 +79,21 @@ fun MainMenu(
             MenuButton(
                 stringResource(R.string.info),
                 Icons.Default.Info,
-            ) {
-                navController.navigate(route = Screen.Info.route) }
+            ) { navController.navigate(route = Screen.Info.route) }
         }
     }
 }
+
+
+
+
+
+
+
+/*
+@Preview
+@Composable
+fun PreviewMenu() {
+    MainMenu()
+}
+*/
