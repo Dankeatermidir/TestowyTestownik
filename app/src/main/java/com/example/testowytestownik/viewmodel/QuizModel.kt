@@ -66,7 +66,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         return QueFile("Rozważmy układ równań różniczkowych du/dt. = Au. Ile wynoszą wartości własne macierzy A, gdy A= [1 2 ; 1 2]","X1010",listOf("a. 0 oraz (-3)", "b. 1 oraz 2", "c. 0 oraz (3)", "d. 2 oraz 2"))
     }
 
-    fun drawQuestion(quizName: String): String
+    fun drewQuestion(quizName: String): String
     {
         var que=""
         viewModelScope.launch {
@@ -85,12 +85,12 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
     fun correctAnswersList(que:QueFile): List<Int>
     {
         val correct = mutableListOf<Int>()
-        val correctStr = que.typeCorrect.substring(1)
-        for(i in 0..correctStr.length)
+        val end=que.typeCorrect.length-1
+        for(i in 1..end)
         {
-            if(correctStr[i]=='1')
+            if(que.typeCorrect[i]=='1')
             {
-                correct.add(i)
+                correct.add(i-1)
             }
         }
         return correct
