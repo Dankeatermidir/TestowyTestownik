@@ -49,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.colorspace.ColorSpace
 import androidx.compose.ui.graphics.colorspace.ColorSpaces
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -65,12 +66,11 @@ fun QuizScreen(
     navController: NavController,
     quizModel: QuizModel
 ) {
+    val context=LocalContext.current
     val thisQuiz by quizModel.lastQuiz.collectAsState()
 
-    val que = quizModel.getQuestion(thisQuiz,"")//quizModel.drawQuestion(state.lastQuiz))
     val userAns = remember { mutableStateListOf<Int>() }
     var answered by remember{ mutableStateOf(false) }
-    val correct = quizModel.correctAnswersList(que)
     Surface()
     {
         Box(
@@ -156,6 +156,8 @@ fun QuizScreen(
                     SideDrawer()
                     return@Box
                 }
+                val que = quizModel.getQuestion(context,thisQuiz,"1")//quizModel.drawQuestion(state.lastQuiz))
+                val correct = quizModel.correctAnswersList(que)
                 if("[img]" !in que.question)
                 {
                     Text(

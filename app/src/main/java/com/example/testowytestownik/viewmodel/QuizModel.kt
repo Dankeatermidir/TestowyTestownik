@@ -1,8 +1,10 @@
 package com.example.testowytestownik.viewmodel
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testowytestownik.data.model.QuizDao
@@ -14,6 +16,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 
 
 data class QueFile(
@@ -87,9 +92,25 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
-    fun getQuestion(quizName: String, questionName: String): QueFile
+
+    fun readFile(context: Context, filename: String): List<String> {
+        return try {
+            File(context.filesDir, filename)
+                .bufferedReader()
+                .use { reader ->
+                    reader.readLines().ifEmpty { listOf("") }
+                }
+        } catch (e: FileNotFoundException) {
+            listOf("")
+        } catch (e: IOException) {
+            listOf("")//Error: ${e.message}")
+        }
+    }
+
+    fun getQuestion(context: Context, quizName: String, questionName: String): QueFile
     {
-        return QueFile("Rozważmy układ równań różniczkowych du/dt. = Au. Ile wynoszą wartości własne macierzy A, gdy A= [1 2 ; 1 2]","X1010",listOf("a. 0 oraz (-3)", "b. 1 oraz 2", "c. 0 oraz (3)", "d. 2 oraz 2"))
+        val listToParse=readFile(context, "${quizName}/${questionName}.txt")
+        return QueFile(listToParse[1],listToParse[0],listToParse.subList(2, listToParse.size))
     }
 
     fun drewQuestion(quizName: String): String
