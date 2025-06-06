@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.testowytestownik.data.model.Question
 import com.example.testowytestownik.data.model.Quiz
 import com.example.testowytestownik.data.model.QuizDao
-import com.example.testowytestownik.data.storage.QuizState
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -20,9 +19,13 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
     Managing permissions, request storage permissions and store result.
     Request only older API permissions, because newer API doesn't need them for picker event.
      */
-    var quizState by mutableStateOf(QuizState())
+
     val PermissionDialogQueue = mutableStateListOf<String>()
 
+    suspend fun updateLastQuiz(quizName: String)
+    {
+        quizDao.setLastQuiz(quizName)
+    }
 
     val permissionsToRequest = arrayOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -74,12 +77,20 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
     fun insertQuizWithQuestions(quiz: Quiz, questions: List<Question>) {
         viewModelScope.launch {
             quizDao.insertQuizWithQuestions(quiz, questions)
+            if(quizDao.getLastQuiz()==null)
+            {
+                quizDao.initLastQuiz()
+            }
         }
     }
 
     fun deleteQuizByName(name: String){
         viewModelScope.launch {
             quizDao.deleteQuizByName(name)
+            if(quizDao.getLastQuiz()?.let { quizDao.getQuestionsForQuiz(it)}?.isEmpty() == true)
+            {
+                quizDao.setLastQuiz("")
+            }
         }
     }
 

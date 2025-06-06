@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -110,5 +111,17 @@ interface QuizDao {
     WHERE questionName = :questionName AND parentQuiz = :quizName
     """)
     suspend fun getRepeatsLeft(quizName: String, questionName: String): Int?
+
+    @Query("UPDATE LastQuiz SET quizName=:quizName WHERE num=1")
+    suspend fun setLastQuiz(quizName: String)
+
+    @Query("SELECT quizName FROM LastQuiz WHERE num=1")
+    suspend fun getLastQuiz():String?
+
+    @Query("SELECT quizName FROM LastQuiz WHERE num=1")
+    fun getLastQuizStream(): Flow<String?>
+
+    @Query("INSERT INTO LastQuiz (num, quizName) VALUES (1, '')")
+    suspend fun initLastQuiz()
 
 }

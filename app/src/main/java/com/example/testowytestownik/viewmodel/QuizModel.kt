@@ -6,8 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testowytestownik.data.model.QuizDao
-import com.example.testowytestownik.data.storage.QuizState
 import com.example.testowytestownik.data.storage.SettingsState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
@@ -19,7 +24,28 @@ data class QueFile(
 
 class QuizModel(private val quizDao: QuizDao) : ViewModel(){
 
-    var quizState by mutableStateOf(QuizState())
+    val lastQuiz: StateFlow<String> = quizDao.getLastQuizStream()
+        .map { it ?: "" }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ""
+        )
+
+    init {
+        loadLastQuiz()
+    }
+
+    private fun loadLastQuiz() {
+        viewModelScope.launch {
+            val test = quizDao.getLastQuiz()
+            if(test == null)
+            {
+                quizDao.initLastQuiz()
+            }
+        }
+    }
+
 
     fun resetQuiz(name: String, initRepeats: Int){
         viewModelScope.launch {
