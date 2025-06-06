@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f1f54b374ee5efbec0026464889d5668",
+    "identityHash": "1cd6bf58b3b4bf72b74fd8c05c7aaf2b",
     "entities": [
       {
         "tableName": "Quiz",
@@ -94,11 +94,35 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "LastQuiz",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`num` INTEGER NOT NULL, `quizName` TEXT NOT NULL, PRIMARY KEY(`num`))",
+        "fields": [
+          {
+            "fieldPath": "num",
+            "columnName": "num",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quizName",
+            "columnName": "quizName",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "num"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f1f54b374ee5efbec0026464889d5668')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1cd6bf58b3b4bf72b74fd8c05c7aaf2b')"
     ]
   }
 }

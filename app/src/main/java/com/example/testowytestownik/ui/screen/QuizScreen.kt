@@ -184,17 +184,17 @@ fun QuizScreen(
                                         userAns.add(i)
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = if(!answered) {
-                                    if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-                                    else MaterialTheme.colorScheme.primary
-                                } else {
-                                    if(i in correct && i in userAns) Color.Green
-                                    else{
-                                        if (i in correct) Color.Yellow
-                                        else Color.Red
-                                    }
-                                }
-                                ))
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
+                                    else MaterialTheme.colorScheme.primary,
+
+                                    disabledContainerColor = if (i in correct && i in userAns) Color.Green.copy(alpha = 0.5f)
+                                    else {
+                                        if (i in correct) Color.Yellow.copy(alpha = 0.5f)
+                                        else Color.Red.copy(alpha = 0.5f) }
+                                ),
+                                enabled = !answered
+                                )
                             {
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Icon(
@@ -210,10 +210,6 @@ fun QuizScreen(
                         answered=false
                     }
 
-                }
-                for(iii in userAns)
-                {
-                    Text(text=iii.toString())
                 }
                 ElevatedButton(
                     modifier = Modifier
