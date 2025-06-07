@@ -7,12 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.testowytestownik.data.model.Question
 import com.example.testowytestownik.data.model.QuizDao
 import com.example.testowytestownik.data.storage.SettingsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -29,6 +29,8 @@ data class QueFile(
 
 class QuizModel(private val quizDao: QuizDao) : ViewModel(){
 
+    private var questionsTemp:List<Question?>?=listOf(null)
+
     val lastQuiz: StateFlow<String> = quizDao.getLastQuizStream()
         .map { it ?: "" }
         .stateIn(
@@ -39,6 +41,19 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
 
     init {
         loadLastQuiz()
+
+        viewModelScope.launch {
+            lastQuiz.collect { quizName ->
+                if (quizName.isNotBlank()) {
+                    loadQuestions(quizName)
+                }
+            }
+        }
+    }
+
+    private suspend fun loadQuestions(quizName: String)
+    {
+        questionsTemp=quizDao.getQuestionsForQuiz(quizName)
     }
 
     private fun loadLastQuiz() {
@@ -117,12 +132,9 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
     {
         var que=""
         viewModelScope.launch {
-            val answers=quizDao.getQuestionsForQuiz(quizName)
-            var ansRepeats:Int?=0
-            while(ansRepeats==0)
+            if (questionsTemp != null)
             {
-                que=answers.random().questionName
-                ansRepeats=quizDao.getRepeatsLeft(quizName,que)
+                que=questionsTemp!!.random()!!.questionName
             }
         }
         return que

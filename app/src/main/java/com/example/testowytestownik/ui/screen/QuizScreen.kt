@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -53,11 +55,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.testowytestownik.R
 import com.example.testowytestownik.ui.navigation.Screen
+import com.example.testowytestownik.viewmodel.QueFile
 import com.example.testowytestownik.viewmodel.QuizModel
 import kotlinx.coroutines.launch
 
@@ -68,7 +72,7 @@ fun QuizScreen(
 ) {
     val context=LocalContext.current
     val thisQuiz by quizModel.lastQuiz.collectAsState()
-
+    var que: QueFile
     val userAns = remember { mutableStateListOf<Int>() }
     var answered by remember{ mutableStateOf(false) }
     Surface()
@@ -120,43 +124,65 @@ fun QuizScreen(
                         textAlign = TextAlign.Center )
                     Spacer(modifier = Modifier.size(38.dp))
                 }
-                if(thisQuiz=="")
+
+                var err=""
+                try
                 {
-                    Spacer(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth() )
-                    Text(
-                        text="Nie otwierałeś wcześniej żadnego testownika.",
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center )
-                    Spacer(modifier = Modifier.size(10.dp))
-                    ElevatedButton(
-                        modifier = Modifier
-                            .padding(vertical = 15.dp)
-                            .fillMaxWidth(1f)
-                            .height(75.dp),
-                        onClick =
-                        {
-                            navController.navigate(Screen.Mgmt.route) {
-                                popUpTo(Screen.Menu.route) {
-                                    inclusive = false // saves Menu
-                                }
-                                launchSingleTop = true // in advance
-                            }
-                        } )
+                    var test=""
+                    try
                     {
-                        Text(text = "Przejdź do Twoich Testowników")
+                        test = quizModel.drewQuestion("thisQuiz")
                     }
-                    Spacer(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth() )
-                    PartialBottomSheet()
-                    SideDrawer()
+                    catch(ee:Exception)
+                    {
+                        err=ee.toString()
+                    }
+                    que = quizModel.getQuestion(context,thisQuiz,test)
+                }//quizModel.drawQuestion(state.lastQuiz)) }
+                catch (e:Exception)
+                {
+                    if(thisQuiz=="")
+                    {
+                        Spacer(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth() )
+                        Text(
+                            text="Nie otwierałeś wcześniej żadnego testownika.",
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center )
+                        Spacer(modifier = Modifier.size(10.dp))
+                        ElevatedButton(
+                            modifier = Modifier
+                                .padding(vertical = 15.dp)
+                                .fillMaxWidth(1f)
+                                .height(75.dp),
+                            onClick =
+                                {
+                                    navController.navigate(Screen.Mgmt.route) {
+                                        popUpTo(Screen.Menu.route) {
+                                            inclusive = false // saves Menu
+                                        }
+                                        launchSingleTop = true // in advance
+                                    }
+                                } )
+                        {
+                            Text(text = "Przejdź do Twoich Testowników")
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth() )
+                        PartialBottomSheet()
+                        SideDrawer()
+                    }
+                    else
+                    {
+                        Text("ERROR: $e \n $err")
+                    }
                     return@Box
                 }
-                val que = quizModel.getQuestion(context,thisQuiz,"1")//quizModel.drawQuestion(state.lastQuiz))
+
                 val correct = quizModel.correctAnswersList(que)
                 if("[img]" !in que.question)
                 {
@@ -178,7 +204,8 @@ fun QuizScreen(
                                 modifier = Modifier
                                     .padding(vertical = 15.dp)
                                     .fillMaxWidth()
-                                    .height(75.dp),
+                                    .wrapContentHeight()
+                                    .heightIn(min=75.dp),
                                 onClick = {
                                     if (isSelected) {
                                         userAns.remove(i)
@@ -204,7 +231,7 @@ fun QuizScreen(
                                     contentDescription = null)
                                 Spacer(modifier = Modifier.fillMaxWidth()
                                     .weight(1f))
-                                Text(text = que.answers[i])
+                                Text(text = que.answers[i],softWrap = true,overflow = TextOverflow.Visible)
                                 Spacer(modifier = Modifier.fillMaxWidth()
                                     .weight(1f))
                             }
