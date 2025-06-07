@@ -75,6 +75,7 @@ fun QuizScreen(
     var que: QueFile
     val userAns = remember { mutableStateListOf<Int>() }
     var answered by remember{ mutableStateOf(false) }
+    var wereClickedBefore=false
     Surface()
     {
         Box(
@@ -247,7 +248,20 @@ fun QuizScreen(
                         .height(75.dp),
                         onClick =
                         {
-                            answered = true
+                            if(!wereClickedBefore)
+                            {
+                                answered = true
+                                wereClickedBefore = true
+                            }
+                            else
+                            {
+                                navController.navigate(Screen.Quiz.route) {
+                                    popUpTo(Screen.Menu.route) {
+                                        inclusive = false // saves Menu
+                                    }
+                                    launchSingleTop = true // in advance
+                                }
+                            }
                         } )
                 { Text(text = stringResource(R.string.next)) }
             }
