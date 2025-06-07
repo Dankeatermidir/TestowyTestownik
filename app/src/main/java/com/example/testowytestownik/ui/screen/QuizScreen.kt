@@ -220,8 +220,19 @@ fun QuizScreen(
 
                                     disabledContainerColor = if (i in correct && i in userAns) Color.Green.copy(alpha = 0.5f)
                                     else {
-                                        if (i in correct) Color.Yellow.copy(alpha = 0.5f)
-                                        else Color.Red.copy(alpha = 0.5f) }
+                                        if (i in correct && i !in userAns) Color.Yellow.copy(alpha = 0.5f)
+                                        else
+                                        {
+                                            if(i !in correct && i in userAns)
+                                            {
+                                                Color.Red.copy(alpha = 0.5f)
+                                            }
+                                            else
+                                            {
+                                                Color.Gray.copy(alpha = 0.5f)
+                                            }
+                                        }
+                                    }
                                 ),
                                 enabled = !answered
                                 )
