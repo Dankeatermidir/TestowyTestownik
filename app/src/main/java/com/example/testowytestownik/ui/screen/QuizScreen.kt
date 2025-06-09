@@ -184,13 +184,19 @@ fun QuizScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     )
                     {
-                        for (i in 0..imagesList.size-1)
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        )
                         {
-                            Text("Obrazek ${i+1}:")
-                            Spacer(Modifier.height(30.dp))
-                            drawImage(quizModel.parseImgageName(imagesList[i]),"Picture-answer for $i answer")
-                            Spacer(Modifier.height(30.dp))
+                            items(imagesList.size) { i ->
+                                Text("Obrazek ${i+1}:")
+                                Spacer(Modifier.height(30.dp))
+                                drawImage(quizModel.parseImgageName(imagesList[i]),"Picture-answer for $i answer")
+                                Spacer(Modifier.height(30.dp))
+                            }
                         }
+
                     }
                 }
             }
