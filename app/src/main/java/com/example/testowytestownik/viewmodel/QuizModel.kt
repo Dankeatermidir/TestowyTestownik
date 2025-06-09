@@ -152,6 +152,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
                     questionLeft -= 1
                     quizDao.updateQuestionLeft(quizName,questionLeft)
                 }
+                quizDao.updateQuestionRepeatsLeft(questionName,0)
             }
             else
             {
