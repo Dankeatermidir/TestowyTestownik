@@ -2,6 +2,7 @@ package com.example.testowytestownik.ui.screen
 
 import android.content.Context
 import android.util.Log
+import android.widget.Space
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -415,14 +417,17 @@ fun QuizScreen(
                 )
                 {
                     Column(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
                     )
                     {
-
                         if ("[img]" !in que.question) {
                             Text(
                                 text = que.question,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(vertical = 10.dp)
                             )
                         }
                         else
@@ -431,8 +436,7 @@ fun QuizScreen(
                         }
                         LazyColumn(
                             modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 10.dp)
+                                .padding(horizontal = 10.dp),
                         )
                         {
                             items(que.answers.size) { i ->
@@ -498,11 +502,16 @@ fun QuizScreen(
 
                         }
 
+                        Spacer(modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                        )
 
                         if (que.answers.any { "[img]" in it })
                         {
                             PartialBottomSheet(que.answers)
                         }
+
 
                         ElevatedButton(
                             modifier = Modifier
@@ -541,6 +550,7 @@ fun QuizScreen(
                                     }
                                 })
                         { Text(text = stringResource(R.string.next)) }
+                        Spacer(modifier = Modifier.height(20.dp))
 
                     }
                 }
