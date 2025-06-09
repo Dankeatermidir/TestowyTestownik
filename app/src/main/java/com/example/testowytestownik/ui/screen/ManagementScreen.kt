@@ -83,8 +83,6 @@ fun ManagementScreen(
     var renameText by remember { mutableStateOf("") }
     var files by remember { mutableStateOf<List<File>>(emptyList()) }
 
-    var wait = remember{ mutableStateOf(false)}
-
     //Load Initial number of repeats from user preferences
     val initRepeatsFlow = context.dataStore.data
         .map { it[intPreferencesKey("initial_repeats")] ?: 2 }
@@ -104,6 +102,15 @@ fun ManagementScreen(
         }
     )
 
+
+    // Scan files in internal storage
+    fun updateFiles() {
+        val dir = File(context.filesDir, folderName)
+        if (!dir.exists()) dir.mkdirs()
+        files = dir.listFiles()?.filter { it.isDirectory }?.toList() ?: emptyList()
+    }
+    updateFiles()
+
     // Pick folder with file manager and copy it to app private files
     val getUserFolder = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree()
@@ -114,16 +121,11 @@ fun ManagementScreen(
             )
             copyFilesToInternalStorage(context, it)
         }
+        updateFiles() //update files list and synchronize DB after adding folder.
+        managementModel.updateDataBases(files, initRepeats)
     }
 
 
-    // Scan files in internal storage
-    fun updateFiles() {
-        val dir = File(context.filesDir, folderName)
-        if (!dir.exists()) dir.mkdirs()
-        files = dir.listFiles()?.filter { it.isDirectory }?.toList() ?: emptyList()
-    }
-    updateFiles()
 
     // Synchronize DB with files
     managementModel.controlledUpdate(files,initRepeats)
@@ -217,8 +219,6 @@ fun ManagementScreen(
                     onClick = {
                         permissionResultLauncher.launch(managementModel.permissionsToRequest)
                         getUserFolder.launch(null)
-                        updateFiles() //update files list and synchronize DB after adding folder.
-                        managementModel.updateDataBases(files,initRepeats)
                     }
 
                 ) {

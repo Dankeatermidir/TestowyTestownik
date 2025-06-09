@@ -128,7 +128,7 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
                     quizUri = quizName
                 )
                 if (questions.size > 3) insertQuizWithQuestions(quiz, questions)
-                else deleteFolder(dir)
+                else dir.deleteRecursively()
             }
             if (names.size != 0) {
                 for (name in names){ //if folder is no longer in internal storage - delete entry
