@@ -15,8 +15,9 @@ fun copyFilesToInternalStorage(context: Context, uri: Uri) {
     if (pickedFolder.name != null) { //if folder name is null, name is random numbers
         folderName = pickedFolder.name
     }
-    val targetDir = File(context.filesDir, folderName).apply { mkdirs() }
 
+    val parentDir = File(context.filesDir, "testowniki").apply { mkdirs() }
+    val targetDir = File(parentDir, folderName).apply { mkdirs() }
     pickedFolder?.listFiles()?.forEach { file ->
         if (file.isFile) {
             val inputStream = contentResolver.openInputStream(file.uri)

@@ -60,7 +60,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Mgmt.route
         ){
-            ManagementScreen(navController, managementModel,"./")
+            ManagementScreen(navController, managementModel)
         }
         composable(
             route = Screen.Quiz.route
