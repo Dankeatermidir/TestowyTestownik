@@ -111,8 +111,8 @@ fun QuizScreen(
     {
         try
         {
-            thisQuestion="A178"
-//            thisQuestion = quizModel.drewQuestion(thisQuiz)
+//            thisQuestion="A178"
+            thisQuestion = quizModel.drewQuestion(thisQuiz)
         }
         catch(ee:Exception)
         {
