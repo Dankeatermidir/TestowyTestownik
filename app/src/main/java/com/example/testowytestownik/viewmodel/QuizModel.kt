@@ -141,12 +141,6 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
-    fun changeRepeatsLeft(quizName: String, questionName: String, newRepeats: Int) {
-        viewModelScope.launch {
-            quizDao.changeRepeatsLeft(quizName, questionName, newRepeats)
-        }
-    }
-
     fun onCorrectAnswer(quizName: String, questionName: String){
         viewModelScope.launch {
             var newRepeats = quizDao.getRepeatsLeft(quizName,questionName)
@@ -159,19 +153,24 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
                     quizDao.updateQuestionLeft(quizName,questionLeft)
                 }
             }
-            changeRepeatsLeft(quizName,questionName,newRepeats)
-            quizDao.updateCorrectAnswers(quizName,1)
-
+            else
+            {
+                quizDao.updateQuestionRepeatsLeft(questionName,newRepeats)
+            }
+            quizDao.updateCorrectAnswers(quizName,quizDao.getIntCorrectAnswers(quizName)+1)
         }
     }
 
     fun onWrongAnswer(quizName: String, questionName: String, extraRepeats: Int, maxRepeats: Int){
         viewModelScope.launch {
-            changeRepeatsLeft(quizName,questionName,extraRepeats)
             var newRepeats = quizDao.getRepeatsLeft(quizName,questionName)
             if (newRepeats == null) newRepeats = 0
-            newRepeats = (newRepeats + extraRepeats) % (maxRepeats + 1)
-            quizDao.updateWrongAnswers(quizName,newRepeats)
+            if (newRepeats+extraRepeats<=maxRepeats)
+            {
+                newRepeats+=extraRepeats
+            }
+            quizDao.updateQuestionRepeatsLeft(questionName,newRepeats)
+            quizDao.updateWrongAnswers(quizName,quizDao.getIntWrongAnswers(quizName)+1)
         }
     }
 

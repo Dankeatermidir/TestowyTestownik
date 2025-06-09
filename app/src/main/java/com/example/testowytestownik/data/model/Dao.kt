@@ -140,4 +140,10 @@ interface QuizDao {
 
     @Query("SELECT correctAnswers FROM Quiz WHERE quizName = :quizName")
     fun correctAnswers(quizName: String?): Flow<Int>
+
+    @Query("SELECT wrongAnswers FROM Quiz WHERE quizName = :quizName")
+    suspend fun getIntWrongAnswers(quizName: String?): Int
+
+    @Query("SELECT correctAnswers FROM Quiz WHERE quizName = :quizName")
+    suspend fun getIntCorrectAnswers(quizName: String?): Int
 }

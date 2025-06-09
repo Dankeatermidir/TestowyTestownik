@@ -340,19 +340,20 @@ fun QuizScreen(
                                         .scale(1.5f)
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text="Do opanowania:")
-                                Text(remainingQuestions.toString(),
-                                    modifier = Modifier
-                                )
-                                Spacer(modifier = Modifier.height(10.dp))
                                 Text(text="Opanowanych:")
                                 Text(doneQuestions.toString(),
                                     modifier = Modifier
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                var correctRatio by remember{ mutableStateOf(if(allQuestions>0) { (doneQuestions/allQuestions).toFloat() } else { 0.toFloat() }) }
+                                Text(text="Do opanowania:")
+                                Text(remainingQuestions.toString(),
+                                    modifier = Modifier
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                                var quizProgress by remember{ mutableStateOf(0f) }
+                                quizProgress = if(allQuestions>0) { (doneQuestions).toFloat()/(allQuestions).toFloat() } else { 0.toFloat() }
                                 LinearProgressIndicator(
-                                    progress = { correctRatio },
+                                    progress = { quizProgress },
                                     modifier = Modifier.fillMaxWidth(0.8f),
                                 )
                                 Spacer(modifier = Modifier.height(20.dp))
@@ -369,11 +370,13 @@ fun QuizScreen(
                                     modifier = Modifier
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                var quizProgress by remember{ mutableStateOf(if((correctAnswers+wrongAnswers)>0) { (correctAnswers/(correctAnswers+wrongAnswers)).toFloat() } else { 0.toFloat() }) }
+                                var correctRatio by remember{ mutableStateOf(0f)}
+                                correctRatio = if((correctAnswers+wrongAnswers)>0) { (correctAnswers).toFloat()/(correctAnswers+wrongAnswers).toFloat() } else { 0.toFloat() }
                                 LinearProgressIndicator(
-                                    progress = { quizProgress },
+                                    progress = { correctRatio },
                                     modifier = Modifier.fillMaxWidth(0.8f)
                                 )
+//                                Text("$correctRatio")
                                 Spacer(modifier = Modifier.height(20.dp))
                                 HorizontalDivider()
                                 Spacer(modifier = Modifier.height(20.dp))
