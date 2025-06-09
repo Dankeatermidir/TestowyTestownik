@@ -38,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +59,7 @@ import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
 import com.example.testowytestownik.ui.navigation.Screen
 import com.example.testowytestownik.viewmodel.ManagementModel
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.io.File
 
 /*
@@ -81,10 +83,14 @@ fun ManagementScreen(
     var renameText by remember { mutableStateOf("") }
     var files by remember { mutableStateOf<List<File>>(emptyList()) }
 
+    var wait = remember{ mutableStateOf(false)}
+
     //Load Initial number of repeats from user preferences
     val initRepeatsFlow = context.dataStore.data
         .map { it[intPreferencesKey("initial_repeats")] ?: 2 }
     val initRepeats by initRepeatsFlow.collectAsState(initial = 2)
+
+    val coroutine = rememberCoroutineScope()
 
     //Ask for permissions
     val permissionResultLauncher = rememberLauncherForActivityResult(
@@ -175,7 +181,16 @@ fun ManagementScreen(
                                         itemOffset = pos / 3f //check card position to display popupMenu on right height
                                     }
                                     .combinedClickable(
-                                        onClick = {},//navController.navigate(route = Screen.Quiz.route) //navigate to quiz
+                                        onClick = {
+                                            coroutine.launch {
+                                                managementModel.updateLastQuiz(files[file].name)
+                                            }
+                                            navController.navigate(route = Screen.Quiz.route){
+                                                popUpTo(Screen.Menu.route) {
+                                                    inclusive = false
+                                                }
+                                            }
+                                        },//navController.navigate(route = Screen.Quiz.route) //navigate to quiz
                                         onLongClick = { // display popupMenu on long press
                                             selectedFolder = files[file]
                                             menuOffset = itemOffset

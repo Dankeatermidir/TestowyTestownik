@@ -7,7 +7,7 @@ import com.example.testowytestownik.data.model.QuizDao
 class ManagementModelFactory(private val quizDao: QuizDao) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ManagementModel::class.java)) {
-            return  ManagementModel(quizDao) as T
+            return ManagementModel(quizDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

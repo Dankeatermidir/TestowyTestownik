@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -111,4 +112,38 @@ interface QuizDao {
     """)
     suspend fun getRepeatsLeft(quizName: String, questionName: String): Int?
 
+    @Query("UPDATE LastQuiz SET quizName=:quizName WHERE num=1")
+    suspend fun setLastQuiz(quizName: String)
+
+    @Query("SELECT quizName FROM LastQuiz WHERE num=1")
+    suspend fun getLastQuiz():String?
+
+    @Query("SELECT quizName FROM LastQuiz WHERE num=1")
+    fun getLastQuizStream(): Flow<String?>
+
+    @Query("INSERT INTO LastQuiz (num, quizName) VALUES (1, '')")
+    suspend fun initLastQuiz()
+
+
+    @Query("SELECT count(questionName) FROM Question WHERE parentQuiz = :quizName")
+    fun allQuestions(quizName: String?): Flow<Int>
+
+    @Query("SELECT count(questionName) FROM Question WHERE parentQuiz = :quizName AND repeatsLeft != 0")
+    fun remainingQuestions(quizName: String?): Flow<Int>
+
+    @Query("SELECT count(questionName) FROM Question WHERE parentQuiz = :quizName AND repeatsLeft = 0")
+    fun doneQuestions(quizName: String?): Flow<Int>
+
+
+    @Query("SELECT wrongAnswers FROM Quiz WHERE quizName = :quizName")
+    fun wrongAnswers(quizName: String?): Flow<Int>
+
+    @Query("SELECT correctAnswers FROM Quiz WHERE quizName = :quizName")
+    fun correctAnswers(quizName: String?): Flow<Int>
+
+    @Query("SELECT wrongAnswers FROM Quiz WHERE quizName = :quizName")
+    suspend fun getIntWrongAnswers(quizName: String?): Int
+
+    @Query("SELECT correctAnswers FROM Quiz WHERE quizName = :quizName")
+    suspend fun getIntCorrectAnswers(quizName: String?): Int
 }

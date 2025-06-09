@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+app/schemas/com.example.testowytestownik.data.model.QuizDatabase
+.idea
+.kotlin
