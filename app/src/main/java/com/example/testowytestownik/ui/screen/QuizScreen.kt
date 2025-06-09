@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Collections
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.Button
@@ -28,6 +30,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -107,8 +111,8 @@ fun QuizScreen(
     {
         try
         {
-//            thisQuestion="066"
-            thisQuestion = quizModel.drewQuestion(thisQuiz)
+            thisQuestion="A178"
+//            thisQuestion = quizModel.drewQuestion(thisQuiz)
         }
         catch(ee:Exception)
         {
@@ -121,7 +125,7 @@ fun QuizScreen(
     }
 
     @Composable
-    fun drawImage(name: String) {
+    fun drawImage(name: String, accessibilityDescription: String) {
         val imageFile = File(context.filesDir, thisQuiz+"/"+name)
 
 //        Log.d("DrawImage", "Loading from: ${imageFile.absolutePath}")
@@ -147,6 +151,53 @@ fun QuizScreen(
             Text("No such picture: \"${context.filesDir}/${imageFile.name}\"|\nCorrect your Testownik in question ${thisQuestion}.txt and readd this Testownik's folder.")
         }
     }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun PartialBottomSheet(imagesList: List<String>) {
+        var showBottomSheet by remember { mutableStateOf(false) }
+        val sheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = false,
+        )
+
+        Box (
+            modifier = Modifier.fillMaxWidth()
+        )
+        {
+            ExtendedFloatingActionButton(
+                modifier=Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd),
+                onClick = { showBottomSheet = true },
+                icon = { Icon(Icons.Filled.Collections, "Multiple images icon") },
+                text = { Text(text = "Pokaż obrazki") }
+            )
+
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    modifier = Modifier.fillMaxHeight(),
+                    sheetState = sheetState,
+                    onDismissRequest = { showBottomSheet = false }
+                ) {
+                    Column (
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    )
+                    {
+                        for (i in 0..imagesList.size-1)
+                        {
+                            Text("Obrazek ${i+1}:")
+                            Spacer(Modifier.height(30.dp))
+                            drawImage(quizModel.parseImgageName(imagesList[i]),"Picture-answer for $i answer")
+                            Spacer(Modifier.height(30.dp))
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
 
     Surface()
     {
@@ -367,7 +418,7 @@ fun QuizScreen(
                         }
                         else
                         {
-                            drawImage(quizModel.parseImgageName(que.question))
+                            drawImage(quizModel.parseImgageName(que.question),"Picture-question for ${que.question} question")
                         }
                         LazyColumn(
                             modifier = Modifier
@@ -375,69 +426,73 @@ fun QuizScreen(
                                 .padding(horizontal = 10.dp)
                         )
                         {
-                            if ("[img]" !in que.answers) {
-                                items(que.answers.size) { i ->
-                                    val isSelected = i in userAns
+                            items(que.answers.size) { i ->
+                                val isSelected = i in userAns
 
-                                    ElevatedButton(
-                                        modifier = Modifier
-                                            .padding(vertical = 15.dp)
-                                            .fillMaxWidth()
-                                            .wrapContentHeight()
-                                            .heightIn(min = 75.dp),
-                                        onClick = {
-                                            if (isSelected) {
-                                                userAns.remove(i)
-                                            } else {
-                                                userAns.add(i)
-                                            }
-                                        },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-                                            else MaterialTheme.colorScheme.primary,
+                                ElevatedButton(
+                                    modifier = Modifier
+                                        .padding(vertical = 15.dp)
+                                        .fillMaxWidth()
+                                        .wrapContentHeight()
+                                        .heightIn(min = 75.dp),
+                                    onClick = {
+                                        if (isSelected) {
+                                            userAns.remove(i)
+                                        } else {
+                                            userAns.add(i)
+                                        }
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
+                                        else MaterialTheme.colorScheme.primary,
 
-                                            disabledContainerColor = if (i in correct && i in userAns) Color.Green.copy(
+                                        disabledContainerColor = if (i in correct && i in userAns) Color.Green.copy(
+                                            alpha = 0.5f
+                                        )
+                                        else {
+                                            if (i in correct && i !in userAns) Color.Yellow.copy(
                                                 alpha = 0.5f
                                             )
                                             else {
-                                                if (i in correct && i !in userAns) Color.Yellow.copy(
-                                                    alpha = 0.5f
-                                                )
-                                                else {
-                                                    if (i !in correct && i in userAns) {
-                                                        Color.Red.copy(alpha = 0.5f)
-                                                    } else {
-                                                        Color.Gray.copy(alpha = 0.5f)
-                                                    }
+                                                if (i !in correct && i in userAns) {
+                                                    Color.Red.copy(alpha = 0.5f)
+                                                } else {
+                                                    Color.Gray.copy(alpha = 0.5f)
                                                 }
                                             }
-                                        ),
-                                        enabled = !answered
+                                        }
+                                    ),
+                                    enabled = !answered
+                                )
+                                {
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Icon(
+                                        if (isSelected) Icons.Rounded.CheckCircle else Icons.Rounded.Check,
+                                        contentDescription = null
                                     )
-                                    {
-                                        Spacer(modifier = Modifier.width(10.dp))
-                                        Icon(
-                                            if (isSelected) Icons.Rounded.CheckCircle else Icons.Rounded.Check,
-                                            contentDescription = null
-                                        )
-                                        Spacer(
-                                            modifier = Modifier.fillMaxWidth()
-                                                .weight(1f)
-                                        )
-                                        Text(
-                                            text = que.answers[i],
-                                            softWrap = true,
-                                            overflow = TextOverflow.Visible
-                                        )
-                                        Spacer(
-                                            modifier = Modifier.fillMaxWidth()
-                                                .weight(1f)
-                                        )
-                                    }
+                                    Spacer(
+                                        modifier = Modifier.fillMaxWidth()
+                                            .weight(1f)
+                                    )
+                                    Text(
+                                        text = if("[img]" in que.answers[i]){"Obrazek ${i+1}"} else {que.answers[i]},
+                                        softWrap = true,
+                                        overflow = TextOverflow.Visible
+                                    )
+                                    Spacer(
+                                        modifier = Modifier.fillMaxWidth()
+                                            .weight(1f)
+                                    )
                                 }
-                                answered = false
                             }
+                                answered = false
 
+                        }
+
+
+                        if (que.answers.any { "[img]" in it })
+                        {
+                            PartialBottomSheet(que.answers)
                         }
 
                         ElevatedButton(
@@ -477,6 +532,7 @@ fun QuizScreen(
                                     }
                                 })
                         { Text(text = stringResource(R.string.next)) }
+
                     }
                 }
             }
@@ -493,37 +549,5 @@ fun InfoScreenPreview(){
 
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PartialBottomSheet() {
-    var showBottomSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = false,
-    )
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Button(
-            onClick = { showBottomSheet = true }
-        ) {
-            Text("Display partial bottom sheet")
-        }
-
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                modifier = Modifier.fillMaxHeight(),
-                sheetState = sheetState,
-                onDismissRequest = { showBottomSheet = false }
-            ) {
-                Text(
-                    "Swipe up to open sheet. Swipe down to dismiss.",
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-        }
-    }
-}
 
 
