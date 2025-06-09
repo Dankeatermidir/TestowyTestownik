@@ -10,9 +10,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.testowytestownik.data.model.Question
 import com.example.testowytestownik.data.model.QuizDao
 import com.example.testowytestownik.data.storage.SettingsState
+import com.example.testowytestownik.data.storage.SettingsStore
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -29,6 +32,12 @@ data class QueFile(
 
 class QuizModel(private val quizDao: QuizDao) : ViewModel(){
 
+
+    private var lastQuizReady by mutableStateOf(false)
+    private var loadQuizReady by mutableStateOf(false)
+    var isReady by mutableStateOf(false)
+//        private set
+
     private var questionsTemp:List<Question?>?=listOf(null)
 
     val lastQuiz: StateFlow<String> = quizDao.getLastQuizStream()
@@ -39,9 +48,58 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
             initialValue = ""
         )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val remainingQuestions: StateFlow<Int> =
+        lastQuiz.flatMapLatest { quizName ->
+            quizDao.remainingQuestions(quizName)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            0
+        )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val doneQuestions: StateFlow<Int> =
+        lastQuiz.flatMapLatest { quizName ->
+            quizDao.doneQuestions(quizName)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            0
+        )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val allQuestions: StateFlow<Int> =
+        lastQuiz.flatMapLatest { quizName ->
+            quizDao.allQuestions(quizName)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            0
+        )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val wrongAnswers: StateFlow<Int> =
+        lastQuiz.flatMapLatest { quizName ->
+            quizDao.wrongAnswers(quizName)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            0
+        )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val correctAnswers: StateFlow<Int> =
+        lastQuiz.flatMapLatest { quizName ->
+            quizDao.correctAnswers(quizName)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            0
+        )
+
     init {
         loadLastQuiz()
-
         viewModelScope.launch {
             lastQuiz.collect { quizName ->
                 if (quizName.isNotBlank()) {
@@ -51,9 +109,18 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
+
     private suspend fun loadQuestions(quizName: String)
     {
-        questionsTemp=quizDao.getQuestionsForQuiz(quizName)
+        if(lastQuizReady)
+        {
+            this.questionsTemp=quizDao.getQuestionsForQuiz(quizName)
+        }
+        else
+        {
+            loadQuestions(quizName)
+        }
+        isReady=true
     }
 
     private fun loadLastQuiz() {
@@ -64,6 +131,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
                 quizDao.initLastQuiz()
             }
         }
+        lastQuizReady=true
     }
 
 
@@ -132,7 +200,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
     {
         var que=""
         viewModelScope.launch {
-            if (questionsTemp != null)
+            if (questionsTemp != null && isReady)
             {
                 que=questionsTemp!!.random()!!.questionName
             }
@@ -165,10 +233,43 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         return false
     }
 
+    fun getImage(context:Context, name:String):File
+    {
+        return File(context.filesDir, name)
+    }
+
+    fun parseImgageName(name: String): String
+    {
+        val input = name
+        val regex = "\\[img](.+?)\\[/img]".toRegex()
+        val matchResult = regex.find(input)
+        return matchResult?.groupValues?.get(1) ?: ""
+    }
+
     fun isY(quizName: String, questionName: String): Boolean
     {
         return false
     }
 
+
+
+    //timer
+
+    private var startTime = System.currentTimeMillis()
+
+    var shouldResetTimer = false
+
+    fun resetTimer() {
+        startTime = System.currentTimeMillis()
+    }
+
+    fun getElapsedTime(): List<Int> {
+        var temp = (System.currentTimeMillis() - startTime) / 1000
+        val hours = (temp / 60 / 60).toInt()
+        temp -= (hours * 60 * 60)
+        val minutes = (temp / 60).toInt()
+        temp -= (minutes * 60)
+        return listOf(hours, minutes, temp.toInt()) // to seconds
+    }
 
 }

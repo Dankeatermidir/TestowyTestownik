@@ -124,4 +124,20 @@ interface QuizDao {
     @Query("INSERT INTO LastQuiz (num, quizName) VALUES (1, '')")
     suspend fun initLastQuiz()
 
+
+    @Query("SELECT count(questionName) FROM Question WHERE parentQuiz = :quizName")
+    fun allQuestions(quizName: String?): Flow<Int>
+
+    @Query("SELECT count(questionName) FROM Question WHERE parentQuiz = :quizName AND repeatsLeft != 0")
+    fun remainingQuestions(quizName: String?): Flow<Int>
+
+    @Query("SELECT count(questionName) FROM Question WHERE parentQuiz = :quizName AND repeatsLeft = 0")
+    fun doneQuestions(quizName: String?): Flow<Int>
+
+
+    @Query("SELECT wrongAnswers FROM Quiz WHERE quizName = :quizName")
+    fun wrongAnswers(quizName: String?): Flow<Int>
+
+    @Query("SELECT correctAnswers FROM Quiz WHERE quizName = :quizName")
+    fun correctAnswers(quizName: String?): Flow<Int>
 }
