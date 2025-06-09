@@ -73,7 +73,7 @@ Rename and Delete Quizzes.
 fun ManagementScreen(
     navController : NavController,
     managementModel: ManagementModel,
-    folderName: String = "./" // optional: browse a subfolder
+    folderName: String = "./testowniki" // optional: browse a subfolder
 ) {
     val context = LocalContext.current
     var selectedFolder by remember { mutableStateOf<File?>(null) }
@@ -90,7 +90,6 @@ fun ManagementScreen(
         .map { it[intPreferencesKey("initial_repeats")] ?: 2 }
     val initRepeats by initRepeatsFlow.collectAsState(initial = 2)
 
-    val coroutine = rememberCoroutineScope()
 
     //Ask for permissions
     val permissionResultLauncher = rememberLauncherForActivityResult(
@@ -182,9 +181,7 @@ fun ManagementScreen(
                                     }
                                     .combinedClickable(
                                         onClick = {
-                                            coroutine.launch {
-                                                managementModel.updateLastQuiz(files[file].name)
-                                            }
+                                            managementModel.updateLastQuiz(files[file].name)
                                             navController.navigate(route = Screen.Quiz.route){
                                                 popUpTo(Screen.Menu.route) {
                                                     inclusive = false

@@ -22,9 +22,11 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
 
     val PermissionDialogQueue = mutableStateListOf<String>()
 
-    suspend fun updateLastQuiz(quizName: String)
+    fun updateLastQuiz(quizName: String)
     {
-        quizDao.setLastQuiz(quizName)
+        viewModelScope.launch {
+            quizDao.setLastQuiz(quizName)
+        }
     }
 
     val permissionsToRequest = arrayOf(
@@ -125,8 +127,8 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
                     wrongAnswers = 0,
                     quizUri = quizName
                 )
-
-                insertQuizWithQuestions(quiz, questions)
+                if (questions.size > 3) insertQuizWithQuestions(quiz, questions)
+                else deleteFolder(dir)
             }
             if (names.size != 0) {
                 for (name in names){ //if folder is no longer in internal storage - delete entry
