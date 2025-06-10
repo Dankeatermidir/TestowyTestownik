@@ -1,8 +1,5 @@
 package com.example.testowytestownik.ui.screen
 
-import android.content.Context
-import android.util.Log
-import android.widget.Space
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,16 +20,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Collections
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -40,7 +34,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -56,7 +49,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -128,7 +120,7 @@ fun QuizScreen(
 
     @Composable
     fun drawImage(name: String, accessibilityDescription: String) {
-        val imageFile = File(context.filesDir, thisQuiz+"/"+name)
+        val imageFile = File(context.filesDir, "testowniki/"+thisQuiz+"/"+name)
 
 //        Log.d("DrawImage", "Loading from: ${imageFile.absolutePath}")
 //
@@ -144,7 +136,7 @@ fun QuizScreen(
                     .data(imageFile)
                     .crossfade(true)
                     .build(),
-                contentDescription = "que image",
+                contentDescription = accessibilityDescription,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxWidth(1.0f)
@@ -194,7 +186,7 @@ fun QuizScreen(
                             items(imagesList.size) { i ->
                                 Text("Obrazek ${i+1}:")
                                 Spacer(Modifier.height(30.dp))
-                                drawImage(quizModel.parseImgageName(imagesList[i]),"Picture-answer for $i answer")
+                                drawImage(quizModel.parseImageName(imagesList[i]),"Picture-answer for $i answer")
                                 Spacer(Modifier.height(30.dp))
                             }
                         }
@@ -432,7 +424,7 @@ fun QuizScreen(
                         }
                         else
                         {
-                            drawImage(quizModel.parseImgageName(que.question),"Picture-question for ${que.question} question")
+                            drawImage(quizModel.parseImageName(que.question),"Picture-question for ${que.question} question")
                         }
                         LazyColumn(
                             modifier = Modifier
@@ -502,10 +494,6 @@ fun QuizScreen(
 
                         }
 
-                        Spacer(modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                        )
 
                         if (que.answers.any { "[img]" in it })
                         {

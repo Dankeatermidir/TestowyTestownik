@@ -4,15 +4,11 @@ import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testowytestownik.data.model.Question
 import com.example.testowytestownik.data.model.QuizDao
-import com.example.testowytestownik.data.storage.SettingsState
-import com.example.testowytestownik.data.storage.SettingsStore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -38,7 +34,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
     var isReady by mutableStateOf(false)
 //        private set
 
-    private var questionsTemp:List<Question?>?=listOf(null)
+    var questionsTemp:List<Question?>?=listOf(null)
 
     val lastQuiz: StateFlow<String> = quizDao.getLastQuizStream()
         .map { it ?: "" }
@@ -192,7 +188,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
 
     fun getQuestion(context: Context, quizName: String, questionName: String): QueFile
     {
-        val listToParse=readFile(context, "${quizName}/${questionName}.txt")
+        val listToParse=readFile(context, "testowniki/${quizName}/${questionName}.txt")
         return QueFile(listToParse[1],listToParse[0],listToParse.subList(2, listToParse.size))
     }
 
@@ -204,6 +200,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
             {
                 que=questionsTemp!!.random()!!.questionName
             }
+            questionsTemp=quizDao.getQuestionsForQuiz(quizName)
         }
         return que
     }
@@ -223,22 +220,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         return correct
     }
 
-    fun isPicInQue(quizName: String, questionName: String): Boolean
-    {
-        return false
-    }
-
-    fun isPicInAns(quizName: String, questionName: String): Boolean
-    {
-        return false
-    }
-
-    fun getImage(context:Context, name:String):File
-    {
-        return File(context.filesDir, name)
-    }
-
-    fun parseImgageName(name: String): String
+    fun parseImageName(name: String): String
     {
         val input = name
         val regex = "\\[img](.+?)\\[/img]".toRegex()
