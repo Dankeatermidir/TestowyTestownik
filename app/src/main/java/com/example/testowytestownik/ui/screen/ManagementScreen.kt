@@ -55,7 +55,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.navigation.NavController
 import com.example.testowytestownik.R
 import com.example.testowytestownik.data.storage.dataStore
-import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
 import com.example.testowytestownik.ui.navigation.Screen
 import com.example.testowytestownik.viewmodel.ManagementModel
 import kotlinx.coroutines.flow.map
@@ -83,8 +82,6 @@ fun ManagementScreen(
     var renameText by remember { mutableStateOf("") }
     var files by remember { mutableStateOf<List<File>>(emptyList()) }
 
-    var wait = remember{ mutableStateOf(false)}
-
     //Load Initial number of repeats from user preferences
     val initRepeatsFlow = context.dataStore.data
         .map { it[intPreferencesKey("initial_repeats")] ?: 2 }
@@ -104,18 +101,6 @@ fun ManagementScreen(
         }
     )
 
-    // Pick folder with file manager and copy it to app private files
-    val getUserFolder = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocumentTree()
-    ) { uri ->
-        uri?.let {
-            context.contentResolver.takePersistableUriPermission(
-                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            copyFilesToInternalStorage(context, it)
-        }
-    }
-
 
     // Scan files in internal storage
     fun updateFiles() {
@@ -124,6 +109,22 @@ fun ManagementScreen(
         files = dir.listFiles()?.filter { it.isDirectory }?.toList() ?: emptyList()
     }
     updateFiles()
+
+    // Pick folder with file manager and copy it to app private files
+    val getUserFolder = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        uri?.let {
+            context.contentResolver.takePersistableUriPermission(
+                it, Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            managementModel.copyFilesToInternalStorage(context, it)
+        }
+        updateFiles() //update files list and synchronize DB after adding folder.
+        managementModel.updateDataBases(files, initRepeats)
+    }
+
+
 
     // Synchronize DB with files
     managementModel.controlledUpdate(files,initRepeats)
@@ -160,6 +161,7 @@ fun ManagementScreen(
                     )
                     Spacer(modifier = Modifier.size(38.dp))
                 }
+
                 if (files.isEmpty()) { //if no files in internal storage - display info
                     Text(stringResource(R.string.testo_missing))
                 }
@@ -217,8 +219,6 @@ fun ManagementScreen(
                     onClick = {
                         permissionResultLauncher.launch(managementModel.permissionsToRequest)
                         getUserFolder.launch(null)
-                        updateFiles() //update files list and synchronize DB after adding folder.
-                        managementModel.updateDataBases(files,initRepeats)
                     }
 
                 ) {
@@ -263,8 +263,8 @@ fun ManagementScreen(
                     },
                     confirmButton = {
                         TextButton(onClick = { //rename folder and entry in DB
-                            managementModel.renameFolder(selectedFolder!!, renameText)
-                            managementModel.renameQuiz(selectedFolder!!.name, renameText)
+                            if (!(files.any{ f -> f.name == renameText}))
+                                managementModel.renameQuiz(selectedFolder!!, renameText)
                             showRenameDialog = false
                             updateFiles()
                         }) {

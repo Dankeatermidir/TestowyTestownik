@@ -1,17 +1,24 @@
 package com.example.testowytestownik.viewmodel
 
 import android.Manifest
+import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testowytestownik.data.model.Question
 import com.example.testowytestownik.data.model.Quiz
 import com.example.testowytestownik.data.model.QuizDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
+import kotlin.random.Random
 
 class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
 
@@ -50,14 +57,6 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
-    fun renameFolder(folder: File, newName: String) {
-        viewModelScope.launch {
-            val newFile = File(folder.parentFile, newName)
-            if (!newFile.exists()) {
-                folder.renameTo(newFile)
-            }
-        }
-    }
 
     // make sure DB is synced only once one start, unless called directly
     private var wasUpdated = false
@@ -70,9 +69,14 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
-    fun renameQuiz(oldName: String, newName: String){
+    fun renameQuiz(folder: File, newName: String){
+        val oldName = folder.name
         viewModelScope.launch {
-            quizDao.renameQuizAndQuestions(oldName,newName)
+            val newFile = File(folder.parentFile, newName)
+            if (!newFile.exists()) {
+                folder.renameTo(newFile)
+            }
+            quizDao.renameQuiz(oldName,newName)
         }
     }
 
@@ -92,6 +96,34 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
             if(quizDao.getLastQuiz()?.let { quizDao.getQuestionsForQuiz(it)}?.isEmpty() == true)
             {
                 quizDao.setLastQuiz("")
+            }
+        }
+    }
+
+    //copy files to /testowniki
+    fun copyFilesToInternalStorage(context: Context, uri: Uri){
+        viewModelScope.launch {
+            val contentResolver = context.contentResolver
+            val pickedFolder = DocumentFile.fromTreeUri(context, uri)
+            var folderName = Random.nextInt(0,999999999).toString()
+            if (pickedFolder.name != null) { //if folder name is null, name is random numbers
+                folderName = pickedFolder.name
+            }
+
+            val parentDir = File(context.filesDir, "testowniki").apply { mkdirs() }
+            val targetDir = File(parentDir, folderName).apply { mkdirs() }
+            pickedFolder?.listFiles()?.forEach { file ->
+                if (file.isFile) {
+                    val inputStream = contentResolver.openInputStream(file.uri)
+                    val outFile = File(targetDir, file.name ?: "unknown_file")
+                    val outputStream = FileOutputStream(outFile)
+
+                    inputStream?.use { input ->
+                        outputStream.use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                }
             }
         }
     }
@@ -128,7 +160,7 @@ class ManagementModel(private val quizDao: QuizDao) : ViewModel(){
                     quizUri = quizName
                 )
                 if (questions.size > 3) insertQuizWithQuestions(quiz, questions)
-                else deleteFolder(dir)
+                else dir.deleteRecursively()
             }
             if (names.size != 0) {
                 for (name in names){ //if folder is no longer in internal storage - delete entry

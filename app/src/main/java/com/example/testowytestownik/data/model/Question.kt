@@ -9,7 +9,8 @@ import androidx.room.PrimaryKey
         entity = Quiz::class,
         parentColumns = ["quizName"],
         childColumns = ["parentQuiz"],
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE
     )]
 )
 data class Question(
