@@ -1,5 +1,6 @@
 package com.example.testowytestownik.ui.screen
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Button
@@ -23,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,11 +53,16 @@ fun SettingsScreen(
     settingsModel: SettingsModel
 ) {
     val state = settingsModel.uiState
-    var address by remember {mutableStateOf("bzztmachen")}
+    var address by remember {mutableStateOf("bzztmachen.local")}
+    val response = settingsModel.response.collectAsState()
+    val scrollState = rememberScrollState()
+
     Surface {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(10.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top,
         ) {
@@ -119,7 +128,7 @@ fun SettingsScreen(
             Slider(
                 value = state.initRepeats.toFloat(),
                 onValueChange = { settingsModel.updateInitRepeats(it.toInt()) },
-                valueRange = 0f..10f
+                valueRange = 1f..10f
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -135,7 +144,7 @@ fun SettingsScreen(
             Slider(
                 value = state.maxRepeats.toFloat(),
                 onValueChange = { settingsModel.updateMaxRepeats(it.toInt()) },
-                valueRange = 0f..10f
+                valueRange = 1f..10f
             )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -149,20 +158,21 @@ fun SettingsScreen(
             if (state.hardcoreMode) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
-                        value = "bzztmachen",
-                        onValueChange = {address = it},
-                        label = {Text("machine address")}
+                        value = address,
+                        onValueChange = { text ->
+                            address = text.filter { it.isDigit() || it.isLowerCase() || it == '.' }
+                                        },
+                        label = {Text("Android sucks at mdns, try using ip address")},
+                        singleLine = true
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
-                        onClick = {}
+                        onClick = {settingsModel.quickTest(address)}
                     ) {
                         Text("test")
                     }
                 }
-                if (settingsModel.response!=null){
-                    Text(settingsModel.response.toString())
-                }
+                Text(response.value)
             }
         }
     }

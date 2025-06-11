@@ -10,6 +10,8 @@ import com.example.testowytestownik.data.storage.FontSize
 import com.example.testowytestownik.data.storage.SettingsState
 import com.example.testowytestownik.data.storage.SettingsStore
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SettingsModel(private val store: SettingsStore) : ViewModel() {
@@ -75,13 +77,12 @@ class SettingsModel(private val store: SettingsStore) : ViewModel() {
         }
     }
 
-    var response :String? = null
+    val response = MutableStateFlow<String>("")
 
     fun quickTest(address: String) {
         viewModelScope.launch {
-            //val url = "http://$address:80"
-            val url = address
-            response = BzztMachen.machen(url = url).toString()
+            val url = "http://$address/machen"
+            response.value = BzztMachen.machen(url = url).toString()
         }
     }
 }
