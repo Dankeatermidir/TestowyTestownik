@@ -44,14 +44,14 @@ object BzztMachen{
     suspend fun machen(
         url: String = "http://bzztmachen.local/machen",
         lvl: Int = 1000, // 50<lvl<1000, clipped otherwise (50 hits hardest), just use lvlFromPercent
-        player: Int = 0
+        player: Int = 1
     ): Result<String> {
         var freq = 50
         if (lvl>50){ freq = lvl%1001}
         return try {
             val body = withTimeout(1000L){
                 val response = client.post(url){
-                    setBody("$player,$freq")
+                    setBody("${player-1},$freq")
                 }
                 response.bodyAsText()
             }

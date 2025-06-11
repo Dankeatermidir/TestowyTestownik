@@ -9,7 +9,9 @@ data class SettingsState(
     val initRepeats: Int = 3,
     val extraRepeats: Int = 1,
     val maxRepeats: Int = 3,
-    val hardcoreMode: Boolean = false
+
+    val hardcoreMode: Boolean = false,
+    val bzztmachenPlayer: Int = 0
 )
 
 enum class FontSize(val scale: Float) {

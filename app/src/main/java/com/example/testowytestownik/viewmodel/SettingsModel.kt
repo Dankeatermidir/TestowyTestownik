@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testowytestownik.data.model.BzztMachen
 import com.example.testowytestownik.data.storage.FontSize
 import com.example.testowytestownik.data.storage.SettingsState
@@ -77,12 +78,21 @@ class SettingsModel(private val store: SettingsStore) : ViewModel() {
         }
     }
 
+    fun updateBzztmachenPlayer(value: Int){
+        //var value = digit.toInt()
+        //if (value < 1) value = 1
+        uiState = uiState.copy(bzztmachenPlayer = value)
+        viewModelScope.launch {
+            store.saveBzztmachenPlayer(value)
+        }
+    }
+
     val response = MutableStateFlow<String>("")
 
-    fun quickTest(address: String) {
+    fun quickTest(address: String, player: Int) {
         viewModelScope.launch {
             val url = "http://$address/machen"
-            response.value = BzztMachen.machen(url = url).toString()
+            response.value = BzztMachen.machen(url = url, player = player).toString()
         }
     }
 }
