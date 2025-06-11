@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -48,6 +49,7 @@ fun SettingsScreen(
     settingsModel: SettingsModel
 ) {
     val state = settingsModel.uiState
+    var address by remember {mutableStateOf("bzztmachen")}
     Surface {
         Column(
             modifier = Modifier
@@ -143,6 +145,24 @@ fun SettingsScreen(
                     checked = state.hardcoreMode,
                     onCheckedChange = { settingsModel.toogleHardcoreMode(it) }
                 )
+            }
+            if (state.hardcoreMode) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(
+                        value = "bzztmachen",
+                        onValueChange = {address = it},
+                        label = {Text("machine address")}
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = {}
+                    ) {
+                        Text("test")
+                    }
+                }
+                if (settingsModel.response!=null){
+                    Text(settingsModel.response.toString())
+                }
             }
         }
     }
