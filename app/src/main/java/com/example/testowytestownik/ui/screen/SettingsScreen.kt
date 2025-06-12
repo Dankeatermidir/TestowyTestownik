@@ -61,7 +61,7 @@ fun SettingsScreen(
     settingsModel: SettingsModel
 ) {
     val state = settingsModel.uiState
-    var address by remember {mutableStateOf("bzztmachen.local")}
+    var address by remember {mutableStateOf(state.bzztmachenAddress)}
     val response = settingsModel.response.collectAsState()
     val scrollState = rememberScrollState()
 
@@ -167,8 +167,9 @@ fun SettingsScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
                         value = address,
-                        onValueChange = { text ->
-                            address = text.filter { it.isDigit() || it.isLowerCase() || it == '.' }
+                        onValueChange = {
+                            address = it
+                            settingsModel.updateBzztMachenAddress(address)
                                         },
                         label = {Text("Android sucks at mdns, try using ip address")},
                         singleLine = true

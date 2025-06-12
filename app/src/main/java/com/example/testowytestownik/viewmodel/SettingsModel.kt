@@ -87,6 +87,12 @@ class SettingsModel(private val store: SettingsStore) : ViewModel() {
         }
     }
 
+    fun updateBzztMachenAddress(address: String){
+        viewModelScope.launch {
+            store.saveBzztmachenAddress(address)
+        }
+    }
+
     val response = MutableStateFlow<String>("")
 
     fun quickTest(address: String, player: Int) {
@@ -95,4 +101,5 @@ class SettingsModel(private val store: SettingsStore) : ViewModel() {
             response.value = BzztMachen.machen(url = url, player = player).toString()
         }
     }
+
 }
