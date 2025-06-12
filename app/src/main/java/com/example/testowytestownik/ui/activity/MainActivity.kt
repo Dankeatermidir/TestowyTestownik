@@ -18,8 +18,6 @@ import com.example.testowytestownik.viewmodel.ManagementModelFactory
 import com.example.testowytestownik.viewmodel.ManualModel
 import com.example.testowytestownik.viewmodel.QuizModel
 import com.example.testowytestownik.viewmodel.QuizModelFactory
-import com.example.testowytestownik.viewmodel.StatisticsModel
-import com.example.testowytestownik.viewmodel.StatisticsModelFactory
 
 
 class MainActivity : ComponentActivity() {
@@ -38,10 +36,7 @@ class MainActivity : ComponentActivity() {
         val managementModel = ViewModelProvider(this, managementModelFactory)[ManagementModel::class.java]
         val quizModelFactory = QuizModelFactory(quizDao)
         val quizModel = ViewModelProvider(this, quizModelFactory)[QuizModel::class.java]
-        val statisticsModelFactory = StatisticsModelFactory(quizDao)
-        val statisticsModel = ViewModelProvider(this, statisticsModelFactory)[StatisticsModel::class.java]
         val settingsModel = SettingsModel(store)
-        val infoModel = InfoModel()
         val manualModel = ManualModel()
         setContent {
             TestowyTestownikTheme {
@@ -50,9 +45,7 @@ class MainActivity : ComponentActivity() {
                     managementModel = managementModel,
                     settingsModel = settingsModel,
                     quizModel = quizModel,
-                    infoModel = infoModel,
-                    manualModel = manualModel,
-                    statisticsModel = statisticsModel
+                    manualModel = manualModel
                 )
             }
         }

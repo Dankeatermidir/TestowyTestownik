@@ -21,12 +21,3 @@ class QuizModelFactory(private val quizDao: QuizDao) : ViewModelProvider.Factory
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-
-class StatisticsModelFactory(private val quizDao: QuizDao) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(StatisticsModel::class.java)) {
-            return StatisticsModel(quizDao) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
