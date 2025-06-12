@@ -74,6 +74,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.ktor.client.android)
+
     implementation(libs.android.youtube.player.core)
 }
 

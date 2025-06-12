@@ -1,9 +1,12 @@
 package com.example.testowytestownik.ui.screen
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,17 +14,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.example.testowytestownik.R
 import com.example.testowytestownik.data.storage.FontSize
@@ -48,10 +61,16 @@ fun SettingsScreen(
     settingsModel: SettingsModel
 ) {
     val state = settingsModel.uiState
+    var address by remember {mutableStateOf(state.bzztmachenAddress)}
+    val response = settingsModel.response.collectAsState()
+    val scrollState = rememberScrollState()
+
     Surface {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(10.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top,
         ) {
@@ -100,24 +119,11 @@ fun SettingsScreen(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-
-
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.autosave))
-                Spacer(modifier = Modifier.weight(1f))
-                Switch(
-                    checked = state.autoSave,
-                    onCheckedChange = { settingsModel.toogleAutoSave(it) }
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-
             Text("${stringResource(R.string.init_repeats)} ${state.initRepeats}")
             Slider(
                 value = state.initRepeats.toFloat(),
                 onValueChange = { settingsModel.updateInitRepeats(it.toInt()) },
-                valueRange = 0f..10f
+                valueRange = 1f..10f
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -133,9 +139,9 @@ fun SettingsScreen(
             Slider(
                 value = state.maxRepeats.toFloat(),
                 onValueChange = { settingsModel.updateMaxRepeats(it.toInt()) },
-                valueRange = 0f..10f
+                valueRange = 1f..10f
             )
-
+            //time to BZZZT!
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.hardcoremode))
                 Spacer(modifier = Modifier.weight(1f))
@@ -143,6 +149,47 @@ fun SettingsScreen(
                     checked = state.hardcoreMode,
                     onCheckedChange = { settingsModel.toogleHardcoreMode(it) }
                 )
+            }
+            if (state.hardcoreMode) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(
+                        value = address,
+                        onValueChange = {
+                            address = it
+                            settingsModel.updateBzztMachenAddress(address)
+                                        },
+                        label = {Text("Android sucks at mdns, try using ip address")},
+                        singleLine = true
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = {settingsModel.quickTest(address = address, player = state.bzztmachenPlayer)}
+                    ) {
+                        Text("test")
+                    }
+                }
+                Spacer(modifier = Modifier.height(1.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(1.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("PLAYER:")
+                    (1..5).forEach { number ->
+                        val isSelected = number == state.bzztmachenPlayer
+                        Button(
+                            onClick = { settingsModel.updateBzztmachenPlayer(number) },
+                            colors = ButtonDefaults.textButtonColors(
+                                containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                            ),
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            Text(text = number.toString())
+                        }
+                    }
+                }
+                Text(response.value)
             }
         }
     }
