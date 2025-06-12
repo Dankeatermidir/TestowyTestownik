@@ -25,4 +25,9 @@
     <string name="accept">Zaakceptuj</string>
     <string name="cancel">Anuluj</string>
     <string name="next">Dalej</string>
+    <string name="tip0">kys</string>
+    <string name="tip2">Wybierz ROZPAKOWANY folder z pytaniami</string>
+    <string name="tip3">Zmień nazwę lub usuń długim przyciśnięciem</string>
+    <string name="tip1">Dodaj nowy testownik</string>
+    <string name="addingtestowiron">Jak importować testowniki</string>
 </resources>
