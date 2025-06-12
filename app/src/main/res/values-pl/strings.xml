@@ -30,4 +30,5 @@
     <string name="tip3">Zmień nazwę lub usuń długim przyciśnięciem</string>
     <string name="tip1">Dodaj nowy testownik</string>
     <string name="addingtestowiron">Jak importować testowniki</string>
+    <string name="markdowntest"><![CDATA[# Welcome to **MyApp**.\n[Click here](https://example.com) to learn more.\n🟢 This line contains an emoji icon.]]></string>
 </resources>

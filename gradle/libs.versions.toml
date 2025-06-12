@@ -1,6 +1,9 @@
 [versions]
 agp = "8.9.0"
 coilCompose = "2.4.0"
+composeMarkdown = "0.3.0"
+composeRichtextUiMaterial = "0.16.0"
+core = "4.6.2"
 datastorePreferences = "1.1.7"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
@@ -15,6 +18,11 @@ materialIconsExtended = "1.7.8"
 navigationRuntimeAndroid = "2.9.0-rc01"
 navigationCompose = "2.8.9"
 documentfile = "1.1.0"
+richeditorCompose = "1.0.0-rc12"
+richtextCommonmark = "{latest_version}"
+richtextMarkdown = "1.0.0"
+richtextUi = "1.0.0"
+richtextUiVersion = "{latest_version}"
 roomCommonJvm = "2.7.1"
 datastoreCoreAndroid = "1.1.7"
 datastorePreferencesCoreAndroid = "1.1.7"
@@ -32,6 +40,11 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+compose-markdown = { module = "io.github.jeziellago:compose-markdown", version.ref = "composeMarkdown" }
+compose-richtext-markdown = { module = "com.halilozercan:compose-richtext-markdown", version.ref = "composeRichtextUiMaterial" }
+compose-richtext-ui-material = { module = "com.halilozercan:compose-richtext-ui-material", version.ref = "composeRichtextUiMaterial" }
+core = { module = "io.noties.markwon:core", version.ref = "core" }
+html = { module = "io.noties.markwon:html", version.ref = "core" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -53,6 +66,11 @@ androidx-datastore-core-android = { group = "androidx.datastore", name = "datast
 androidx-datastore-preferences-core-android = { group = "androidx.datastore", name = "datastore-preferences-core-android", version.ref = "datastorePreferencesCoreAndroid" }
 androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientAndroid" }
+richeditor-compose = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "richeditorCompose" }
+richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtextCommonmark" }
+richtext-markdown = { module = "com.halilibo.compose-richtext:richtext-markdown", version.ref = "richtextMarkdown" }
+richtext-ui = { module = "com.halilibo.compose-richtext:richtext-ui", version.ref = "richtextUi" }
+richtext-ui-vlatestversion = { module = "com.halilibo.compose-richtext:richtext-ui", version.ref = "richtextUiVersion" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 android-youtube-player-core = { group = "com.pierfrancescosoffritti.androidyoutubeplayer", name = "core", version.ref = "androidYoutubePlayer" }

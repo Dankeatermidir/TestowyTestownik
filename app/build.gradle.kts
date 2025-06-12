@@ -77,6 +77,10 @@ dependencies {
     implementation(libs.ktor.client.android)
 
     implementation(libs.android.youtube.player.core)
+
+    implementation(libs.core)
+    implementation(libs.html)
+
 }
 
 kapt {

@@ -30,4 +30,5 @@
     <string name="tip1">Add a new quiz.</string>
     <string name="tip2">Select uncompressed folder with questions.</string>
     <string name="addingtestowiron">How to import a Quiz</string>
+    <string name="markdowntest">Welcome to **MyApp**.\\n[Click here](https://example.com) to learn more.\\n🟢 This line contains an emoji icon.</string>
 </resources>

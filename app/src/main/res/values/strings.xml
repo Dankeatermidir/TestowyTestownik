@@ -29,4 +29,5 @@
     <string name="tip3">TODO</string>
     <string name="tip1">TODO</string>
     <string name="addingtestowiron">TODO</string>
+    <string name="markdowntest">Welcome to **MyApp**.\\n[Click here](https://example.com) to learn more.\\n🟢 This line contains an emoji icon.</string>
 </resources>
