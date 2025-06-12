@@ -11,7 +11,7 @@ data class SettingsState(
     val maxRepeats: Int = 3,
 
     val hardcoreMode: Boolean = false,
-    val bzztmachenPlayer: Int = 0,
+    val bzztmachenPlayer: Int = 1,
     val bzztmachenAddress: String = "bzztmachen.local"
 )
 

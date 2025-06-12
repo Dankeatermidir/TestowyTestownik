@@ -119,19 +119,6 @@ fun SettingsScreen(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-
-
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.autosave))
-                Spacer(modifier = Modifier.weight(1f))
-                Switch(
-                    checked = state.autoSave,
-                    onCheckedChange = { settingsModel.toogleAutoSave(it) }
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-
             Text("${stringResource(R.string.init_repeats)} ${state.initRepeats}")
             Slider(
                 value = state.initRepeats.toFloat(),
@@ -154,7 +141,7 @@ fun SettingsScreen(
                 onValueChange = { settingsModel.updateMaxRepeats(it.toInt()) },
                 valueRange = 1f..10f
             )
-
+            //time to BZZZT!
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.hardcoremode))
                 Spacer(modifier = Modifier.weight(1f))
