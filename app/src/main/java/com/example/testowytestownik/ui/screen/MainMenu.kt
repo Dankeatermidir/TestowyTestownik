@@ -61,10 +61,6 @@ fun MainMenu(
                 Icons.Default.Settings
             ) { navController.navigate(route = Screen.Sett.route) }
             MenuButton(
-                stringResource(R.string.stats),
-                Icons.AutoMirrored.Filled.List
-            ) { navController.navigate(route = Screen.Stat.route) }
-            MenuButton(
                 stringResource(R.string.open_last),
                 Icons.Default.PlayArrow
             ) { navController.navigate(route = Screen.Quiz.route) }

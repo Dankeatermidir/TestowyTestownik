@@ -19,6 +19,8 @@ class SettingsStore(private val context: Context) {
     private val EXTRA_REPEATS_KEY = intPreferencesKey("extra_repeats")
     private val MAXIMUM_REPEATS_KEY = intPreferencesKey("maximum_repeats")
     private val HARDCORE_MODE_KEY = booleanPreferencesKey("hardcore_mode")
+    private val BZZTMACHEN_PLAYER = intPreferencesKey("bzztmachen_player")
+    private val BZZTMACHEN_ADDRESS = stringPreferencesKey("bzztmachen_address")
 
     val defaultSettings = SettingsState()
 
@@ -30,7 +32,10 @@ class SettingsStore(private val context: Context) {
                 fontSize = FontSize.valueOf(prefs[FONT_SIZE_KEY] ?: defaultSettings.fontSize.name),
                 initRepeats = prefs[INITIAL_REPEATS_KEY] ?: defaultSettings.initRepeats,
                 extraRepeats = prefs[EXTRA_REPEATS_KEY] ?: defaultSettings.extraRepeats,
-                maxRepeats = prefs[MAXIMUM_REPEATS_KEY] ?: defaultSettings.maxRepeats
+                maxRepeats = prefs[MAXIMUM_REPEATS_KEY] ?: defaultSettings.maxRepeats,
+                hardcoreMode = prefs[HARDCORE_MODE_KEY] ?: defaultSettings.hardcoreMode,
+                bzztmachenPlayer = prefs[BZZTMACHEN_PLAYER] ?: defaultSettings.bzztmachenPlayer,
+                bzztmachenAddress = prefs[BZZTMACHEN_ADDRESS] ?: defaultSettings.bzztmachenAddress
             )
         }
     suspend fun saveDarkMode(enabled: Boolean) {
@@ -53,5 +58,11 @@ class SettingsStore(private val context: Context) {
     }
     suspend fun saveMaxRepeats(value: Int) {
         context.dataStore.edit { it[MAXIMUM_REPEATS_KEY] = value }
+    }
+    suspend fun saveBzztmachenPlayer(value: Int){
+        context.dataStore.edit { it[BZZTMACHEN_PLAYER] = value }
+    }
+    suspend fun saveBzztmachenAddress(address: String){
+        context.dataStore.edit { it[BZZTMACHEN_ADDRESS] = address }
     }
 }

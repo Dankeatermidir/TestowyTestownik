@@ -29,7 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.testowytestownik.R
+import com.example.testowytestownik.ui.components.MarkdownText
 import com.example.testowytestownik.ui.navigation.Screen
+
+
 
 @Composable
 fun InfoScreen(
@@ -72,26 +75,8 @@ fun InfoScreen(
                   )
                   Spacer(modifier = Modifier.size(38.dp))
               }
-              Text(
-                  text = "KYS!",
-                  color = Color.Red,
-                  fontSize = 50.sp,
-                  fontWeight = FontWeight.Bold
-              )
-              ElevatedButton(
-                  modifier = Modifier
-                      .padding(vertical = 15.dp)
-                      .fillMaxWidth(1f)
-                      .height(75.dp),
-                  onClick = {
-                      navController.navigate(route = Screen.Menu.route) {
-                          popUpTo(Screen.Menu.route)
-                      }
-                  }
-              ) {
-                  Icon(Icons.Default.CheckCircle, "time to kys")
-                  Text(text = "GOT IT!")
-              }
+
+              MarkdownText(R.raw.testowiron)
           }
       }
   }

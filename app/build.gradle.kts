@@ -73,6 +73,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.ktor.client.android)
+
+    implementation(libs.android.youtube.player.core)
+
+    implementation(libs.core)
+    implementation(libs.html)
+
 }
 
 kapt {

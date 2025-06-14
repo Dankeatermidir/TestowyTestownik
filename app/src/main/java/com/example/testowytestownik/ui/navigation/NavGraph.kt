@@ -9,14 +9,11 @@ import com.example.testowytestownik.ui.screen.InfoScreen
 import com.example.testowytestownik.ui.screen.MainMenu
 import com.example.testowytestownik.ui.screen.ManualScreen
 import com.example.testowytestownik.ui.screen.SettingsScreen
-import com.example.testowytestownik.ui.screen.StatisticsScreen
 import com.example.testowytestownik.ui.screen.QuizScreen
-import com.example.testowytestownik.viewmodel.InfoModel
 import com.example.testowytestownik.viewmodel.ManagementModel
 import com.example.testowytestownik.viewmodel.ManualModel
 import com.example.testowytestownik.viewmodel.QuizModel
 import com.example.testowytestownik.viewmodel.SettingsModel
-import com.example.testowytestownik.viewmodel.StatisticsModel
 
 @Composable
 fun SetupNavGraph(
@@ -24,8 +21,6 @@ fun SetupNavGraph(
     managementModel: ManagementModel,
     settingsModel: SettingsModel,
     quizModel: QuizModel,
-    infoModel: InfoModel,
-    statisticsModel: StatisticsModel,
     manualModel: ManualModel
 ) {
     NavHost (
@@ -46,11 +41,6 @@ fun SetupNavGraph(
             route = Screen.Inst.route
         ){
             ManualScreen(navController)
-        }
-        composable(
-            route = Screen.Stat.route
-        ){
-            StatisticsScreen(navController)
         }
         composable(
             route = Screen.Sett.route
