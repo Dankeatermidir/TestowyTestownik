@@ -142,7 +142,7 @@ fun QuizScreen(
                     .fillMaxWidth(1.0f)
             )
         } else {
-            Text("No such picture: \"${context.filesDir}/${imageFile.name}\"|\nCorrect your Testownik in question ${thisQuestion}.txt and readd this Testownik's folder.")
+            Text("No such picture: \"${context.filesDir}/${imageFile.name}\"|\nCorrect your Testownik in question ${thisQuestion}.txt and read this Testownik's folder.")
         }
     }
 
@@ -164,7 +164,7 @@ fun QuizScreen(
                     .align(Alignment.BottomEnd),
                 onClick = { showBottomSheet = true },
                 icon = { Icon(Icons.Filled.Collections, "Multiple images icon") },
-                text = { Text(text = "Pokaż obrazki") }
+                text = { Text(text = stringResource(R.string.show_pictures)) }
             )
 
             if (showBottomSheet) {
@@ -184,7 +184,7 @@ fun QuizScreen(
                         )
                         {
                             items(imagesList.size) { i ->
-                                Text("Obrazek ${i+1}:")
+                                Text("${stringResource(R.string.picture)}} ${i+1}:")
                                 Spacer(Modifier.height(30.dp))
                                 drawImage(quizModel.parseImageName(imagesList[i]),"Picture-answer for $i answer")
                                 Spacer(Modifier.height(30.dp))
@@ -265,7 +265,7 @@ fun QuizScreen(
                                     .fillMaxWidth()
                             )
                             Text(
-                                text = "Nie otwarłeś wcześniej testownika",
+                                text = stringResource(R.string.no_recent),
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
                             )
@@ -286,7 +286,7 @@ fun QuizScreen(
                                         }
                                     })
                             {
-                                Text(text = "Przejdź do Twoich Testowników")
+                                Text(text = stringResource(R.string.goto_management))
                             }
                             Spacer(
                                 modifier = Modifier
@@ -321,25 +321,25 @@ fun QuizScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text("Statystyki", modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Bold)
+                                Text(stringResource(R.string.stats), modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Bold)
                                 HorizontalDivider()
 
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text = "Postęp Testownika:", fontWeight = FontWeight.Bold)
+                                Text(text = "${stringResource(R.string.test_progress)}:", fontWeight = FontWeight.Bold)
                                 Spacer(modifier = Modifier.height(20.dp))
-                                Text(text="Wszystkich pytań w testowniku:")
+                                Text(text="${stringResource(R.string.all_questions)}:")
                                 Spacer(modifier = Modifier.height(10.dp))
                                 Text(allQuestions.toString(),
                                     modifier = Modifier
                                         .scale(1.5f)
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text="Opanowanych:")
+                                Text(text="${stringResource(R.string.done_questions)}:")
                                 Text(doneQuestions.toString(),
                                     modifier = Modifier
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text="Do opanowania:")
+                                Text(text="${stringResource(R.string.to_do_questions)}:")
                                 Text(remainingQuestions.toString(),
                                     modifier = Modifier
                                 )
@@ -354,12 +354,12 @@ fun QuizScreen(
                                 HorizontalDivider()
                                 Spacer(modifier = Modifier.height(20.dp))
 
-                                Text(text="Poprawnych odpowiedzi:")
+                                Text(text="${stringResource(R.string.correct_answers)}:")
                                 Text(correctAnswers.toString(),
                                     modifier = Modifier
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text="Błędnych odpowiedzi:")
+                                Text(text="${stringResource(R.string.bad_answers)}:")
                                 Text(wrongAnswers.toString(),
                                     modifier = Modifier
                                 )
@@ -379,7 +379,7 @@ fun QuizScreen(
 //                                    selected = false,
 //                                    onClick = { }
 //                                )
-                                Text(text = "Czas sesji", fontWeight = FontWeight.Bold)
+                                Text(text = stringResource(R.string.session_duration), fontWeight = FontWeight.Bold)
 
                                 LaunchedEffect(Unit) {
                                     while (true) {
@@ -400,7 +400,7 @@ fun QuizScreen(
                                         quizModel.resetTimer()
                                     }
                                 ) {
-                                    Text("Zresetuj postęp")
+                                    Text(stringResource(R.string.reset_progress))
                                 }
                                 Text(text="$thisQuestion.txt", modifier = Modifier.scale(0.8f))
                             }
@@ -480,7 +480,7 @@ fun QuizScreen(
                                             .weight(1f)
                                     )
                                     Text(
-                                        text = if("[img]" in que.answers[i]){"Obrazek ${i+1}"} else {que.answers[i]},
+                                        text = if("[img]" in que.answers[i]){"${stringResource(R.string.picture)} ${i+1}"} else {que.answers[i]},
                                         softWrap = true,
                                         overflow = TextOverflow.Visible
                                     )

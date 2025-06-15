@@ -102,7 +102,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.size(38.dp))
             }
 
-            Text("Font Size")
+            Text(stringResource(R.string.fontsize))
             DropdownMenuFontSize(
                 selected = state.fontSize,
                 onSelect = { settingsModel.updateFontSize(it) }
@@ -158,14 +158,14 @@ fun SettingsScreen(
                             address = it
                             settingsModel.updateBzztMachenAddress(address)
                                         },
-                        label = {Text("Android sucks at mdns, try using ip address")},
+                        label = {Text(stringResource(R.string.info_mdns))},
                         singleLine = true
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
                         onClick = {settingsModel.quickTest(address = address, player = state.bzztmachenPlayer)}
                     ) {
-                        Text("test")
+                        Text(stringResource(R.string.test_config))
                     }
                 }
                 Spacer(modifier = Modifier.height(1.dp))
@@ -173,7 +173,7 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.spacedBy(1.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("PLAYER:")
+                    Text("${stringResource(R.string.player)}:")
                     (1..5).forEach { number ->
                         val isSelected = number == state.bzztmachenPlayer
                         Button(
@@ -205,7 +205,7 @@ fun DropdownMenuFontSize(
 
     Box {
         Button(onClick = { expanded = true }) {
-            Text("Font Size: ${selected.name}")
+            Text("${stringResource(R.string.fontsize)}: ${selected.name}")
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             FontSize.values().forEach { size ->

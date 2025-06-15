@@ -14,7 +14,7 @@
     <string name="add">Add new Testownik</string>
     <string name="rename">Rename Testownik</string>
     <string name="darkmode">Dark Mode</string>
-    <string name="fontsize">Font Size</string>
+    <string name="fontsize">Font size</string>
     <string name="autosave">AutoSave</string>
     <string name="init_repeats">Initial number of repeats</string>
     <string name="extra_repeats">Repeats on wrong answer</string>
@@ -31,4 +31,19 @@
     <string name="tip2">Select uncompressed folder with questions.</string>
     <string name="addingtestowiron">How to import a Quiz</string>
     <string name="markdowntest">Welcome to **MyApp**.\\n[Click here](https://example.com) to learn more.\\n🟢 This line contains an emoji icon.</string>
+    <string name="show_pictures">Show pictures</string>
+    <string name="picture">Picture</string>
+    <string name="no_recent">You have not opened any Testownik before.</string>
+    <string name="goto_management">Go to \'Your Testowniks\'</string>
+    <string name="test_progress">Testownik progress</string>
+    <string name="all_questions">All questions in Testownik</string>
+    <string name="done_questions">Learned</string>
+    <string name="to_do_questions">To learn</string>
+    <string name="correct_answers">Correct answers</string>
+    <string name="bad_answers">Bad answers</string>
+    <string name="session_duration">Session duration</string>
+    <string name="reset_progress">Reset progress</string>
+    <string name="test_config">Test</string>
+    <string name="info_mdns">Android sucks at mDNS, try using IP address</string>
+    <string name="player">Player</string>
 </resources>

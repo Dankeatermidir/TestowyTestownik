@@ -233,7 +233,7 @@ fun ManagementScreen(
                     offset = DpOffset(menuOffset.x.dp, menuOffset.y.dp)
                 ) {
                     DropdownMenuItem(// Delete quiz from storage and DB
-                        text = { Text("Delete") },
+                        text = { Text(stringResource(R.string.delete)) },
                         onClick = {
                             showMenu = false
                             managementModel.deleteFolder(folder)
@@ -242,7 +242,7 @@ fun ManagementScreen(
                         }
                     )
                     DropdownMenuItem(// Start rename dialog popup
-                        text = { Text("Rename") },
+                        text = { Text(stringResource(R.string.rename)) },
                         onClick = {
                             showMenu = false
                             renameText = folder.name
@@ -258,7 +258,7 @@ fun ManagementScreen(
                         OutlinedTextField(
                             value = renameText,
                             onValueChange = { renameText = it },
-                            label = { Text("New name") }
+                            label = { Text(stringResource(R.string.new_name)) }
                         )
                     },
                     confirmButton = {
@@ -268,12 +268,12 @@ fun ManagementScreen(
                             showRenameDialog = false
                             updateFiles()
                         }) {
-                            Text("Confirm")
+                            Text(stringResource(R.string.accept))
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { showRenameDialog = false }) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                     }
                 )

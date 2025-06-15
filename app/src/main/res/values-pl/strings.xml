@@ -14,7 +14,7 @@
     <string name="add">Dodaj nowy testownik</string>
     <string name="rename">Zmień nazwę</string>
     <string name="darkmode">Tryb Ciemny</string>
-    <string name="fontsize">Rozmiar Czcionki</string>
+    <string name="fontsize">Rozmiar czcionki</string>
     <string name="autosave">Autozapis</string>
     <string name="init_repeats">Wstępna liczba powtórzeń</string>
     <string name="extra_repeats">Powtórzenia przy błędnej odpowiedzi</string>
@@ -31,4 +31,19 @@
     <string name="tip1">Dodaj nowy testownik</string>
     <string name="addingtestowiron">Jak importować testowniki</string>
     <string name="markdowntest"><![CDATA[# Welcome to **MyApp**.\n[Click here](https://example.com) to learn more.\n🟢 This line contains an emoji icon.]]></string>
+    <string name="show_pictures">Pokaż obrazki</string>
+    <string name="picture">Obrazek</string>
+    <string name="no_recent">Nie otwarto wcześniej żadnego testownika.</string>
+    <string name="goto_management">Przejdź do Twoich Testowników</string>
+    <string name="test_progress">Postęp Testownika</string>
+    <string name="all_questions">Wszystkich pytań w testowniku</string>
+    <string name="done_questions">Opanowanych</string>
+    <string name="to_do_questions">Do opanowania</string>
+    <string name="correct_answers">Poprawnych odpowiedzi</string>
+    <string name="bad_answers">Złych odpowiedzi</string>
+    <string name="session_duration">Czas sesji</string>
+    <string name="reset_progress">Zresetuj postęp</string>
+    <string name="test_config">Test</string>
+    <string name="info_mdns">Android ssie w mDNS. Spróbuj raczej po IP</string>
+    <string name="player">Gracz</string>
 </resources>
