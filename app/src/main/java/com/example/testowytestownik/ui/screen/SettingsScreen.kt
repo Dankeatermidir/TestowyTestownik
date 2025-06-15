@@ -119,7 +119,7 @@ fun SettingsScreen(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text("${stringResource(R.string.init_repeats)} ${state.initRepeats}")
+            Text("${stringResource(R.string.init_repeats)}: ${state.initRepeats}")
             Slider(
                 value = state.initRepeats.toFloat(),
                 onValueChange = { settingsModel.updateInitRepeats(it.toInt()) },
@@ -127,7 +127,7 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text("${stringResource(R.string.extra_repeats)} ${state.extraRepeats}")
+            Text("${stringResource(R.string.extra_repeats)}: ${state.extraRepeats}")
             Slider(
                 value = state.extraRepeats.toFloat(),
                 onValueChange = { settingsModel.updateExtraRepeats(it.toInt()) },
@@ -135,7 +135,7 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text("${stringResource(R.string.max_repeats)} ${state.maxRepeats}")
+            Text("${stringResource(R.string.max_repeats)}: ${state.maxRepeats}")
             Slider(
                 value = state.maxRepeats.toFloat(),
                 onValueChange = { settingsModel.updateMaxRepeats(it.toInt()) },

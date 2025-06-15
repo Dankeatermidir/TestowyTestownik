@@ -45,4 +45,6 @@
     <string name="test_config">Test</string>
     <string name="info_mdns">Android ist schlecht bei mDNS, versuchen Sie es mit der IP-Adresse</string>
     <string name="player">Spieler</string>
+    <string name="finished">Fertig gelernt</string>
+    <string name="once_again">Ich will noch einmal!</string>
 </resources>

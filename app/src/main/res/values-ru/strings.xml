@@ -46,4 +46,6 @@
     <string name="test_config">Тест</string>
     <string name="info_mdns">Android płoho rabotaet c mDNSom. Rekomendiruem wwedit\' IP</string>
     <string name="player">Igrok</string>
+    <string name="finished">Wy укончили</string>
+    <string name="once_again">Ja hoczu eszczjo raz!</string>
 </resources>

@@ -46,4 +46,6 @@
     <string name="test_config">Test</string>
     <string name="info_mdns">Android ssie w mDNS. Spróbuj raczej po IP</string>
     <string name="player">Gracz</string>
+    <string name="finished">Ukończono</string>
+    <string name="once_again">Ja chcę jeszcze raz!</string>
 </resources>

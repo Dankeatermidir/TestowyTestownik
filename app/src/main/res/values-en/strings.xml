@@ -46,4 +46,6 @@
     <string name="test_config">Test</string>
     <string name="info_mdns">Android sucks at mDNS, try using IP address</string>
     <string name="player">Player</string>
+    <string name="finished">Finished</string>
+    <string name="once_again">Once again!</string>
 </resources>
