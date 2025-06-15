@@ -48,4 +48,11 @@
     <string name="player">Gracz</string>
     <string name="finished">Ukończono</string>
     <string name="once_again">Ja chcę jeszcze raz!</string>
+    <string name="show">Pokaż</string>
+    <string name="hide">Ukryj</string>
+    <string name="image_question">pytanie-obrazek</string>
+    <string name="video_question">pytanie-filmik</string>
+    <string name="audio_question">pytanie-nagranie</string>
+    <string name="play_audio">Odtwórz</string>
+    <string name="stop_audio">Stop</string>
 </resources>

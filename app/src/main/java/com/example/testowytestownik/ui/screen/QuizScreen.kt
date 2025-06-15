@@ -1,6 +1,8 @@
 package com.example.testowytestownik.ui.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +22,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Collections
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Speaker
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.ButtonDefaults
@@ -29,6 +37,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -38,6 +47,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -50,6 +60,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +68,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavController
 import com.example.testowytestownik.R
 import com.example.testowytestownik.ui.navigation.Screen
@@ -65,6 +79,7 @@ import com.example.testowytestownik.viewmodel.QuizModel
 import kotlinx.coroutines.delay
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.testowytestownik.ui.components.YoutubeVideo
 import java.io.File
 
 @Composable
@@ -120,7 +135,7 @@ fun QuizScreen(
 
     @Composable
     fun drawImage(name: String, accessibilityDescription: String) {
-        val imageFile = File(context.filesDir, "testowniki/"+thisQuiz+"/"+name)
+        val imageFile = File(context.filesDir, "testowniki/$thisQuiz/$name")
 
 //        Log.d("DrawImage", "Loading from: ${imageFile.absolutePath}")
 //
@@ -130,7 +145,8 @@ fun QuizScreen(
 //            Log.d("FILES", it.name)
 //        }
 
-        if (imageFile.exists()) {
+        if (imageFile.exists())
+        {
             AsyncImage(
                 model = ImageRequest.Builder(context)
                     .data(imageFile)
@@ -141,8 +157,73 @@ fun QuizScreen(
                 modifier = Modifier
                     .fillMaxWidth(1.0f)
             )
-        } else {
+        }
+        else
+        {
             Text("No such picture: \"${context.filesDir}/${imageFile.name}\"|\nCorrect your Testownik in question ${thisQuestion}.txt and read this Testownik's folder.")
+        }
+    }
+
+    @Composable
+    fun placeAudiofile(name: String)
+    {
+        val audioFile = File(context.filesDir,"/testowniki/$thisQuiz/$name")
+
+        if (audioFile.exists())
+        {
+            val exoPlayer = remember {
+                ExoPlayer.Builder(context).build().apply {
+                    setMediaItem(MediaItem.fromUri(audioFile.toUri()))
+                    prepare()
+                }
+            }
+
+            DisposableEffect(Unit) {
+                onDispose {
+                    exoPlayer.release()
+                }
+            }
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally)
+            {
+                Row(verticalAlignment = Alignment.CenterVertically)
+                {
+                    ElevatedButton(
+                        modifier = Modifier
+                            .padding(vertical = 15.dp)
+                            .height(75.dp),
+                        onClick = {
+                        exoPlayer.pause()
+                        exoPlayer.seekTo(0)
+                        exoPlayer.play()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "play"
+                        )
+                        Text(stringResource(R.string.play_audio))
+                    }
+                    Spacer(Modifier.width(30.dp))
+                    ElevatedButton(
+                        modifier = Modifier
+                            .padding(vertical = 15.dp)
+                            .height(75.dp),
+                        onClick = {
+                        exoPlayer.pause()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Stop,
+                            contentDescription = "stop"
+                        )
+                        Text(stringResource(R.string.stop_audio))
+                    }
+                }
+            }
+
+        }
+        else
+        {
+            Text("No such file: ${context.filesDir}/testowniki/$thisQuiz/$name")
         }
     }
 
@@ -184,9 +265,9 @@ fun QuizScreen(
                         )
                         {
                             items(imagesList.size) { i ->
-                                Text("${stringResource(R.string.picture)}} ${i+1}:")
+                                Text("${stringResource(R.string.picture)} ${i+1}:")
                                 Spacer(Modifier.height(30.dp))
-                                drawImage(quizModel.parseImageName(imagesList[i]),"Picture-answer for $i answer")
+                                drawImage(quizModel.parseFile(imagesList[i],"img"),"Picture-answer for $i answer")
                                 Spacer(Modifier.height(30.dp))
                             }
                         }
@@ -249,68 +330,71 @@ fun QuizScreen(
                         textAlign = TextAlign.Center )
                     Spacer(modifier = Modifier.size(38.dp))
                 }
-                if(isReady)
+                if (thisQuiz == "")
                 {
-                    try
-                    {
-                        getQuestion()
-                    }
-                    catch (e: Exception)
-                    {
-                        if (thisQuiz == "")
-                        {
-                            Spacer(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxWidth()
-                            )
-                            Text(
-                                text = stringResource(R.string.no_recent),
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(modifier = Modifier.size(10.dp))
-                            ElevatedButton(
-                                modifier = Modifier
-                                    .padding(vertical = 15.dp)
-                                    .fillMaxWidth(1f)
-                                    .height(75.dp),
-                                onClick =
-                                    {
-                                        quizModel.shouldResetTimer = true
-                                        navController.navigate(Screen.Mgmt.route) {
-                                            popUpTo(Screen.Menu.route) {
-                                                inclusive = false // saves Menu
-                                            }
-                                            launchSingleTop = true // in advance
-                                        }
-                                    })
+                    Spacer(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    )
+                    Text(
+                        text = stringResource(R.string.no_recent),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.size(10.dp))
+                    ElevatedButton(
+                        modifier = Modifier
+                            .padding(vertical = 15.dp)
+                            .fillMaxWidth(1f)
+                            .height(75.dp),
+                        onClick =
                             {
-                                Text(text = stringResource(R.string.goto_management))
-                            }
-                            Spacer(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxWidth()
-                            )
-                        } else
+                                quizModel.shouldResetTimer = true
+                                navController.navigate(Screen.Mgmt.route) {
+                                    popUpTo(Screen.Menu.route) {
+                                        inclusive = false // saves Menu
+                                    }
+                                    launchSingleTop = true // in advance
+                                }
+                            })
+                    {
+                        Text(text = stringResource(R.string.goto_management))
+                    }
+                    Spacer(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    )
+                    return@Box
+                }
+                else
+                {
+                    if(isReady)
+                    {
+                        try
+                        {
+                            getQuestion()
+                        }
+                        catch (e: Exception)
                         {
                             Text("ERROR: [in question Loading: $e] \n [$err]")
+                            return@Box
+                        }
+                    }
+                    else
+                    {
+                        Column (horizontalAlignment = Alignment.CenterHorizontally)
+                        {
+                            Row (verticalAlignment = Alignment.CenterVertically)
+                            {
+                                CircularProgressIndicator()
+                            }
                         }
                         return@Box
                     }
                 }
-                else
-                {
-                    Column (horizontalAlignment = Alignment.CenterHorizontally)
-                    {
-                        Row (verticalAlignment = Alignment.CenterVertically)
-                        {
-                            CircularProgressIndicator()
-                        }
-                    }
-                    return@Box
-                }
+
 
 
                 val correct = quizModel.correctAnswersList(que)
@@ -411,86 +495,137 @@ fun QuizScreen(
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
                     )
                     {
-                        if ("[img]" !in que.question) {
-                            Text(
-                                text = que.question,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(vertical = 10.dp)
-                            )
-                        }
-                        else
-                        {
-                            drawImage(quizModel.parseImageName(que.question),"Picture-question for ${que.question} question")
-                        }
-                        LazyColumn(
+                        Column(
                             modifier = Modifier
-                                .padding(horizontal = 10.dp),
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         )
                         {
-                            items(que.answers.size) { i ->
-                                val isSelected = i in userAns
-
-                                ElevatedButton(
-                                    modifier = Modifier
-                                        .padding(vertical = 15.dp)
-                                        .fillMaxWidth()
-                                        .wrapContentHeight()
-                                        .heightIn(min = 75.dp),
-                                    onClick = {
-                                        if (isSelected) {
-                                            userAns.remove(i)
-                                        } else {
-                                            userAns.add(i)
+                            Row()
+                            {
+                                if ("[img]" !in que.question && "[yt]" !in que.question && "[aud]" !in que.question) {
+                                    Text(
+                                        text = que.question,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier
+                                            .padding(vertical = 10.dp)
+                                    )
+                                }
+                                else
+                                {
+                                    var imageVisible by remember { mutableStateOf(true) }
+                                    Column(modifier = Modifier.animateContentSize()) {
+                                        var whichMedium=""
+                                        AnimatedVisibility(visible = imageVisible)
+                                        {
+                                            if("[img]" in que.question)
+                                            {
+                                                whichMedium=stringResource(R.string.image_question)
+                                                drawImage(
+                                                    quizModel.parseFile(que.question,"img"),
+                                                    "${stringResource(R.string.image_question)} № ${que.question}"
+                                                )
+                                            }
+                                            else if ("[aud]" in que.question)
+                                            {
+                                                whichMedium=stringResource(R.string.audio_question)
+                                                placeAudiofile(quizModel.parseFile(que.question,"aud"))
+                                            }
+                                            else if ("[yt]" in que.question)
+                                            {
+                                                whichMedium=stringResource(R.string.video_question)
+                                                YoutubeVideo(quizModel.parseFile(que.question,"yt"))
+                                            }
                                         }
-                                    },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-                                        else MaterialTheme.colorScheme.primary,
 
-                                        disabledContainerColor = if (i in correct && i in userAns) Color.Green.copy(
-                                            alpha = 0.5f
-                                        )
-                                        else {
-                                            if (i in correct && i !in userAns) Color.Yellow.copy(
+                                        Row(verticalAlignment = Alignment.CenterVertically)
+                                        {
+                                            val descText="${if(!imageVisible){stringResource(R.string.show)} else{stringResource(R.string.hide)}} $whichMedium"
+                                            ElevatedButton(onClick = { imageVisible = !imageVisible }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary))
+                                            {
+                                                Icon(
+                                                    imageVector = if (imageVisible) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                                    contentDescription = descText
+                                                )
+                                                Text(descText)
+                                            }
+                                        }
+
+
+                                    }
+
+                                }
+                            }
+                            LazyColumn(
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                            )
+                            {
+                                items(que.answers.size) { i ->
+                                    val isSelected = i in userAns
+
+                                    ElevatedButton(
+                                        modifier = Modifier
+                                            .padding(vertical = 15.dp)
+                                            .fillMaxWidth()
+                                            .wrapContentHeight()
+                                            .heightIn(min = 75.dp),
+                                        onClick = {
+                                            if (isSelected) {
+                                                userAns.remove(i)
+                                            } else {
+                                                userAns.add(i)
+                                            }
+                                        },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
+                                            else MaterialTheme.colorScheme.primary,
+
+                                            disabledContainerColor = if (i in correct && i in userAns) Color.Green.copy(
                                                 alpha = 0.5f
                                             )
                                             else {
-                                                if (i !in correct && i in userAns) {
-                                                    Color.Red.copy(alpha = 0.5f)
-                                                } else {
-                                                    Color.Gray.copy(alpha = 0.5f)
+                                                if (i in correct && i !in userAns) Color.Yellow.copy(
+                                                    alpha = 0.5f
+                                                )
+                                                else {
+                                                    if (i !in correct && i in userAns) {
+                                                        Color.Red.copy(alpha = 0.5f)
+                                                    } else {
+                                                        Color.Gray.copy(alpha = 0.5f)
+                                                    }
                                                 }
                                             }
-                                        }
-                                    ),
-                                    enabled = !answered
-                                )
-                                {
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    Icon(
-                                        if (isSelected) Icons.Rounded.CheckCircle else Icons.Rounded.Check,
-                                        contentDescription = null
+                                        ),
+                                        enabled = !answered
                                     )
-                                    Spacer(
-                                        modifier = Modifier.fillMaxWidth()
-                                            .weight(1f)
-                                    )
-                                    Text(
-                                        text = if("[img]" in que.answers[i]){"${stringResource(R.string.picture)} ${i+1}"} else {que.answers[i]},
-                                        softWrap = true,
-                                        overflow = TextOverflow.Visible
-                                    )
-                                    Spacer(
-                                        modifier = Modifier.fillMaxWidth()
-                                            .weight(1f)
-                                    )
+                                    {
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                        Icon(
+                                            if (isSelected) Icons.Rounded.CheckCircle else Icons.Rounded.Check,
+                                            contentDescription = null
+                                        )
+                                        Spacer(
+                                            modifier = Modifier.fillMaxWidth()
+                                                .weight(1f)
+                                        )
+                                        Text(
+                                            text = if("[img]" in que.answers[i]){"${stringResource(R.string.picture)} ${i+1}"} else {que.answers[i]},
+                                            softWrap = true,
+                                            overflow = TextOverflow.Visible
+                                        )
+                                        Spacer(
+                                            modifier = Modifier.fillMaxWidth()
+                                                .weight(1f)
+                                        )
+                                    }
                                 }
-                            }
                                 answered = false
+
+                            }
 
                         }
 

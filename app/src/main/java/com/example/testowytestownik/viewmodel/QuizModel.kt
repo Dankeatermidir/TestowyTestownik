@@ -220,10 +220,10 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         return correct
     }
 
-    fun parseImageName(name: String): String
+    fun parseFile(name: String, medium: String): String
     {
         val input = name
-        val regex = "\\[img](.+?)\\[/img]".toRegex()
+        val regex = "\\[$medium](.+?)\\[/$medium]".toRegex()
         val matchResult = regex.find(input)
         return matchResult?.groupValues?.get(1) ?: ""
     }

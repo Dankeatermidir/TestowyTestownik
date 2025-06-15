@@ -48,4 +48,11 @@
     <string name="player">Player</string>
     <string name="finished">Finished</string>
     <string name="once_again">Once again!</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+    <string name="image_question">picture question</string>
+    <string name="video_question">video question</string>
+    <string name="audio_question">audio question</string>
+    <string name="play_audio">Play audio</string>
+    <string name="stop_audio">Stop audio</string>
 </resources>

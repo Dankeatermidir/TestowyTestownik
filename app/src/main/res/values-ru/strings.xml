@@ -48,4 +48,11 @@
     <string name="player">Igrok</string>
     <string name="finished">Wy укончили</string>
     <string name="once_again">Ja hoczu eszczjo raz!</string>
+    <string name="show">Pokazat\'</string>
+    <string name="hide">Skryt\'</string>
+    <string name="image_question">izobrażennyj wopros</string>
+    <string name="video_question">wideo wopros</string>
+    <string name="audio_question">awdio wapros</string>
+    <string name="play_audio">Играть аудио</string>
+    <string name="stop_audio">Остановка</string>
 </resources>

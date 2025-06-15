@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.media3.exoplayer)
     kapt(libs.room.compiler)
 
     testImplementation(libs.junit)

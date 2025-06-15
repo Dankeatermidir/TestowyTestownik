@@ -47,4 +47,11 @@
     <string name="player">Spieler</string>
     <string name="finished">Fertig gelernt</string>
     <string name="once_again">Ich will noch einmal!</string>
+    <string name="show">Zeige ein</string>
+    <string name="hide">Ausblende ein</string>
+    <string name="image_question">Bildfrage</string>
+    <string name="video_question">Videofrage</string>
+    <string name="audio_question">Audiofrage</string>
+    <string name="play_audio">Audio abspielen</string>
+    <string name="stop_audio">Audio anhalten</string>
 </resources>
