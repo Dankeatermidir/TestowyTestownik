@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Collections
@@ -119,7 +122,7 @@ fun QuizScreen(
 
     var answered by remember{ mutableStateOf(false) }
     var wereClickedBefore=false
-
+    val scrollState = rememberScrollState()
 
     fun getQuestion()
     {
@@ -468,7 +471,9 @@ fun QuizScreen(
                     drawerContent = {
                         ModalDrawerSheet {
                             Column(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier
+                                    .verticalScroll(scrollState)
+                                    .fillMaxSize(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             )
                             {
@@ -547,13 +552,14 @@ fun QuizScreen(
                                         .height(75.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                                     onClick = {
-                                        quizModel.resetQuiz(thisQuiz,2)
+                                        quizModel.resetQuiz(thisQuiz,)
                                         quizModel.resetTimer()
                                     }
                                 ) {
                                     Text(stringResource(R.string.reset_progress))
                                 }
                                 Text(text="$thisQuestion.txt", modifier = Modifier.scale(0.8f))
+                                Text(text="R: ${quizModel.currentRepeats}")
                             }
                         }
                     }
@@ -752,7 +758,7 @@ fun QuizScreen(
                                             }
                                             else
                                             {
-                                                quizModel.onWrongAnswer(thisQuiz,thisQuestion,1,4)
+                                                quizModel.onWrongAnswer(thisQuiz,thisQuestion)
                                             }
                                             navController.navigate(Screen.Quiz.route) {
                                                 popUpTo(Screen.Menu.route) {
@@ -763,7 +769,7 @@ fun QuizScreen(
                                         }
                                         else
                                         {
-                                            quizModel.resetQuiz(thisQuiz,2)
+                                            quizModel.resetQuiz(thisQuiz,)
                                             navController.navigate(Screen.Menu.route)
                                         }
                                     }

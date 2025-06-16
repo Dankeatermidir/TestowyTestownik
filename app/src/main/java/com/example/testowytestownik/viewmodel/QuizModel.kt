@@ -6,8 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.testowytestownik.data.model.BzztMachen
 import com.example.testowytestownik.data.model.Question
 import com.example.testowytestownik.data.model.QuizDao
+import com.example.testowytestownik.data.storage.SettingsState
+import com.example.testowytestownik.data.storage.SettingsStore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,14 +35,25 @@ data class YQueFile(
     val answers: List<List<String>>
 )
 
-class QuizModel(private val quizDao: QuizDao) : ViewModel(){
+class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) : ViewModel(){
 
+    // settings state
+    var state by mutableStateOf(SettingsState())
+
+    init { // load Preferences on init
+        viewModelScope.launch {
+            store.loadSettings().collect { loadedSettings ->
+                state = loadedSettings
+            }
+        }
+    }
 
     private var lastQuizReady by mutableStateOf(false)
     private var loadQuizReady by mutableStateOf(false)
     var isReady by mutableStateOf(false)
 //        private set
 
+    var currentRepeats = 0
     var questionsTemp:List<Question?>?=listOf(null)
 
     val lastQuiz: StateFlow<String> = quizDao.getLastQuizStream()
@@ -137,7 +151,7 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
     }
 
 
-    fun resetQuiz(name: String, initRepeats: Int){
+    fun resetQuiz(name: String, initRepeats: Int = state.initRepeats){
         viewModelScope.launch {
             quizDao.resetQuiz(name,initRepeats)
         }
@@ -164,16 +178,14 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         }
     }
 
-    fun onWrongAnswer(quizName: String, questionName: String, extraRepeats: Int, maxRepeats: Int){
+    fun onWrongAnswer(quizName: String, questionName: String, extraRepeats: Int = state.extraRepeats, maxRepeats: Int = state.maxRepeats, isBzzt: Boolean = state.hardcoreMode){
         viewModelScope.launch {
             var newRepeats = quizDao.getRepeatsLeft(quizName,questionName)
             if (newRepeats == null) newRepeats = 0
-            if (newRepeats+extraRepeats<=maxRepeats)
-            {
-                newRepeats+=extraRepeats
-            }
+            newRepeats = (newRepeats+extraRepeats)%(maxRepeats+1)
             quizDao.updateQuestionRepeatsLeft(questionName,newRepeats)
             quizDao.updateWrongAnswers(quizName,quizDao.getIntWrongAnswers(quizName)+1)
+            if (isBzzt) BzztMachen.machen(state.bzztmachenAddress,BzztMachen.lvlFromPercent(100*newRepeats/maxRepeats))
         }
     }
 
@@ -216,7 +228,9 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         viewModelScope.launch {
             if (questionsTemp != null && isReady)
             {
-                que=questionsTemp!!.random()!!.questionName
+                val questionTemp = questionsTemp!!.random()!!
+                que = questionTemp.questionName
+                currentRepeats = quizDao.getRepeatsLeft(questionTemp.parentQuiz,  que)!!
             }
             questionsTemp=quizDao.getQuestionsForQuiz(quizName)
         }

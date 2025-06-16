@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         //init viewModels
         val managementModelFactory = ManagementModelFactory(quizDao)
         val managementModel = ViewModelProvider(this, managementModelFactory)[ManagementModel::class.java]
-        val quizModelFactory = QuizModelFactory(quizDao)
+        val quizModelFactory = QuizModelFactory(quizDao, store)
         val quizModel = ViewModelProvider(this, quizModelFactory)[QuizModel::class.java]
         val settingsModel = SettingsModel(store)
         val manualModel = ManualModel()
