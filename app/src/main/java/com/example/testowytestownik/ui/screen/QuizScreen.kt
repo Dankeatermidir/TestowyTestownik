@@ -111,7 +111,7 @@ fun QuizScreen(
     var thisQuestion = ""
     val allQuestions by quizModel.allQuestions.collectAsState()
     val remainingQuestions by quizModel.remainingQuestions.collectAsState()
-    val doneQuestions by quizModel.doneQuestions.collectAsState()
+    val doneQuestions: Int by quizModel.doneQuestions.collectAsState()
     val wrongAnswers by quizModel.wrongAnswers.collectAsState()
     val correctAnswers by quizModel.correctAnswers.collectAsState()
     var que = QueFile("","",listOf(""))
@@ -588,7 +588,7 @@ fun QuizScreen(
                                             text = que.question,
                                             fontWeight = FontWeight.Bold,
                                             modifier = Modifier
-                                                .padding(vertical = 10.dp)
+                                                .padding(10.dp)
                                         )
                                     }
                                     else
