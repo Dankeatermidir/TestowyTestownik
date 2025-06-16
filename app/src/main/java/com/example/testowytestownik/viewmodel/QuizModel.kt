@@ -149,6 +149,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
     fun resetQuiz(name: String, initRepeats: Int = state.initRepeats) {
         viewModelScope.launch {
             quizDao.resetQuiz(name, initRepeats)
+            loadQuestions(name)
         }
     }
 
