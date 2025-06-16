@@ -19,7 +19,7 @@ interface QuizDao {
     suspend fun insertQuestions(questions: List<Question>)
 
     @Transaction
-    suspend fun insertQuizWithQuestions(quiz: Quiz, questions: List<Question>){
+    suspend fun insertQuizWithQuestions(quiz: Quiz, questions: List<Question>) {
         insertQuiz(quiz)
         insertQuestions(questions)
     }
@@ -34,7 +34,7 @@ interface QuizDao {
     suspend fun updateUri(quizName: String, newUri: String)
 
     @Query("SELECT questionLeft FROM Quiz WHERE quizName = :quizName")
-    suspend fun getQuestionLeft(quizName: String) : Int?
+    suspend fun getQuestionLeft(quizName: String): Int?
 
     @Query("UPDATE Quiz SET questionLeft = :newCount WHERE quizName = :quizName")
     suspend fun updateQuestionLeft(quizName: String, newCount: Int)
@@ -64,14 +64,16 @@ interface QuizDao {
     @Query("UPDATE Question SET repeatsLeft = :defaultRepeats WHERE parentQuiz = :quizName")
     suspend fun resetQuestionRepeats(quizName: String, defaultRepeats: Int)
 
-    @Query("""
+    @Query(
+        """
         UPDATE Quiz 
         SET 
             wrongAnswers = 0, 
             correctAnswers = 0, 
             questionLeft = questionNum 
         WHERE quizName = :quizName
-    """)
+    """
+    )
     suspend fun resetQuizStats(quizName: String)
 
     @Transaction
@@ -98,25 +100,29 @@ interface QuizDao {
     @Query("SELECT quizName FROM Quiz")
     fun observeAllQuizNames(): LiveData<List<String>>
 
-    @Query("""
+    @Query(
+        """
     UPDATE Question 
     SET repeatsLeft = :newRepeats 
     WHERE questionName = :questionName AND parentQuiz = :quizName
-    """)
+    """
+    )
     suspend fun changeRepeatsLeft(quizName: String, questionName: String, newRepeats: Int)
 
-    @Query("""
+    @Query(
+        """
     SELECT repeatsLeft 
     FROM Question 
     WHERE questionName = :questionName AND parentQuiz = :quizName
-    """)
+    """
+    )
     suspend fun getRepeatsLeft(quizName: String, questionName: String): Int?
 
     @Query("UPDATE LastQuiz SET quizName=:quizName WHERE num=1")
     suspend fun setLastQuiz(quizName: String)
 
     @Query("SELECT quizName FROM LastQuiz WHERE num=1")
-    suspend fun getLastQuiz():String?
+    suspend fun getLastQuiz(): String?
 
     @Query("SELECT quizName FROM LastQuiz WHERE num=1")
     fun getLastQuizStream(): Flow<String?>

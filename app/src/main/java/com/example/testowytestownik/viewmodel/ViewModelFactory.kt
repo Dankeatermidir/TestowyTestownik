@@ -14,7 +14,8 @@ class ManagementModelFactory(private val quizDao: QuizDao) : ViewModelProvider.F
     }
 }
 
-class QuizModelFactory(private val quizDao: QuizDao, private val store: SettingsStore) : ViewModelProvider.Factory {
+class QuizModelFactory(private val quizDao: QuizDao, private val store: SettingsStore) :
+    ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(QuizModel::class.java)) {
             return QuizModel(quizDao, store) as T

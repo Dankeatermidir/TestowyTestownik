@@ -5,14 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testowytestownik.data.model.BzztMachen
 import com.example.testowytestownik.data.storage.FontSize
 import com.example.testowytestownik.data.storage.SettingsState
 import com.example.testowytestownik.data.storage.SettingsStore
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SettingsModel(private val store: SettingsStore) : ViewModel() {
@@ -78,7 +75,7 @@ class SettingsModel(private val store: SettingsStore) : ViewModel() {
         }
     }
 
-    fun updateBzztmachenPlayer(value: Int){
+    fun updateBzztmachenPlayer(value: Int) {
         //var value = digit.toInt()
         //if (value < 1) value = 1
         uiState = uiState.copy(bzztmachenPlayer = value)
@@ -87,7 +84,7 @@ class SettingsModel(private val store: SettingsStore) : ViewModel() {
         }
     }
 
-    fun updateBzztMachenAddress(address: String){
+    fun updateBzztMachenAddress(address: String) {
         viewModelScope.launch {
             store.saveBzztmachenAddress(address)
         }

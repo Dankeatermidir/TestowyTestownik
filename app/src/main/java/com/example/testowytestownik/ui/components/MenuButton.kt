@@ -11,8 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
+//noice button 4 menu
 @Composable
-fun MenuButton(name:String, icon: ImageVector, onclick: () -> Unit) {
+fun MenuButton(name: String, icon: ImageVector, onclick: () -> Unit) {
     ElevatedButton(
         modifier = Modifier
             .padding(vertical = 15.dp)

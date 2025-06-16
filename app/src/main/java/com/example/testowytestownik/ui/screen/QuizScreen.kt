@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -77,15 +76,15 @@ import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.testowytestownik.R
+import com.example.testowytestownik.ui.components.YoutubeVideo
 import com.example.testowytestownik.ui.navigation.Screen
 import com.example.testowytestownik.viewmodel.QueFile
 import com.example.testowytestownik.viewmodel.QuizModel
-import kotlinx.coroutines.delay
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.example.testowytestownik.ui.components.YoutubeVideo
 import com.example.testowytestownik.viewmodel.YQueFile
+import kotlinx.coroutines.delay
 import java.io.File
 
 @Composable
@@ -95,17 +94,16 @@ fun QuizScreen(
 ) {
 
     BackHandler {
-        quizModel.shouldResetTimer=true
+        quizModel.shouldResetTimer = true
         navController.popBackStack()
     }
 
-    if(quizModel.shouldResetTimer)
-    {
-        quizModel.shouldResetTimer=false
+    if (quizModel.shouldResetTimer) {
+        quizModel.shouldResetTimer = false
         quizModel.resetTimer()
     }
 
-    val context=LocalContext.current
+    val context = LocalContext.current
     val isReady = quizModel.isReady
     val thisQuiz by quizModel.lastQuiz.collectAsState()
     var thisQuestion = ""
@@ -114,30 +112,25 @@ fun QuizScreen(
     val doneQuestions: Int by quizModel.doneQuestions.collectAsState()
     val wrongAnswers by quizModel.wrongAnswers.collectAsState()
     val correctAnswers by quizModel.correctAnswers.collectAsState()
-    var que = QueFile("","",listOf(""))
+    var que = QueFile("", "", listOf(""))
     val userAns = remember { mutableStateListOf<Int>() }
     val yUserAns = remember { mutableStateListOf<Int>() }
     var err = ""
-    var timer = remember { mutableStateOf(listOf(0,0,0)) }
+    var timer = remember { mutableStateOf(listOf(0, 0, 0)) }
 
-    var answered by remember{ mutableStateOf(false) }
-    var wereClickedBefore=false
+    var answered by remember { mutableStateOf(false) }
+    var wereClickedBefore = false
     val scrollState = rememberScrollState()
 
-    fun getQuestion()
-    {
-        try
-        {
+    fun getQuestion() {
+        try {
 //            thisQuestion="A178"
             thisQuestion = quizModel.drewQuestion(thisQuiz)
+        } catch (ee: Exception) {
+            err = ee.toString() + ": in question drawing"
         }
-        catch(ee:Exception)
-        {
-            err=ee.toString()+": in question drawing"
-        }
-        if(thisQuestion.isNotBlank())
-        {
-               que = quizModel.getQuestion(context,thisQuiz,thisQuestion)
+        if (thisQuestion.isNotBlank()) {
+            que = quizModel.getQuestion(context, thisQuiz, thisQuestion)
         }
     }
 
@@ -153,8 +146,7 @@ fun QuizScreen(
 //            Log.d("FILES", it.name)
 //        }
 
-        if (imageFile.exists())
-        {
+        if (imageFile.exists()) {
             AsyncImage(
                 model = ImageRequest.Builder(context)
                     .data(imageFile)
@@ -165,20 +157,16 @@ fun QuizScreen(
                 modifier = Modifier
                     .fillMaxWidth(1.0f)
             )
-        }
-        else
-        {
+        } else {
             Text("No such picture: \"${context.filesDir}/${imageFile.name}\"|\nCorrect your Testownik in question ${thisQuestion}.txt and read this Testownik's folder.")
         }
     }
 
     @Composable
-    fun placeAudiofile(name: String)
-    {
-        val audioFile = File(context.filesDir,"/testowniki/$thisQuiz/$name")
+    fun placeAudiofile(name: String) {
+        val audioFile = File(context.filesDir, "/testowniki/$thisQuiz/$name")
 
-        if (audioFile.exists())
-        {
+        if (audioFile.exists()) {
             val exoPlayer = remember {
                 ExoPlayer.Builder(context).build().apply {
                     setMediaItem(MediaItem.fromUri(audioFile.toUri()))
@@ -201,10 +189,10 @@ fun QuizScreen(
                             .padding(vertical = 15.dp)
                             .height(75.dp),
                         onClick = {
-                        exoPlayer.pause()
-                        exoPlayer.seekTo(0)
-                        exoPlayer.play()
-                    }) {
+                            exoPlayer.pause()
+                            exoPlayer.seekTo(0)
+                            exoPlayer.play()
+                        }) {
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = "play"
@@ -217,8 +205,8 @@ fun QuizScreen(
                             .padding(vertical = 15.dp)
                             .height(75.dp),
                         onClick = {
-                        exoPlayer.pause()
-                    }) {
+                            exoPlayer.pause()
+                        }) {
                         Icon(
                             imageVector = Icons.Default.Stop,
                             contentDescription = "stop"
@@ -228,9 +216,7 @@ fun QuizScreen(
                 }
             }
 
-        }
-        else
-        {
+        } else {
             Text("No such file: ${context.filesDir}/testowniki/$thisQuiz/$name")
         }
     }
@@ -243,12 +229,12 @@ fun QuizScreen(
             skipPartiallyExpanded = false,
         )
 
-        Box (
+        Box(
             modifier = Modifier.fillMaxWidth()
         )
         {
             ExtendedFloatingActionButton(
-                modifier=Modifier
+                modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.BottomEnd),
                 onClick = { showBottomSheet = true },
@@ -262,7 +248,7 @@ fun QuizScreen(
                     sheetState = sheetState,
                     onDismissRequest = { showBottomSheet = false }
                 ) {
-                    Column (
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     )
@@ -273,9 +259,12 @@ fun QuizScreen(
                         )
                         {
                             items(imagesList.size) { i ->
-                                Text("${stringResource(R.string.picture)} ${i+1}:")
+                                Text("${stringResource(R.string.picture)} ${i + 1}:")
                                 Spacer(Modifier.height(30.dp))
-                                drawImage(quizModel.parseFile(imagesList[i],"img"),"Picture-answer for $i answer")
+                                drawImage(
+                                    quizModel.parseFile(imagesList[i], "img"),
+                                    "Picture-answer for $i answer"
+                                )
                                 Spacer(Modifier.height(30.dp))
                             }
                         }
@@ -289,13 +278,14 @@ fun QuizScreen(
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    fun drawY(yQue: YQueFile)
-    {
+    fun drawY(yQue: YQueFile) {
         var noChoiceQueList = Regex("""\{wybór \d+\}""").split(yQue.question)
 
-        val selectionAndHideState = remember {List(yQue.answers.size) { mutableStateOf(0 to false) }}
+        val selectionAndHideState =
+            remember { List(yQue.answers.size) { mutableStateOf(0 to false) } }
 
-        val choiceTextList = remember { mutableStateListOf<String>().apply { repeat(yQue.answers.size) { add("") } } }
+        val choiceTextList =
+            remember { mutableStateListOf<String>().apply { repeat(yQue.answers.size) { add("") } } }
 
         val localScrollState = rememberScrollState()
 
@@ -383,7 +373,8 @@ fun QuizScreen(
     Surface()
     {
         Box(
-            modifier = Modifier.fillMaxSize() )
+            modifier = Modifier.fillMaxSize()
+        )
         {
 //            when (val quiz = thisQuiz) {
 //                "" -> {
@@ -403,11 +394,12 @@ fun QuizScreen(
             )
             {
                 Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween )
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                )
                 {
                     Icon(
                         Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -421,17 +413,17 @@ fun QuizScreen(
                                     popUpTo(Screen.Menu.route)
                                 }
                             }
-                            .size(38.dp) )
+                            .size(38.dp))
                     Text(
                         text = thisQuiz,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center )
+                        textAlign = TextAlign.Center
+                    )
                     Spacer(modifier = Modifier.size(38.dp))
                 }
-                if (thisQuiz == "")
-                {
+                if (thisQuiz == "") {
                     Spacer(
                         modifier = Modifier
                             .weight(1f)
@@ -467,26 +459,18 @@ fun QuizScreen(
                             .fillMaxWidth()
                     )
                     return@Box
-                }
-                else
-                {
-                    if(isReady)
-                    {
-                        try
-                        {
+                } else {
+                    if (isReady) {
+                        try {
                             getQuestion()
-                        }
-                        catch (e: Exception)
-                        {
+                        } catch (e: Exception) {
                             Text("ERROR: [in question Loading: $e] \n [$err]")
                             return@Box
                         }
-                    }
-                    else
-                    {
-                        Column (horizontalAlignment = Alignment.CenterHorizontally)
+                    } else {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally)
                         {
-                            Row (verticalAlignment = Alignment.CenterVertically)
+                            Row(verticalAlignment = Alignment.CenterVertically)
                             {
                                 CircularProgressIndicator()
                             }
@@ -494,7 +478,6 @@ fun QuizScreen(
                         return@Box
                     }
                 }
-
 
 
                 val correct = quizModel.correctAnswersList(que)
@@ -508,31 +491,45 @@ fun QuizScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             )
                             {
-                                Text(stringResource(R.string.stats), modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Bold)
+                                Text(
+                                    stringResource(R.string.stats),
+                                    modifier = Modifier.padding(16.dp),
+                                    fontWeight = FontWeight.Bold
+                                )
                                 HorizontalDivider()
 
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text = "${stringResource(R.string.test_progress)}:", fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = "${stringResource(R.string.test_progress)}:",
+                                    fontWeight = FontWeight.Bold
+                                )
                                 Spacer(modifier = Modifier.height(20.dp))
-                                Text(text="${stringResource(R.string.all_questions)}:")
+                                Text(text = "${stringResource(R.string.all_questions)}:")
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(allQuestions.toString(),
+                                Text(
+                                    allQuestions.toString(),
                                     modifier = Modifier
                                         .scale(1.5f)
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text="${stringResource(R.string.done_questions)}:")
-                                Text(doneQuestions.toString(),
+                                Text(text = "${stringResource(R.string.done_questions)}:")
+                                Text(
+                                    doneQuestions.toString(),
                                     modifier = Modifier
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text="${stringResource(R.string.to_do_questions)}:")
-                                Text(remainingQuestions.toString(),
+                                Text(text = "${stringResource(R.string.to_do_questions)}:")
+                                Text(
+                                    remainingQuestions.toString(),
                                     modifier = Modifier
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                var quizProgress by remember{ mutableStateOf(0f) }
-                                quizProgress = if(allQuestions>0) { (doneQuestions).toFloat()/(allQuestions).toFloat() } else { 0.toFloat() }
+                                var quizProgress by remember { mutableStateOf(0f) }
+                                quizProgress = if (allQuestions > 0) {
+                                    (doneQuestions).toFloat() / (allQuestions).toFloat()
+                                } else {
+                                    0.toFloat()
+                                }
                                 LinearProgressIndicator(
                                     progress = { quizProgress },
                                     modifier = Modifier.fillMaxWidth(0.8f),
@@ -541,18 +538,24 @@ fun QuizScreen(
                                 HorizontalDivider()
                                 Spacer(modifier = Modifier.height(20.dp))
 
-                                Text(text="${stringResource(R.string.correct_answers)}:")
-                                Text(correctAnswers.toString(),
+                                Text(text = "${stringResource(R.string.correct_answers)}:")
+                                Text(
+                                    correctAnswers.toString(),
                                     modifier = Modifier
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text="${stringResource(R.string.bad_answers)}:")
-                                Text(wrongAnswers.toString(),
+                                Text(text = "${stringResource(R.string.bad_answers)}:")
+                                Text(
+                                    wrongAnswers.toString(),
                                     modifier = Modifier
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                var correctRatio by remember{ mutableStateOf(0f)}
-                                correctRatio = if((correctAnswers+wrongAnswers)>0) { (correctAnswers).toFloat()/(correctAnswers+wrongAnswers).toFloat() } else { 0.toFloat() }
+                                var correctRatio by remember { mutableStateOf(0f) }
+                                correctRatio = if ((correctAnswers + wrongAnswers) > 0) {
+                                    (correctAnswers).toFloat() / (correctAnswers + wrongAnswers).toFloat()
+                                } else {
+                                    0.toFloat()
+                                }
                                 LinearProgressIndicator(
                                     progress = { correctRatio },
                                     modifier = Modifier.fillMaxWidth(0.8f)
@@ -566,7 +569,10 @@ fun QuizScreen(
 //                                    selected = false,
 //                                    onClick = { }
 //                                )
-                                Text(text = stringResource(R.string.session_duration), fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = stringResource(R.string.session_duration),
+                                    fontWeight = FontWeight.Bold
+                                )
 
                                 LaunchedEffect(Unit) {
                                     while (true) {
@@ -575,7 +581,13 @@ fun QuizScreen(
                                     }
                                 }
 
-                                Text(text="${timer.value[0]}:${"%02d".format(timer.value[1])}:${"%02d".format(timer.value[2])}")
+                                Text(
+                                    text = "${timer.value[0]}:${"%02d".format(timer.value[1])}:${
+                                        "%02d".format(
+                                            timer.value[2]
+                                        )
+                                    }"
+                                )
                                 ElevatedButton(
                                     modifier = Modifier
                                         .padding(vertical = 15.dp)
@@ -583,14 +595,14 @@ fun QuizScreen(
                                         .height(75.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                                     onClick = {
-                                        quizModel.resetQuiz(thisQuiz,)
+                                        quizModel.resetQuiz(thisQuiz)
                                         quizModel.resetTimer()
                                     }
                                 ) {
                                     Text(stringResource(R.string.reset_progress))
                                 }
-                                Text(text="$thisQuestion.txt", modifier = Modifier.scale(0.8f))
-                                Text(text="R: ${quizModel.currentRepeats}")
+                                Text(text = "$thisQuestion.txt", modifier = Modifier.scale(0.8f))
+                                Text(text = "R: ${quizModel.currentRepeats}")
                             }
                         }
                     }
@@ -602,8 +614,7 @@ fun QuizScreen(
                     )
                     {
 
-                        if(que.typeCorrect[0]=='X')
-                        {
+                        if (que.typeCorrect[0] == 'X') {
                             Column(
                                 modifier = Modifier
                                     .weight(1f),
@@ -621,38 +632,57 @@ fun QuizScreen(
                                             modifier = Modifier
                                                 .padding(10.dp)
                                         )
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         var imageVisible by remember { mutableStateOf(true) }
                                         Column(modifier = Modifier.animateContentSize()) {
-                                            var whichMedium=""
+                                            var whichMedium = ""
                                             AnimatedVisibility(visible = imageVisible)
                                             {
-                                                if("[img]" in que.question)
-                                                {
-                                                    whichMedium=stringResource(R.string.image_question)
+                                                if ("[img]" in que.question) {
+                                                    whichMedium =
+                                                        stringResource(R.string.image_question)
                                                     drawImage(
-                                                        quizModel.parseFile(que.question,"img"),
+                                                        quizModel.parseFile(que.question, "img"),
                                                         "${stringResource(R.string.image_question)} № ${que.question}"
                                                     )
-                                                }
-                                                else if ("[aud]" in que.question)
-                                                {
-                                                    whichMedium=stringResource(R.string.audio_question)
-                                                    placeAudiofile(quizModel.parseFile(que.question,"aud"))
-                                                }
-                                                else if ("[yt]" in que.question)
-                                                {
-                                                    whichMedium=stringResource(R.string.video_question)
-                                                    YoutubeVideo(quizModel.parseFile(que.question,"yt"))
+                                                } else if ("[aud]" in que.question) {
+                                                    whichMedium =
+                                                        stringResource(R.string.audio_question)
+                                                    placeAudiofile(
+                                                        quizModel.parseFile(
+                                                            que.question,
+                                                            "aud"
+                                                        )
+                                                    )
+                                                } else if ("[yt]" in que.question) {
+                                                    whichMedium =
+                                                        stringResource(R.string.video_question)
+                                                    YoutubeVideo(
+                                                        quizModel.parseFile(
+                                                            que.question,
+                                                            "yt"
+                                                        )
+                                                    )
                                                 }
                                             }
 
                                             Row(verticalAlignment = Alignment.CenterVertically)
                                             {
-                                                val descText="${if(!imageVisible){stringResource(R.string.show)} else{stringResource(R.string.hide)}} $whichMedium"
-                                                ElevatedButton(onClick = { imageVisible = !imageVisible }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary))
+                                                val descText = "${
+                                                    if (!imageVisible) {
+                                                        stringResource(R.string.show)
+                                                    } else {
+                                                        stringResource(R.string.hide)
+                                                    }
+                                                } $whichMedium"
+                                                ElevatedButton(
+                                                    onClick = {
+                                                        imageVisible = !imageVisible
+                                                    },
+                                                    colors = ButtonDefaults.buttonColors(
+                                                        containerColor = MaterialTheme.colorScheme.tertiary
+                                                    )
+                                                )
                                                 {
                                                     Icon(
                                                         imageVector = if (imageVisible) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
@@ -722,7 +752,11 @@ fun QuizScreen(
                                                     .weight(1f)
                                             )
                                             Text(
-                                                text = if("[img]" in que.answers[i]){"${stringResource(R.string.picture)} ${i+1}"} else {que.answers[i]},
+                                                text = if ("[img]" in que.answers[i]) {
+                                                    "${stringResource(R.string.picture)} ${i + 1}"
+                                                } else {
+                                                    que.answers[i]
+                                                },
                                                 softWrap = true,
                                                 overflow = TextOverflow.Visible
                                             )
@@ -740,14 +774,10 @@ fun QuizScreen(
                             }
 
 
-                            if (que.answers.any { "[img]" in it })
-                            {
+                            if (que.answers.any { "[img]" in it }) {
                                 PartialBottomSheet(que.answers)
                             }
-                        }
-
-                        else if(que.typeCorrect[0]=='Y')
-                        {
+                        } else if (que.typeCorrect[0] == 'Y') {
                             Column(
                                 modifier = Modifier
                                     .weight(1f),
@@ -755,7 +785,7 @@ fun QuizScreen(
                                 verticalArrangement = Arrangement.Center
                             )
                             {
-                                drawY(quizModel.getYQuestion(context,thisQuiz,thisQuestion))
+                                drawY(quizModel.getYQuestion(context, thisQuiz, thisQuestion))
                             }
                         }
 
@@ -773,25 +803,22 @@ fun QuizScreen(
                                         wereClickedBefore = true
                                     } else {
 
-                                        if(remainingQuestions>0)
-                                        {
-                                            var areCorrect=false
-                                            if(que.typeCorrect[0]=='X')
-                                            {
-                                                areCorrect=correct.sorted()==userAns.sorted()
-                                            }
-                                            else
-                                            {
-                                                areCorrect=quizModel.getYQuestion(context,thisQuiz,thisQuestion).correct==yUserAns.toList()
+                                        if (remainingQuestions > 0) {
+                                            var areCorrect = false
+                                            if (que.typeCorrect[0] == 'X') {
+                                                areCorrect = correct.sorted() == userAns.sorted()
+                                            } else {
+                                                areCorrect = quizModel.getYQuestion(
+                                                    context,
+                                                    thisQuiz,
+                                                    thisQuestion
+                                                ).correct == yUserAns.toList()
                                             }
 
-                                            if(areCorrect)
-                                            {
-                                                quizModel.onCorrectAnswer(thisQuiz,thisQuestion)
-                                            }
-                                            else
-                                            {
-                                                quizModel.onWrongAnswer(thisQuiz,thisQuestion)
+                                            if (areCorrect) {
+                                                quizModel.onCorrectAnswer(thisQuiz, thisQuestion)
+                                            } else {
+                                                quizModel.onWrongAnswer(thisQuiz, thisQuestion)
                                             }
                                             navController.navigate(Screen.Quiz.route) {
                                                 popUpTo(Screen.Menu.route) {
@@ -799,10 +826,8 @@ fun QuizScreen(
                                                 }
                                                 launchSingleTop = true
                                             }
-                                        }
-                                        else
-                                        {
-                                            quizModel.resetQuiz(thisQuiz,)
+                                        } else {
+                                            quizModel.resetQuiz(thisQuiz)
                                             navController.navigate(Screen.Menu.route)
                                         }
                                     }

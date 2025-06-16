@@ -3,7 +3,6 @@ package com.example.testowytestownik.ui.components
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import androidx.annotation.RawRes
-import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -15,6 +14,7 @@ import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.core.MarkwonTheme
 
+//compile Markdown
 @Composable
 fun MarkdownText(
     @RawRes rawResId: Int,

@@ -35,7 +35,7 @@ data class YQueFile(
     val answers: List<List<String>>
 )
 
-class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) : ViewModel(){
+class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) : ViewModel() {
 
     // settings state
     var state by mutableStateOf(SettingsState())
@@ -54,7 +54,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
 //        private set
 
     var currentRepeats = 0
-    var questionsTemp:List<Question?>?=listOf(null)
+    var questionsTemp: List<Question?>? = listOf(null)
 
     val lastQuiz: StateFlow<String> = quizDao.getLastQuizStream()
         .map { it ?: "" }
@@ -126,66 +126,68 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
     }
 
 
-    private suspend fun loadQuestions(quizName: String)
-    {
-        if(lastQuizReady)
-        {
-            this.questionsTemp=quizDao.getQuestionsForQuiz(quizName)
-        }
-        else
-        {
+    private suspend fun loadQuestions(quizName: String) {
+        if (lastQuizReady) {
+            this.questionsTemp = quizDao.getQuestionsForQuiz(quizName)
+        } else {
             loadQuestions(quizName)
         }
-        isReady=true
+        isReady = true
     }
 
     private fun loadLastQuiz() {
         viewModelScope.launch {
             val test = quizDao.getLastQuiz()
-            if(test == null)
-            {
+            if (test == null) {
                 quizDao.initLastQuiz()
             }
         }
-        lastQuizReady=true
+        lastQuizReady = true
     }
 
 
-    fun resetQuiz(name: String, initRepeats: Int = state.initRepeats){
+    fun resetQuiz(name: String, initRepeats: Int = state.initRepeats) {
         viewModelScope.launch {
-            quizDao.resetQuiz(name,initRepeats)
+            quizDao.resetQuiz(name, initRepeats)
         }
     }
 
-    fun onCorrectAnswer(quizName: String, questionName: String){
+    fun onCorrectAnswer(quizName: String, questionName: String) {
         viewModelScope.launch {
-            var newRepeats = quizDao.getRepeatsLeft(quizName,questionName)
+            var newRepeats = quizDao.getRepeatsLeft(quizName, questionName)
             if (newRepeats == null) newRepeats = 0
             newRepeats -= 1
-            if (newRepeats <= 0){
+            if (newRepeats <= 0) {
                 var questionLeft = quizDao.getQuestionLeft(quizName)
-                if (questionLeft != null){
+                if (questionLeft != null) {
                     questionLeft -= 1
-                    quizDao.updateQuestionLeft(quizName,questionLeft)
+                    quizDao.updateQuestionLeft(quizName, questionLeft)
                 }
-                quizDao.updateQuestionRepeatsLeft(questionName,0)
+                quizDao.updateQuestionRepeatsLeft(questionName, 0)
+            } else {
+                quizDao.updateQuestionRepeatsLeft(questionName, newRepeats)
             }
-            else
-            {
-                quizDao.updateQuestionRepeatsLeft(questionName,newRepeats)
-            }
-            quizDao.updateCorrectAnswers(quizName,quizDao.getIntCorrectAnswers(quizName)+1)
+            quizDao.updateCorrectAnswers(quizName, quizDao.getIntCorrectAnswers(quizName) + 1)
         }
     }
 
-    fun onWrongAnswer(quizName: String, questionName: String, extraRepeats: Int = state.extraRepeats, maxRepeats: Int = state.maxRepeats, isBzzt: Boolean = state.hardcoreMode){
+    fun onWrongAnswer(
+        quizName: String,
+        questionName: String,
+        extraRepeats: Int = state.extraRepeats,
+        maxRepeats: Int = state.maxRepeats,
+        isBzzt: Boolean = state.hardcoreMode
+    ) {
         viewModelScope.launch {
-            var newRepeats = quizDao.getRepeatsLeft(quizName,questionName)
+            var newRepeats = quizDao.getRepeatsLeft(quizName, questionName)
             if (newRepeats == null) newRepeats = 0
-            newRepeats = (newRepeats+extraRepeats)%(maxRepeats+1)
-            quizDao.updateQuestionRepeatsLeft(questionName,newRepeats)
-            quizDao.updateWrongAnswers(quizName,quizDao.getIntWrongAnswers(quizName)+1)
-            if (isBzzt) BzztMachen.machen(state.bzztmachenAddress,BzztMachen.lvlFromPercent(100*newRepeats/maxRepeats))
+            newRepeats = (newRepeats + extraRepeats) % (maxRepeats + 1)
+            quizDao.updateQuestionRepeatsLeft(questionName, newRepeats)
+            quizDao.updateWrongAnswers(quizName, quizDao.getIntWrongAnswers(quizName) + 1)
+            if (isBzzt) BzztMachen.machen(
+                state.bzztmachenAddress,
+                BzztMachen.lvlFromPercent(100 * newRepeats / maxRepeats)
+            )
         }
     }
 
@@ -204,56 +206,48 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
         }
     }
 
-    fun getQuestion(context: Context, quizName: String, questionName: String): QueFile
-    {
-        val listToParse=readFile(context, "testowniki/${quizName}/${questionName}.txt")
-        return QueFile(listToParse[1],listToParse[0],listToParse.subList(2, listToParse.size))
+    fun getQuestion(context: Context, quizName: String, questionName: String): QueFile {
+        val listToParse = readFile(context, "testowniki/${quizName}/${questionName}.txt")
+        return QueFile(listToParse[1], listToParse[0], listToParse.subList(2, listToParse.size))
     }
 
 
+    fun getYQuestion(context: Context, quizName: String, questionName: String): YQueFile {
+        val listToParse = readFile(context, "testowniki/${quizName}/${questionName}.txt")
+        var ansList = listToParse[0].drop(2).map { it.digitToInt() - 1 }
+        val result: List<List<String>> =
+            listToParse.subList(2, listToParse.size).map { it.split(";;") }
 
-    fun getYQuestion(context: Context, quizName: String, questionName: String): YQueFile
-    {
-        val listToParse=readFile(context, "testowniki/${quizName}/${questionName}.txt")
-        var ansList = listToParse[0].drop(2).map { it.digitToInt()-1 }
-        val result: List<List<String>> = listToParse.subList(2,listToParse.size).map { it.split(";;") }
-
-        return YQueFile(listToParse[1],ansList,result)
+        return YQueFile(listToParse[1], ansList, result)
     }
 
 
-    fun drewQuestion(quizName: String): String
-    {
-        var que=""
+    fun drewQuestion(quizName: String): String {
+        var que = ""
         viewModelScope.launch {
-            if (questionsTemp != null && isReady)
-            {
+            if (questionsTemp != null && isReady) {
                 val questionTemp = questionsTemp!!.random()!!
                 que = questionTemp.questionName
-                currentRepeats = quizDao.getRepeatsLeft(questionTemp.parentQuiz,  que)!!
+                currentRepeats = quizDao.getRepeatsLeft(questionTemp.parentQuiz, que)!!
             }
-            questionsTemp=quizDao.getQuestionsForQuiz(quizName)
+            questionsTemp = quizDao.getQuestionsForQuiz(quizName)
         }
         return que
     }
 
 
-    fun correctAnswersList(que:QueFile): List<Int>
-    {
+    fun correctAnswersList(que: QueFile): List<Int> {
         val correct = mutableListOf<Int>()
-        val end=que.typeCorrect.length-1
-        for(i in 1..end)
-        {
-            if(que.typeCorrect[i]=='1')
-            {
-                correct.add(i-1)
+        val end = que.typeCorrect.length - 1
+        for (i in 1..end) {
+            if (que.typeCorrect[i] == '1') {
+                correct.add(i - 1)
             }
         }
         return correct
     }
 
-    fun parseFile(name: String, medium: String): String
-    {
+    fun parseFile(name: String, medium: String): String {
         val input = name
         val regex = "\\[$medium](.+?)\\[/$medium]".toRegex()
         val matchResult = regex.find(input)

@@ -2,15 +2,16 @@ package com.example.testowytestownik.data.storage
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-val Context.dataStore by preferencesDataStore(name="settings")
+val Context.dataStore by preferencesDataStore(name = "settings")
 
+//Shared preferences
 class SettingsStore(private val context: Context) {
     private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
     private val AUTO_SAVE_KEY = booleanPreferencesKey("auto_save")
@@ -38,31 +39,40 @@ class SettingsStore(private val context: Context) {
                 bzztmachenAddress = prefs[BZZTMACHEN_ADDRESS] ?: defaultSettings.bzztmachenAddress
             )
         }
+
     suspend fun saveDarkMode(enabled: Boolean) {
         context.dataStore.edit { it[DARK_MODE_KEY] = enabled }
     }
+
     suspend fun saveAutoSave(enabled: Boolean) {
         context.dataStore.edit { it[AUTO_SAVE_KEY] = enabled }
     }
+
     suspend fun saveHardcoreMode(enabled: Boolean) {
         context.dataStore.edit { it[HARDCORE_MODE_KEY] = enabled }
     }
+
     suspend fun saveFontSize(size: FontSize) {
         context.dataStore.edit { it[FONT_SIZE_KEY] = size.name }
     }
+
     suspend fun saveInitRepeats(value: Int) {
         context.dataStore.edit { it[INITIAL_REPEATS_KEY] = value }
     }
+
     suspend fun saveExtraRepeats(value: Int) {
         context.dataStore.edit { it[EXTRA_REPEATS_KEY] = value }
     }
+
     suspend fun saveMaxRepeats(value: Int) {
         context.dataStore.edit { it[MAXIMUM_REPEATS_KEY] = value }
     }
-    suspend fun saveBzztmachenPlayer(value: Int){
+
+    suspend fun saveBzztmachenPlayer(value: Int) {
         context.dataStore.edit { it[BZZTMACHEN_PLAYER] = value }
     }
-    suspend fun saveBzztmachenAddress(address: String){
+
+    suspend fun saveBzztmachenAddress(address: String) {
         context.dataStore.edit { it[BZZTMACHEN_ADDRESS] = address }
     }
 }

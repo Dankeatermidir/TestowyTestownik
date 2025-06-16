@@ -2,14 +2,15 @@ package com.example.testowytestownik.data.storage
 
 
 data class SettingsState(
+    //Ui preferences
     val darkMode: Boolean = false,
     val autoSave: Boolean = true,
     val fontSize: FontSize = FontSize.Medium,
-
+    //Quiz preferences
     val initRepeats: Int = 3,
     val extraRepeats: Int = 1,
     val maxRepeats: Int = 3,
-
+    //Bzzt preferences
     val hardcoreMode: Boolean = false,
     val bzztmachenPlayer: Int = 1,
     val bzztmachenAddress: String = "bzztmachen.local"

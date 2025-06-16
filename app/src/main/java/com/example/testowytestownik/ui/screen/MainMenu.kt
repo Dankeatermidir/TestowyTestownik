@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
@@ -16,22 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import android.Manifest
-import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.ui.modifier.modifierLocalMapOf
-import androidx.compose.ui.platform.LocalContext
-
-import com.example.testowytestownik.ui.components.MenuButton
 import com.example.testowytestownik.R
-import com.example.testowytestownik.data.storage.copyFilesToInternalStorage
+import com.example.testowytestownik.ui.components.MenuButton
 import com.example.testowytestownik.ui.navigation.Screen
 
 @Composable
@@ -42,8 +33,8 @@ fun MainMenu(
 
 
 
-    Surface{
-        Column (
+    Surface {
+        Column(
             modifier = Modifier
                 .padding(vertical = 5.dp, horizontal = 30.dp)
                 .fillMaxSize(),
@@ -79,11 +70,6 @@ fun MainMenu(
         }
     }
 }
-
-
-
-
-
 
 
 /*

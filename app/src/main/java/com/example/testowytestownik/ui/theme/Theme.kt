@@ -7,9 +7,9 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -84,7 +84,7 @@ fun TestowyTestownikTheme(
         bodyLarge = TextStyle(
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.Normal,
-            fontSize = (16.0f * fontSize.value).sp ,
+            fontSize = (16.0f * fontSize.value).sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp
         ),
@@ -99,7 +99,7 @@ fun TestowyTestownikTheme(
         )
     )
 
-    MaterialTheme (
+    MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = content

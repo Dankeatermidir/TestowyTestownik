@@ -4,21 +4,15 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -38,27 +32,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.navigation.NavController
 import com.example.testowytestownik.R
 import com.example.testowytestownik.data.storage.dataStore
+import com.example.testowytestownik.ui.components.topText
 import com.example.testowytestownik.ui.navigation.Screen
 import com.example.testowytestownik.viewmodel.ManagementModel
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import java.io.File
 
 /*
@@ -70,7 +59,7 @@ Rename and Delete Quizzes.
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ManagementScreen(
-    navController : NavController,
+    navController: NavController,
     managementModel: ManagementModel,
     folderName: String = "./testowniki" // optional: browse a subfolder
 ) {
@@ -125,47 +114,19 @@ fun ManagementScreen(
     }
 
 
-
     // Synchronize DB with files
-    managementModel.controlledUpdate(files,initRepeats)
+    managementModel.controlledUpdate(files, initRepeats)
 
 
 
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Row( // Title
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        stringResource(R.string.back_button_desc),
-                        modifier = Modifier
-                            .clickable {
-                                navController.navigate(route = Screen.Menu.route) {
-                                    popUpTo(Screen.Menu.route)
-                                }
-                            }
-                            .size(38.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.open_new),
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.size(38.dp))
-                }
+                topText(navController, R.string.open_new)
 
                 if (files.isEmpty()) { //if no files in internal storage - display info
                     Text(stringResource(R.string.testo_missing))
-                }
-                else {
+                } else {
                     LazyColumn( //Display Scrollable list of Quiz folders
                         modifier = Modifier
                             .weight(1f)
@@ -179,12 +140,13 @@ fun ManagementScreen(
                                     .padding(vertical = 4.dp)
                                     .onGloballyPositioned { layoutCoordinates ->
                                         val pos = layoutCoordinates.localToWindow(Offset.Zero)
-                                        itemOffset = pos / 3f //check card position to display popupMenu on right height
+                                        itemOffset =
+                                            pos / 3f //check card position to display popupMenu on right height
                                     }
                                     .combinedClickable(
                                         onClick = {
                                             managementModel.updateLastQuiz(files[file].name)
-                                            navController.navigate(route = Screen.Quiz.route){
+                                            navController.navigate(route = Screen.Quiz.route) {
                                                 popUpTo(Screen.Menu.route) {
                                                     inclusive = false
                                                 }
@@ -213,7 +175,7 @@ fun ManagementScreen(
                 }
                 ElevatedButton( // Add new folder on click
                     modifier = Modifier
-                        .padding(horizontal= 10.dp, vertical = 5.dp)
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
                         .fillMaxWidth(1f)
                         .height(75.dp),
                     onClick = {
@@ -257,13 +219,16 @@ fun ManagementScreen(
                     text = {
                         OutlinedTextField(
                             value = renameText,
-                            onValueChange = { renameText = it },
-                            label = { Text(stringResource(R.string.new_name)) }
+                            onValueChange = {
+                                renameText = it.filter { it.toString() != "/" }
+                            }, //filter for directory shit
+                            label = { Text(stringResource(R.string.new_name)) },
+                            singleLine = true
                         )
                     },
                     confirmButton = {
                         TextButton(onClick = { //rename folder and entry in DB
-                            if (!(files.any{ f -> f.name == renameText}))
+                            if (!(files.any { f -> f.name == renameText }))
                                 managementModel.renameQuiz(selectedFolder!!, renameText)
                             showRenameDialog = false
                             updateFiles()
