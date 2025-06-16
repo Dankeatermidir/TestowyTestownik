@@ -54,4 +54,5 @@
     <string name="audio_question">Audiofrage</string>
     <string name="play_audio">Audio abspielen</string>
     <string name="stop_audio">Audio anhalten</string>
+    <string name="choice">Auswahl</string>
 </resources>

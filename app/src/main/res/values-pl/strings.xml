@@ -55,4 +55,5 @@
     <string name="audio_question">pytanie-nagranie</string>
     <string name="play_audio">Odtwórz</string>
     <string name="stop_audio">Stop</string>
+    <string name="choice">Wybór</string>
 </resources>

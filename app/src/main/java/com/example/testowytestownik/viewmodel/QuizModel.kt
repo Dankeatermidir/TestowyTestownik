@@ -26,6 +26,12 @@ data class QueFile(
     val answers: List<String>
 )
 
+data class YQueFile(
+    val question: String,
+    val correct: List<Int>,
+    val answers: List<List<String>>
+)
+
 class QuizModel(private val quizDao: QuizDao) : ViewModel(){
 
 
@@ -192,6 +198,18 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         return QueFile(listToParse[1],listToParse[0],listToParse.subList(2, listToParse.size))
     }
 
+
+
+    fun getYQuestion(context: Context, quizName: String, questionName: String): YQueFile
+    {
+        val listToParse=readFile(context, "testowniki/${quizName}/${questionName}.txt")
+        var ansList = listToParse[0].drop(2).map { it.digitToInt()-1 }
+        val result: List<List<String>> = listToParse.subList(2,listToParse.size).map { it.split(";;") }
+
+        return YQueFile(listToParse[1],ansList,result)
+    }
+
+
     fun drewQuestion(quizName: String): String
     {
         var que=""
@@ -227,12 +245,6 @@ class QuizModel(private val quizDao: QuizDao) : ViewModel(){
         val matchResult = regex.find(input)
         return matchResult?.groupValues?.get(1) ?: ""
     }
-
-    fun isY(quizName: String, questionName: String): Boolean
-    {
-        return false
-    }
-
 
 
     //timer
