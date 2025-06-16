@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileNotFoundException
@@ -49,9 +50,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
     }
 
     private var lastQuizReady by mutableStateOf(false)
-    private var loadQuizReady by mutableStateOf(false)
     var isReady by mutableStateOf(false)
-//        private set
 
     var currentRepeats = 0
     var questionsTemp: List<Question?>? = listOf(null)
@@ -68,6 +67,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
     val remainingQuestions: StateFlow<Int> =
         lastQuiz.flatMapLatest { quizName ->
             quizDao.remainingQuestions(quizName)
+                .filterNotNull()
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -78,6 +78,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
     val doneQuestions: StateFlow<Int> =
         lastQuiz.flatMapLatest { quizName ->
             quizDao.doneQuestions(quizName)
+                .filterNotNull()
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -88,6 +89,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
     val allQuestions: StateFlow<Int> =
         lastQuiz.flatMapLatest { quizName ->
             quizDao.allQuestions(quizName)
+                .filterNotNull()
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -98,16 +100,19 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
     val wrongAnswers: StateFlow<Int> =
         lastQuiz.flatMapLatest { quizName ->
             quizDao.wrongAnswers(quizName)
+                .filterNotNull()
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             0
         )
 
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val correctAnswers: StateFlow<Int> =
         lastQuiz.flatMapLatest { quizName ->
             quizDao.correctAnswers(quizName)
+                .filterNotNull()
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -203,7 +208,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
         } catch (e: FileNotFoundException) {
             listOf("")
         } catch (e: IOException) {
-            listOf("")//Error: ${e.message}")
+            listOf("")
         }
     }
 
@@ -272,7 +277,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
         temp -= (hours * 60 * 60)
         val minutes = (temp / 60).toInt()
         temp -= (minutes * 60)
-        return listOf(hours, minutes, temp.toInt()) // to seconds
+        return listOf(hours, minutes, temp.toInt())
     }
 
 }

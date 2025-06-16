@@ -889,6 +889,13 @@ fun QuizScreen(
                                             quizModel.resetQuiz(thisQuiz)
                                             quizModel.shouldResetTimer = true
                                             navController.navigate("finish/$thisQuiz/$allQuestions/$correctAnswers/$wrongAnswers/${timer.value.joinToString(",")}")
+                                            {
+                                                popUpTo(Screen.Menu.route)
+                                                {
+                                                    inclusive = false
+                                                }
+                                                launchSingleTop = true
+                                            }
                                         }
                                     }
                                 })
