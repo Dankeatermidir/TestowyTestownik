@@ -216,7 +216,9 @@ fun QuizScreen(
                 }
             }
 
-        } else {
+        }
+        else
+        {
             Text("No such file: ${context.filesDir}/testowniki/$thisQuiz/$name")
         }
     }
@@ -258,7 +260,8 @@ fun QuizScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         )
                         {
-                            items(imagesList.size) { i ->
+                            items(imagesList.size)
+                            { i ->
                                 Text("${stringResource(R.string.picture)} ${i + 1}:")
                                 Spacer(Modifier.height(30.dp))
                                 drawImage(
@@ -300,20 +303,20 @@ fun QuizScreen(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             )
             {
-                for (i in 0..noChoiceQueList.size - 1) {
-                    if (yUserAns.size < i) {
+                for (i in 0..noChoiceQueList.size - 1)
+                {
+                    if (yUserAns.size < i)
+                    {
                         yUserAns += Int.MIN_VALUE
                     }
 
                     Text(noChoiceQueList[i])
-                    if (selectionAndHideState.size > i) {
+                    if (selectionAndHideState.size > i)
+                    {
                         val choiceText = choiceTextList[i]
                         Text(
-                            text = if (choiceText.length > 0) {
-                                choiceText
-                            } else {
-                                "{${stringResource(R.string.choice)} ${i + 1}}"
-                            },
+                            text = if (choiceText.length > 0) { choiceText}
+                                   else { "{${stringResource(R.string.choice)} ${i + 1}}" },
                             modifier = Modifier
                                 .clickable {
                                     selectionAndHideState[i].value =
@@ -324,15 +327,12 @@ fun QuizScreen(
                                     shape = RoundedCornerShape(4.dp)
                                 )
                                 .padding(horizontal = 6.dp, vertical = 4.dp),
-                            color = if (!answered) {
-                                MaterialTheme.colorScheme.onPrimaryContainer
-                            } else {
-                                if (yQue.correct[i] == yUserAns[i]) {
-                                    Color.Green
-                                } else {
-                                    Color.Red
-                                }
-                            }
+                            color = if (!answered) { MaterialTheme.colorScheme.onPrimaryContainer }
+                                    else
+                                    {
+                                        if (yQue.correct[i] == yUserAns[i]) { Color.Green }
+                                        else { Color.Red }
+                                    }
                         )
 
                         DropdownMenu(
@@ -343,7 +343,8 @@ fun QuizScreen(
                             }
                         )
                         {
-                            for (ii in 0..yQue.answers[i].size - 1) {
+                            for (ii in 0..yQue.answers[i].size - 1)
+                            {
                                 DropdownMenuItem(
                                     text = { Text(yQue.answers[i][ii]) },
                                     onClick = {
@@ -354,7 +355,8 @@ fun QuizScreen(
                                             ); choiceTextList[i] =
                                         yQue.answers[i][ii]; yUserAns[i] = ii
                                     })
-                                if (ii < yQue.answers[i].size - 1) {
+                                if (ii < yQue.answers[i].size - 1)
+                                {
                                     HorizontalDivider()
                                 }
                             }
@@ -423,7 +425,8 @@ fun QuizScreen(
                     )
                     Spacer(modifier = Modifier.size(38.dp))
                 }
-                if (thisQuiz == "") {
+                if (thisQuiz == "")
+                {
                     Spacer(
                         modifier = Modifier
                             .weight(1f)
@@ -459,15 +462,22 @@ fun QuizScreen(
                             .fillMaxWidth()
                     )
                     return@Box
-                } else {
-                    if (isReady) {
-                        try {
+                } else
+                {
+                    if (isReady)
+                    {
+                        try
+                        {
                             getQuestion()
-                        } catch (e: Exception) {
+                        }
+                        catch (e: Exception)
+                        {
                             Text("ERROR: [in question Loading: $e] \n [$err]")
                             return@Box
                         }
-                    } else {
+                    }
+                    else
+                    {
                         Column(horizontalAlignment = Alignment.CenterHorizontally)
                         {
                             Row(verticalAlignment = Alignment.CenterVertically)
@@ -525,11 +535,14 @@ fun QuizScreen(
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
                                 var quizProgress by remember { mutableStateOf(0f) }
-                                quizProgress = if (allQuestions > 0) {
-                                    (doneQuestions).toFloat() / (allQuestions).toFloat()
-                                } else {
-                                    0.toFloat()
-                                }
+                                quizProgress = if (allQuestions > 0)
+                                               {
+                                                    (doneQuestions).toFloat() / (allQuestions).toFloat()
+                                               }
+                                               else
+                                               {
+                                                   0.toFloat()
+                                               }
                                 LinearProgressIndicator(
                                     progress = { quizProgress },
                                     modifier = Modifier.fillMaxWidth(0.8f),
@@ -551,11 +564,14 @@ fun QuizScreen(
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
                                 var correctRatio by remember { mutableStateOf(0f) }
-                                correctRatio = if ((correctAnswers + wrongAnswers) > 0) {
-                                    (correctAnswers).toFloat() / (correctAnswers + wrongAnswers).toFloat()
-                                } else {
-                                    0.toFloat()
-                                }
+                                correctRatio = if ((correctAnswers + wrongAnswers) > 0)
+                                               {
+                                                    (correctAnswers).toFloat() / (correctAnswers + wrongAnswers).toFloat()
+                                               }
+                                               else
+                                               {
+                                                    0.toFloat()
+                                               }
                                 LinearProgressIndicator(
                                     progress = { correctRatio },
                                     modifier = Modifier.fillMaxWidth(0.8f)
@@ -582,11 +598,7 @@ fun QuizScreen(
                                 }
 
                                 Text(
-                                    text = "${timer.value[0]}:${"%02d".format(timer.value[1])}:${
-                                        "%02d".format(
-                                            timer.value[2]
-                                        )
-                                    }"
+                                    text = "${timer.value[0]}:${"%02d".format(timer.value[1])}:${"%02d".format(timer.value[2])}"
                                 )
                                 ElevatedButton(
                                     modifier = Modifier
@@ -614,7 +626,8 @@ fun QuizScreen(
                     )
                     {
 
-                        if (que.typeCorrect[0] == 'X') {
+                        if (que.typeCorrect[0] == 'X')
+                        {
                             Column(
                                 modifier = Modifier
                                     .weight(1f),
@@ -625,27 +638,33 @@ fun QuizScreen(
 
                                 Row()
                                 {
-                                    if ("[img]" !in que.question && "[yt]" !in que.question && "[aud]" !in que.question) {
+                                    if ("[img]" !in que.question && "[yt]" !in que.question && "[aud]" !in que.question)
+                                    {
                                         Text(
                                             text = que.question,
                                             fontWeight = FontWeight.Bold,
                                             modifier = Modifier
                                                 .padding(10.dp)
                                         )
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         var imageVisible by remember { mutableStateOf(true) }
                                         Column(modifier = Modifier.animateContentSize()) {
                                             var whichMedium = ""
                                             AnimatedVisibility(visible = imageVisible)
                                             {
-                                                if ("[img]" in que.question) {
+                                                if ("[img]" in que.question)
+                                                {
                                                     whichMedium =
                                                         stringResource(R.string.image_question)
                                                     drawImage(
                                                         quizModel.parseFile(que.question, "img"),
                                                         "${stringResource(R.string.image_question)} № ${que.question}"
                                                     )
-                                                } else if ("[aud]" in que.question) {
+                                                }
+                                                else if ("[aud]" in que.question)
+                                                {
                                                     whichMedium =
                                                         stringResource(R.string.audio_question)
                                                     placeAudiofile(
@@ -654,7 +673,9 @@ fun QuizScreen(
                                                             "aud"
                                                         )
                                                     )
-                                                } else if ("[yt]" in que.question) {
+                                                }
+                                                else if ("[yt]" in que.question)
+                                                {
                                                     whichMedium =
                                                         stringResource(R.string.video_question)
                                                     YoutubeVideo(
@@ -669,9 +690,12 @@ fun QuizScreen(
                                             Row(verticalAlignment = Alignment.CenterVertically)
                                             {
                                                 val descText = "${
-                                                    if (!imageVisible) {
+                                                    if (!imageVisible) 
+                                                    {
                                                         stringResource(R.string.show)
-                                                    } else {
+                                                    } 
+                                                    else 
+                                                    {
                                                         stringResource(R.string.hide)
                                                     }
                                                 } $whichMedium"
@@ -712,9 +736,12 @@ fun QuizScreen(
                                                 .wrapContentHeight()
                                                 .heightIn(min = 75.dp),
                                             onClick = {
-                                                if (isSelected) {
+                                                if (isSelected)
+                                                {
                                                     userAns.remove(i)
-                                                } else {
+                                                }
+                                                else
+                                                {
                                                     userAns.add(i)
                                                 }
                                             },
@@ -725,14 +752,16 @@ fun QuizScreen(
                                                 disabledContainerColor = if (i in correct && i in userAns) Color.Green.copy(
                                                     alpha = 0.5f
                                                 )
-                                                else {
-                                                    if (i in correct && i !in userAns) Color.Yellow.copy(
-                                                        alpha = 0.5f
-                                                    )
+                                                else
+                                                {
+                                                    if (i in correct && i !in userAns) {Color.Yellow.copy(alpha = 0.5f)}
                                                     else {
-                                                        if (i !in correct && i in userAns) {
+                                                        if (i !in correct && i in userAns)
+                                                        {
                                                             Color.Red.copy(alpha = 0.5f)
-                                                        } else {
+                                                        }
+                                                        else
+                                                        {
                                                             Color.Gray.copy(alpha = 0.5f)
                                                         }
                                                     }
@@ -752,11 +781,13 @@ fun QuizScreen(
                                                     .weight(1f)
                                             )
                                             Text(
-                                                text = if ("[img]" in que.answers[i]) {
-                                                    "${stringResource(R.string.picture)} ${i + 1}"
-                                                } else {
-                                                    que.answers[i]
-                                                },
+                                                text = if ("[img]" in que.answers[i])
+                                                       {
+                                                            "${stringResource(R.string.picture)} ${i + 1}"
+                                                       }
+                                                       else {
+                                                            que.answers[i]
+                                                       },
                                                 softWrap = true,
                                                 overflow = TextOverflow.Visible
                                             )
@@ -774,10 +805,16 @@ fun QuizScreen(
                             }
 
 
-                            if (que.answers.any { "[img]" in it }) {
+                            if (que.answers.any { "[img]" in it })
+                            {
                                 PartialBottomSheet(que.answers)
                             }
-                        } else if (que.typeCorrect[0] == 'Y') {
+                        }
+
+
+                        // Y-type question
+                        else if (que.typeCorrect[0] == 'Y')
+                        {
                             Column(
                                 modifier = Modifier
                                     .weight(1f),
@@ -790,7 +827,7 @@ fun QuizScreen(
                         }
 
 
-
+                        //check is user answer correct
                         ElevatedButton(
                             modifier = Modifier
                                 .padding(horizontal = 10.dp, vertical = 5.dp)
@@ -798,16 +835,23 @@ fun QuizScreen(
                                 .height(75.dp),
                             onClick =
                                 {
-                                    if (!wereClickedBefore) {
+                                    if (!wereClickedBefore)
+                                    {
                                         answered = true
                                         wereClickedBefore = true
-                                    } else {
+                                    }
+                                    else
+                                    {
 
-                                        if (remainingQuestions > 0) {
+                                        if (remainingQuestions > 0)
+                                        {
                                             var areCorrect = false
-                                            if (que.typeCorrect[0] == 'X') {
+                                            if (que.typeCorrect[0] == 'X')
+                                            {
                                                 areCorrect = correct.sorted() == userAns.sorted()
-                                            } else {
+                                            }
+                                            else
+                                            {
                                                 areCorrect = quizModel.getYQuestion(
                                                     context,
                                                     thisQuiz,
@@ -815,9 +859,12 @@ fun QuizScreen(
                                                 ).correct == yUserAns.toList()
                                             }
 
-                                            if (areCorrect) {
+                                            if (areCorrect)
+                                            {
                                                 quizModel.onCorrectAnswer(thisQuiz, thisQuestion)
-                                            } else {
+                                            }
+                                            else
+                                            {
                                                 quizModel.onWrongAnswer(thisQuiz, thisQuestion)
                                             }
                                             navController.navigate(Screen.Quiz.route) {
@@ -826,7 +873,9 @@ fun QuizScreen(
                                                 }
                                                 launchSingleTop = true
                                             }
-                                        } else {
+                                        }
+                                        else
+                                        {
                                             quizModel.resetQuiz(thisQuiz)
                                             navController.navigate(Screen.Menu.route)
                                         }
