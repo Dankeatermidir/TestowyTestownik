@@ -297,53 +297,84 @@ fun QuizScreen(
 
         val choiceTextList = remember { mutableStateListOf<String>().apply { repeat(yQue.answers.size) { add("") } } }
 
-        FlowRow(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        )
-        {
-            for (i in 0..noChoiceQueList.size-1)
+        val localScrollState = rememberScrollState()
+
+        Column(
+            modifier = Modifier.verticalScroll(localScrollState)
+        ) {
+            FlowRow(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            )
             {
-                if(yUserAns.size<i)
-                {
-                    yUserAns+=Int.MIN_VALUE
-                }
-
-                Text(noChoiceQueList[i])
-                if (selectionAndHideState.size > i)
-                {
-                    val choiceText = choiceTextList[i]
-                    Text(
-                        text = if (choiceText.length > 0) { choiceText } else {"{${stringResource(R.string.choice)} ${i + 1}}"},
-                        modifier = Modifier
-                            .clickable { selectionAndHideState[i].value = selectionAndHideState[i].value.copy(second = true) }
-                            .background(MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(4.dp))
-                            .padding(horizontal = 6.dp, vertical = 4.dp),
-                        color = if(!answered) {MaterialTheme.colorScheme.onPrimaryContainer} else { if(yQue.correct[i]==yUserAns[i]){Color.Green} else{Color.Red} }
-                    )
-
-                    DropdownMenu(
-                        expanded = selectionAndHideState[i].value.second,
-                        onDismissRequest = { selectionAndHideState[i].value = selectionAndHideState[i].value.copy(second = false) }
-                    )
-                    {
-                        for(ii in 0 .. yQue.answers[i].size-1)
-                        {
-                            DropdownMenuItem(text={Text(yQue.answers[i][ii])}, onClick = { selectionAndHideState[i].value = selectionAndHideState[i].value.copy(ii,false); choiceTextList[i] = yQue.answers[i][ii]; yUserAns[i]=ii} )
-                            if(ii<yQue.answers[i].size-1)
-                            {
-                                HorizontalDivider()
-                            }
-                        }
+                for (i in 0..noChoiceQueList.size - 1) {
+                    if (yUserAns.size < i) {
+                        yUserAns += Int.MIN_VALUE
                     }
 
+                    Text(noChoiceQueList[i])
+                    if (selectionAndHideState.size > i) {
+                        val choiceText = choiceTextList[i]
+                        Text(
+                            text = if (choiceText.length > 0) {
+                                choiceText
+                            } else {
+                                "{${stringResource(R.string.choice)} ${i + 1}}"
+                            },
+                            modifier = Modifier
+                                .clickable {
+                                    selectionAndHideState[i].value =
+                                        selectionAndHideState[i].value.copy(second = true)
+                                }
+                                .background(
+                                    MaterialTheme.colorScheme.primaryContainer,
+                                    shape = RoundedCornerShape(4.dp)
+                                )
+                                .padding(horizontal = 6.dp, vertical = 4.dp),
+                            color = if (!answered) {
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            } else {
+                                if (yQue.correct[i] == yUserAns[i]) {
+                                    Color.Green
+                                } else {
+                                    Color.Red
+                                }
+                            }
+                        )
 
+                        DropdownMenu(
+                            expanded = selectionAndHideState[i].value.second,
+                            onDismissRequest = {
+                                selectionAndHideState[i].value =
+                                    selectionAndHideState[i].value.copy(second = false)
+                            }
+                        )
+                        {
+                            for (ii in 0..yQue.answers[i].size - 1) {
+                                DropdownMenuItem(
+                                    text = { Text(yQue.answers[i][ii]) },
+                                    onClick = {
+                                        selectionAndHideState[i].value =
+                                            selectionAndHideState[i].value.copy(
+                                                ii,
+                                                false
+                                            ); choiceTextList[i] =
+                                        yQue.answers[i][ii]; yUserAns[i] = ii
+                                    })
+                                if (ii < yQue.answers[i].size - 1) {
+                                    HorizontalDivider()
+                                }
+                            }
+                        }
+
+
+                    }
                 }
-            }
 
+            }
         }
     }
 
@@ -386,7 +417,7 @@ fun QuizScreen(
                             {
                                 navController.navigate(route = Screen.Menu.route)
                                 {
-                                    quizModel.shouldResetTimer=true
+                                    quizModel.shouldResetTimer = true
                                     popUpTo(Screen.Menu.route)
                                 }
                             }
@@ -686,7 +717,8 @@ fun QuizScreen(
                                                 contentDescription = null
                                             )
                                             Spacer(
-                                                modifier = Modifier.fillMaxWidth()
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
                                                     .weight(1f)
                                             )
                                             Text(
@@ -695,7 +727,8 @@ fun QuizScreen(
                                                 overflow = TextOverflow.Visible
                                             )
                                             Spacer(
-                                                modifier = Modifier.fillMaxWidth()
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
                                                     .weight(1f)
                                             )
                                         }
