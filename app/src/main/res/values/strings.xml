@@ -55,4 +55,8 @@
     <string name="play_audio">Audio abspielen</string>
     <string name="stop_audio">Audio anhalten</string>
     <string name="choice">Auswahl</string>
+    <string name="testo_proud">Testo ist so stolz</string>
+    <string name="some_stats">Einige Statistiken</string>
+    <string name="last_session_time">Zeitpunkt der letzten Sitzung</string>
+    <string name="share">Teilen</string>
 </resources>

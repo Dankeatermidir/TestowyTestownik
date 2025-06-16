@@ -10,6 +10,7 @@ import com.example.testowytestownik.ui.screen.ManagementScreen
 import com.example.testowytestownik.ui.screen.ManualScreen
 import com.example.testowytestownik.ui.screen.QuizScreen
 import com.example.testowytestownik.ui.screen.SettingsScreen
+import com.example.testowytestownik.ui.screen.FinishScreen
 import com.example.testowytestownik.viewmodel.ManagementModel
 import com.example.testowytestownik.viewmodel.ManualModel
 import com.example.testowytestownik.viewmodel.QuizModel
@@ -57,6 +58,17 @@ fun SetupNavGraph(
             route = Screen.Quiz.route
         ) {
             QuizScreen(navController, quizModel)
+        }
+        composable(route="finish/{quizName}/{questions}/{correct}/{bad}/{timeList}")
+        {
+            backStackEntry ->
+            val quizName = backStackEntry.arguments?.getString("quizName") ?: ""
+            val questions = backStackEntry.arguments?.getString("questions")?.toIntOrNull() ?: 0
+            val correct = backStackEntry.arguments?.getString("correct")?.toIntOrNull() ?: 0
+            val bad = backStackEntry.arguments?.getString("bad")?.toIntOrNull() ?: 0
+            val timeList = backStackEntry.arguments?.getString("timeList")?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
+
+            FinishScreen(navController, quizName, questions, correct, bad, timeList)
         }
     }
 }

@@ -56,4 +56,8 @@
     <string name="play_audio">Odtwórz</string>
     <string name="stop_audio">Stop</string>
     <string name="choice">Wybór</string>
+    <string name="testo_proud">Testo jest dumny</string>
+    <string name="some_stats">Garść statystyk</string>
+    <string name="last_session_time">Czas ostatniej sesji</string>
+    <string name="share">Udostępnij</string>
 </resources>

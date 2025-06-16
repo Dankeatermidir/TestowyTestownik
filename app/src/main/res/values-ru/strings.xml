@@ -56,4 +56,8 @@
     <string name="play_audio">Играть аудио</string>
     <string name="stop_audio">Остановка</string>
     <string name="choice">Выбор</string>
+    <string name="testo_proud">Testo очень гордится</string>
+    <string name="some_stats">Немного статистики</string>
+    <string name="last_session_time">Длительность последней сессии</string>
+    <string name="share">Поделитесь</string>
 </resources>

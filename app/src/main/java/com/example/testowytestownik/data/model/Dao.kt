@@ -55,7 +55,7 @@ interface QuizDao {
     @Query("SELECT * FROM Quiz")
     suspend fun getAllQuizzes(): List<Quiz>
 
-    @Query("SELECT * FROM Question WHERE parentQuiz = :quizName")
+    @Query("SELECT * FROM Question WHERE parentQuiz = :quizName AND repeatsLeft != 0")
     suspend fun getQuestionsForQuiz(quizName: String): List<Question>
 
     @Query("DELETE FROM Quiz")

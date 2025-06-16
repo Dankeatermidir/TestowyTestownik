@@ -56,4 +56,8 @@
     <string name="play_audio">Play audio</string>
     <string name="stop_audio">Stop audio</string>
     <string name="choice">Choice</string>
+    <string name="testo_proud">Testo is so proud</string>
+    <string name="some_stats">Some statistics</string>
+    <string name="last_session_time">Time of the last session</string>
+    <string name="share">Share</string>
 </resources>

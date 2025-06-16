@@ -197,7 +197,8 @@ fun QuizScreen(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = "play"
                         )
-                        Text(stringResource(R.string.play_audio))
+                        Text(stringResource(R.string.play_audio),
+                            textAlign = TextAlign.Center)
                     }
                     Spacer(Modifier.width(30.dp))
                     ElevatedButton(
@@ -211,7 +212,8 @@ fun QuizScreen(
                             imageVector = Icons.Default.Stop,
                             contentDescription = "stop"
                         )
-                        Text(stringResource(R.string.stop_audio))
+                        Text(stringResource(R.string.stop_audio),
+                            textAlign = TextAlign.Center)
                     }
                 }
             }
@@ -454,7 +456,8 @@ fun QuizScreen(
                                 }
                             })
                     {
-                        Text(text = stringResource(R.string.goto_management))
+                        Text(text = stringResource(R.string.goto_management),
+                            textAlign = TextAlign.Center)
                     }
                     Spacer(
                         modifier = Modifier
@@ -611,7 +614,8 @@ fun QuizScreen(
                                         quizModel.resetTimer()
                                     }
                                 ) {
-                                    Text(stringResource(R.string.reset_progress))
+                                    Text(stringResource(R.string.reset_progress),
+                                        textAlign = TextAlign.Center)
                                 }
                                 Text(text = "$thisQuestion.txt", modifier = Modifier.scale(0.8f))
                                 Text(text = "R: ${quizModel.currentRepeats}")
@@ -712,7 +716,8 @@ fun QuizScreen(
                                                         imageVector = if (imageVisible) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                                                         contentDescription = descText
                                                     )
-                                                    Text(descText)
+                                                    Text(descText,
+                                                        textAlign = TextAlign.Center)
                                                 }
                                             }
 
@@ -789,7 +794,8 @@ fun QuizScreen(
                                                             que.answers[i]
                                                        },
                                                 softWrap = true,
-                                                overflow = TextOverflow.Visible
+                                                overflow = TextOverflow.Visible,
+                                                textAlign = TextAlign.Center
                                             )
                                             Spacer(
                                                 modifier = Modifier
@@ -867,21 +873,26 @@ fun QuizScreen(
                                             {
                                                 quizModel.onWrongAnswer(thisQuiz, thisQuestion)
                                             }
-                                            navController.navigate(Screen.Quiz.route) {
-                                                popUpTo(Screen.Menu.route) {
+                                            navController.navigate(Screen.Quiz.route)
+                                            {
+                                                popUpTo(Screen.Menu.route)
+                                                {
                                                     inclusive = false
                                                 }
                                                 launchSingleTop = true
                                             }
+//                                            navController.navigate("finish/$thisQuiz/$allQuestions/$correctAnswers/$wrongAnswers/${timer.value.joinToString(",")}")
+
                                         }
                                         else
                                         {
                                             quizModel.resetQuiz(thisQuiz)
-                                            navController.navigate(Screen.Menu.route)
+                                            quizModel.shouldResetTimer = true
+                                            navController.navigate("finish/$thisQuiz/$allQuestions/$correctAnswers/$wrongAnswers/${timer.value.joinToString(",")}")
                                         }
                                     }
                                 })
-                        { Text(text = stringResource(R.string.next)) }
+                        { Text(text = stringResource(R.string.next),textAlign = TextAlign.Center) }
                         Spacer(modifier = Modifier.height(20.dp))
 
 
@@ -891,15 +902,3 @@ fun QuizScreen(
         }
     }
 }
-
-/*
-@Composable
-@Preview(showBackground = true)
-fun InfoScreenPreview(){
-    InfoScreen()
-}
-
- */
-
-
-
