@@ -1,3 +1,9 @@
+# What's new
+### v 1.0.1
+- Changed quiz buttons shape
+- Updated Themes - now dark is dark and light is light
+- Fixed ui bugs
+
 # Testowy Testownik
 
 Kolejna aplikacja testownika pwr, jak testownik-electron, albo Testownik Solvro, ale na **telefon**.

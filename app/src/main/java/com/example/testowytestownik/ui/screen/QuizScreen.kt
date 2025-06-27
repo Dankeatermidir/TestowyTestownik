@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -27,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -326,7 +328,7 @@ fun QuizScreen(
                                 }
                                 .background(
                                     MaterialTheme.colorScheme.primaryContainer,
-                                    shape = RoundedCornerShape(4.dp)
+                                    shape = RoundedCornerShape(8.dp)
                                 )
                                 .padding(horizontal = 6.dp, vertical = 4.dp),
                             color = if (!answered) { MaterialTheme.colorScheme.onPrimaryContainer }
@@ -750,9 +752,11 @@ fun QuizScreen(
                                                     userAns.add(i)
                                                 }
                                             },
+                                            shape = RoundedCornerShape(10.dp),
+                                            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 10.dp),
                                             colors = ButtonDefaults.buttonColors(
-                                                containerColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-                                                else MaterialTheme.colorScheme.primary,
+                                                containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
+                                                else MaterialTheme.colorScheme.surfaceContainer,
 
                                                 disabledContainerColor = if (i in correct && i in userAns) Color.Green.copy(
                                                     alpha = 0.5f
@@ -770,16 +774,18 @@ fun QuizScreen(
                                                             Color.Gray.copy(alpha = 0.5f)
                                                         }
                                                     }
-                                                }
+                                                },
+                                                contentColor = if (isSelected)
+                                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                                else
+                                                    MaterialTheme.colorScheme.onSurface
                                             ),
                                             enabled = !answered
                                         )
                                         {
                                             Spacer(modifier = Modifier.width(10.dp))
-                                            Icon(
-                                                if (isSelected) Icons.Rounded.CheckCircle else Icons.Rounded.Check,
-                                                contentDescription = null
-                                            )
+                                            if (isSelected)
+                                                Icon(Icons.Rounded.Check, contentDescription = null)
                                             Spacer(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
@@ -899,7 +905,9 @@ fun QuizScreen(
                                         }
                                     }
                                 })
-                        { Text(text = stringResource(R.string.next),textAlign = TextAlign.Center) }
+                        {
+                            Text(text = stringResource(R.string.next),textAlign = TextAlign.Center, fontWeight = FontWeight.Bold)
+                        }
                         Spacer(modifier = Modifier.height(20.dp))
 
 

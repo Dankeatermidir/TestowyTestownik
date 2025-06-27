@@ -1,3 +1,9 @@
+# Co nowego
+### wersja 1.0.1
+- Zmieniony kształt przycisków
+- Poprawiony motyw, teraz ciemny jest rzeczywiście ciemny
+- Mniej bugów graficznych
+
 # Testowy Testownik
 
 Kolejna aplikacja testownika pwr, jak testownik-electron, albo Testownik Solvro, ale na **telefon**.

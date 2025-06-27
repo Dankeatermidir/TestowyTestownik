@@ -1,7 +1,12 @@
+# What's new
+### v 1.0.1
+- Changed quiz buttons shape
+- Updated Themes - now dark is dark and light is light
+- Fixed ui bugs
+
 # Testowy Testownik
 
-Another PWR quiz application, like testownik-electron or Testownik Solvro, but for **mobile phones
-**.
+Another PWR quiz application, like testownik-electron or Testownik Solvro, but for **mobile phones**.
 The application was written by two students (idiots) as a project for android applications, hence
 the forced "features", but who knows, maybe the ability to add YouTube videos to questions will be
 used and implemented later in other quiz apps... **I doubt it**

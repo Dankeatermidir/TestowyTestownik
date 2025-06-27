@@ -13,6 +13,7 @@ import android.widget.Space
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Collections
@@ -42,6 +46,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -64,6 +69,7 @@ import org.commonmark.node.Image
 import java.io.File
 import androidx.core.graphics.createBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun FinishScreen(
@@ -78,6 +84,7 @@ fun FinishScreen(
     val context = LocalContext.current
     val message= stringResource(R.string.share)
 
+    val scrollState = rememberScrollState()
     val activity = context as Activity
 
     fun saveBitmapToFile(context: Context, bitmap: Bitmap): File {
@@ -113,6 +120,7 @@ fun FinishScreen(
         {
             Column(
                 modifier = Modifier
+                    .verticalScroll(scrollState)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
@@ -154,82 +162,108 @@ fun FinishScreen(
                 {
                     val rotation = remember { Animatable(0f) }
 
-                    LaunchedEffect(Unit) {
-                        rotation.animateTo(
-                            targetValue = 360f,
-                            animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+                    Box (
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                    ){
+                        LaunchedEffect(Unit) {
+                            rotation.animateTo(
+                                targetValue = 360f,
+                                animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+                            )
+                        }
+
+                        AsyncImage(
+                            model = ImageRequest.Builder(context)
+                                .data(R.drawable.finish_testo)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = "Testo(viron) finished",
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .fillMaxHeight(0.36f)
+                                .graphicsLayer {
+                                    rotationZ = rotation.value
+                                }
                         )
                     }
-
-                    AsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .data(R.drawable.finish_testo)
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = "Testo(viron) finished",
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .fillMaxHeight(0.36f)
-                            .graphicsLayer {
-                                rotationZ = rotation.value
-                            }
-                    )
                     Spacer(Modifier.height(20.dp))
                     Text(stringResource(R.string.testo_proud),
                         textAlign = TextAlign.Center)
                     Spacer(Modifier.height(20.dp))
-                    Text("${stringResource(R.string.some_stats)}:",
+
+                    Text("${stringResource(R.string.last_session_time)}:",
                         textAlign = TextAlign.Center)
                     Spacer(Modifier.height(10.dp))
-
                     Text("${timeOfSession[0]}:${"%02d".format(timeOfSession[1])}:${"%02d".format(timeOfSession[2])}",
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.scale(1.75f))
-                    Spacer(Modifier.height(10.dp))
-                    Text("${stringResource(R.string.last_session_time)}:",
-                        textAlign = TextAlign.Center)
+
 
                     Spacer(Modifier.height(20.dp))
 
-                    Text("$questions",
-                        modifier = Modifier.scale(1.33f))
-                    Spacer(Modifier.height(10.dp))
                     Text("${stringResource(R.string.all_questions)}:",
                         textAlign = TextAlign.Center)
+                    Spacer(Modifier.height(10.dp))
+                    Text("$questions",
+                        modifier = Modifier.scale(1.33f))
+
                     Spacer(Modifier.height(20.dp))
 
 
-                    Row()
-                    {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(0.45f))
-                        {
-                            Text("$correct",
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            Text(
+                                text = stringResource(R.string.correct_answers) + ":",
+                                textAlign = TextAlign.Center,
+                                overflow = TextOverflow.Clip
+                            )
+                            Spacer(Modifier.height(10.dp))
+                            Text(
+                                text = "$correct",
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.scale(1.33f),
                                 color = Color.Green.copy(alpha = 0.7f)
                             )
-                            Spacer(Modifier.height(10.dp))
-                            Text("${stringResource(R.string.correct_answers)}:",
-                                textAlign = TextAlign.Center)
                         }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(0.45f))
-                        {
-                            Text("$bad",
+
+                        Column(
+                            modifier = Modifier
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            Text(
+                                text = stringResource(R.string.bad_answers) + ":",
+                                textAlign = TextAlign.Center,
+                                overflow = TextOverflow.Clip
+                            )
+                            Spacer(Modifier.height(10.dp))
+                            Text(
+                                text = "$bad",
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.scale(1.33f),
                                 color = Color.Red.copy(alpha = 0.7f)
                             )
-                            Spacer(Modifier.height(10.dp))
-                            Text("${stringResource(R.string.bad_answers)}:",
-                                textAlign = TextAlign.Center)
                         }
                     }
                     Spacer(Modifier.height(20.dp))
                     ElevatedButton(
                         modifier = Modifier
-                            .padding(horizontal = 10.dp, vertical = 5.dp)
-                            .fillMaxWidth(1f)
-                            .height(75.dp),
+                            .padding(horizontal = 20.dp, vertical = 5.dp)
+                            .height(60.dp)
+                            .fillMaxWidth(1f),
                         onClick = {
                             navController.navigate(Screen.Quiz.route)
                             {
@@ -278,8 +312,7 @@ fun FinishScreen(
                                     e.printStackTrace()
                                 }
                             },
-                            icon = { Icon(Icons.Filled.Share, "Share testo stats") },
-                            text = { Text(text = stringResource(R.string.share)) }
+                            content = { Icon(Icons.Filled.Share, "Share testo stats", modifier = Modifier.scale(1.5f))}
                         )
                     }
                 }

@@ -175,7 +175,7 @@ fun ManagementScreen(
                 }
                 ElevatedButton( // Add new folder on click
                     modifier = Modifier
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                        .padding(horizontal = 10.dp, vertical = 10.dp)
                         .fillMaxWidth(1f)
                         .height(75.dp),
                     onClick = {
