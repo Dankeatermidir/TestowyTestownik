@@ -1,9 +1,9 @@
 # Testowy Testownik
 
-Kolejna aplikacja testownika pwr, jak testownik-electron, albo Testownik Solvro, ale na **telefon**.
-Aplikacja została napisana przez dwóch studentów(debili) na projekt na aplikacje mobilne, stąd
-wepchane na siłę ''funkcjonalności'', ale kto wie, może możliwość dodawania filmików z youtuba do
-pytań będzie wykorzystywana i zaimplementowana później w innych testownikach... **wątpie**Podstawowe funkcje oczywiście pozostają takie same, to nadal jest **w pełni funkcjonalny testownik**.
+Kolejna aplikacja testownika pwr, jak testownik-electron, albo Testownik Solvro, ale na **Androida**.
+Aplikacja została napisana przez dwóch studentów(debili) na projekt na aplikacje mobilne, stąd wepchane na siłę ''funkcjonalności'', ale kto wie, może możliwość dodawania filmików z youtuba do pytań będzie wykorzystywana i zaimplementowana później w innych testownikach... **wątpie**
+
+Podstawowe funkcje oczywiście pozostają takie same, to nadal jest **w pełni funkcjonalny testownik**.
 Przyjmuje bazy w tym samym formacie (na razie nie przyjmuje prosto z zipa), I obsługuje wszystkie
 typy pytań.
 
