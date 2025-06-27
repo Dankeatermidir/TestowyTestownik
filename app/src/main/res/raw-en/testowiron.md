@@ -24,8 +24,7 @@ ___
 
 What is hardcore mode?
 Let's say you haven't learned for networking exam that quickly yet. It's an integration of Testowy
-Testownik with [BzztMachen](https://github.com/Dankeatermidir/bzztmachen) - more information on *
-*[GitHub](https://github.com/Dankeatermidir/bzztmachen)**.
+Testownik with [BzztMachen](https://github.com/Dankeatermidir/bzztmachen) - more information on **[GitHub](https://github.com/Dankeatermidir/bzztmachen)**.
 ___
 
 ### License? GPLv3 !
