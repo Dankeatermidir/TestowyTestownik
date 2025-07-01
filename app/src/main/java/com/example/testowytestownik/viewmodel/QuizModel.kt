@@ -182,7 +182,8 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
         questionName: String,
         extraRepeats: Int = state.extraRepeats,
         maxRepeats: Int = state.maxRepeats,
-        isBzzt: Boolean = state.hardcoreMode
+        isBzzt: Boolean = state.hardcoreMode,
+        bzztPlayer: Int = state.bzztmachenPlayer
     ) {
         viewModelScope.launch {
             var newRepeats = quizDao.getRepeatsLeft(quizName, questionName)
@@ -192,7 +193,9 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
             quizDao.updateWrongAnswers(quizName, quizDao.getIntWrongAnswers(quizName) + 1)
             if (isBzzt) BzztMachen.machen(
                 state.bzztmachenAddress,
-                BzztMachen.lvlFromPercent(100 * newRepeats / maxRepeats)
+                BzztMachen.lvlFromPercent(100 * newRepeats / maxRepeats,
+                ),
+                bzztPlayer
             )
         }
     }
