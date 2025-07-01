@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
+import okhttp3.Address
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -183,6 +184,7 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
         extraRepeats: Int = state.extraRepeats,
         maxRepeats: Int = state.maxRepeats,
         isBzzt: Boolean = state.hardcoreMode,
+        address: String = state.bzztmachenAddress,
         bzztPlayer: Int = state.bzztmachenPlayer
     ) {
         viewModelScope.launch {
@@ -191,12 +193,11 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
             newRepeats = (newRepeats + extraRepeats) % (maxRepeats + 1)
             quizDao.updateQuestionRepeatsLeft(questionName, newRepeats)
             quizDao.updateWrongAnswers(quizName, quizDao.getIntWrongAnswers(quizName) + 1)
-            if (isBzzt) BzztMachen.machen(
-                state.bzztmachenAddress,
-                BzztMachen.lvlFromPercent(100 * newRepeats / maxRepeats,
-                ),
-                bzztPlayer
-            )
+            if (isBzzt){
+                val freq = BzztMachen.lvlFromPercent(50)
+                val url = "http://$address/machen"
+                BzztMachen.machen(url = url, player = bzztPlayer, lvl = freq)
+            }
         }
     }
 

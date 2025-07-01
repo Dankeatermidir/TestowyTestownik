@@ -851,34 +851,36 @@ fun QuizScreen(
                                     {
                                         answered = true
                                         wereClickedBefore = true
+                                        var areCorrect = false
+                                        if (que.typeCorrect[0] == 'X')
+                                        {
+                                            areCorrect = correct.sorted() == userAns.sorted()
+                                        }
+                                        else
+                                        {
+                                            areCorrect = quizModel.getYQuestion(
+                                                context,
+                                                thisQuiz,
+                                                thisQuestion
+                                            ).correct == yUserAns.toList()
+                                        }
+                                        if (areCorrect)
+                                        {
+                                            quizModel.onCorrectAnswer(thisQuiz, thisQuestion)
+                                        }
+                                        else
+                                        {
+                                            quizModel.onWrongAnswer(thisQuiz, thisQuestion)
+                                        }
                                     }
                                     else
                                     {
 
                                         if (remainingQuestions > 0)
                                         {
-                                            var areCorrect = false
-                                            if (que.typeCorrect[0] == 'X')
-                                            {
-                                                areCorrect = correct.sorted() == userAns.sorted()
-                                            }
-                                            else
-                                            {
-                                                areCorrect = quizModel.getYQuestion(
-                                                    context,
-                                                    thisQuiz,
-                                                    thisQuestion
-                                                ).correct == yUserAns.toList()
-                                            }
 
-                                            if (areCorrect)
-                                            {
-                                                quizModel.onCorrectAnswer(thisQuiz, thisQuestion)
-                                            }
-                                            else
-                                            {
-                                                quizModel.onWrongAnswer(thisQuiz, thisQuestion)
-                                            }
+
+
                                             navController.navigate(Screen.Quiz.route)
                                             {
                                                 popUpTo(Screen.Menu.route)
@@ -887,7 +889,6 @@ fun QuizScreen(
                                                 }
                                                 launchSingleTop = true
                                             }
-//                                            navController.navigate("finish/$thisQuiz/$allQuestions/$correctAnswers/$wrongAnswers/${timer.value.joinToString(",")}")
 
                                         }
                                         else
