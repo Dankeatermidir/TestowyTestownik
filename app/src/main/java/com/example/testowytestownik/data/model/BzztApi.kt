@@ -36,7 +36,8 @@ object BzztMachen {
 
     fun lvlFromPercent(percent: Int): Int {
         var lvl = abs(percent) % 100
-        lvl = 1000 - 950 * lvl
+        lvl = 100000 - 950 * lvl
+        lvl /= 100
         return lvl
     }
 

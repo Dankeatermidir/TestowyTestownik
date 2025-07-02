@@ -194,7 +194,8 @@ class QuizModel(private val quizDao: QuizDao, private val store: SettingsStore) 
             quizDao.updateQuestionRepeatsLeft(questionName, newRepeats)
             quizDao.updateWrongAnswers(quizName, quizDao.getIntWrongAnswers(quizName) + 1)
             if (isBzzt){
-                val freq = BzztMachen.lvlFromPercent(50)
+                val percent = wrongAnswers.value * 100 / (correctAnswers.value + wrongAnswers.value + 1)
+                val freq = BzztMachen.lvlFromPercent(percent)
                 val url = "http://$address/machen"
                 BzztMachen.machen(url = url, player = bzztPlayer, lvl = freq)
             }
